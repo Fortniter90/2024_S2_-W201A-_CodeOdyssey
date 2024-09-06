@@ -1,0 +1,117 @@
+.learning-path {
+    background-color: var(--white);
+    border-radius: 25px;
+    width: fit-content;
+    height: fit-content;
+    position: relative;
+    overflow: hidden;
+}
+
+.path-header {
+    padding: 10px 20px 10px 20px;
+}
+
+.path-title {
+    color: var(--logo-purple);
+    margin: 10px 0;
+}
+
+.levels-list {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.level-box-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.level-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.level-box:hover, 
+.level-box.selected {
+    background-color: var(--background-light);
+}
+
+.number-circle {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: var(--white); /* Text color inside the circle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px; /* Space between circle and title */
+    font-size: 22px;
+    z-index: 2
+}
+
+.complete {
+    background-image: linear-gradient(135deg, var(--background-dark), var(--purple-accent));
+    background-image: linear-gradient(135deg, var(--background-dark), var(--purple-accent));
+}
+
+.current {
+    background-image: linear-gradient(135deg, var(--java-light), var(--java-medium), var(--java-dark));
+}
+
+.incomplete {
+    background-image: linear-gradient(135deg, #DBD9D9, #DBD9D9);
+}
+
+.complete-name {
+    color: var(--logo-purple);
+}
+
+.current-name {
+    color: var(--java-dark);
+}
+
+.incomplete-name {
+    color: #5F5F5F;
+}
+
+.line {
+    position: absolute;
+    width: 5px;
+    height: 25px;
+    background-color: #DBD9D9;
+    z-index: 0;
+    top: 80%;
+    left: 14%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.complete-complete,
+.complete-current,
+.current-complete,
+.current-current {
+    background-color: var(--purple-accent);
+}
+
+.incomplete-complete,
+.incomplete-current,
+.complete-incomplete,
+.current-incomplete,
+.incomplete-incomplete {
+    background: repeating-linear-gradient(
+        to bottom,
+        #DBD9D9 0,
+        #DBD9D9 10px,
+        transparent 10px,
+        transparent 15px 
+    );
+    border-radius: 10px;
+}

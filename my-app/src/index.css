@@ -1,0 +1,68 @@
+:root {
+    --white: #FFFCFA;
+	--dark-blue: #13315C;
+	
+	--logo-purple: #585D9D;
+	--purple-accent: #8E94F2;
+	
+	--background-light: #EEF2FB;
+	--background-medium: #DFE7FC;
+	--background-dark: #CDDAFD;
+	
+	--python-light: #B4D9BC;
+	--python-medium: #71B39A;
+	--python-dark: #396E59;
+	
+	--java-light: #F7B267;
+	--java-medium: #F4845F;
+	--java-dark: #F25C54;
+	
+	--c-light: #90E0EF;
+	--c-medium: #00B4D8;
+	--c-dark: #0077B6;
+}
+
+.fira-code {
+    font-family: "Fira Code", monospace;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.roboto-regular {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+}
+
+.roboto-medium {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.roboto-bold {
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.ultra-regular {
+    font-family: "Ultra", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.solway-regular {
+    font-family: "Solway", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+
+/* Testing */
+body {
+    background-color: #CDDAFD;
+}

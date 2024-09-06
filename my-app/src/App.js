@@ -1,9 +1,10 @@
+import LearningPath from "./components/LearningPath";
 import './App.css';
 
 function App() {
   return (
     <div>
-      Template to start coding
+      <LearningPath/>
     </div>
   );
 }
