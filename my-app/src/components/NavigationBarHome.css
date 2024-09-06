@@ -1,0 +1,70 @@
+/*Testing random colours at the moment, will ad actual interface colours at the end*/
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #8E94F2; 
+    padding: 10px 20px;
+    border-bottom: 2px solid #EFE7FF; 
+    font-family: 'Arial', sans-serif;
+    border-radius: 25px;
+  }
+  
+  /*Links for the left side*/
+  .navbar-left .nav-links {
+    display: flex;
+    list-style-type: none;
+  }
+  
+  .navbar-left .nav-item {
+    margin-right: 20px;
+  }
+  
+  /*Style for navigation text*/
+  .navbar-left .nav-item span {
+    font-weight: bold;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .navbar-left .nav-item span:hover {
+    color: #D3D1F3; 
+  }
+  
+  /*Dropdown icons for courses (TBF)*/
+  .dropdown-icon {
+    margin-left: 5px;
+  }
+  
+  /*Right side buttons*/
+  .navbar-right {
+    display: flex;
+  }
+  
+  .login-btn, .signup-btn {
+    background-color: transparent;
+    border: 2px solid #585D9D; 
+    color: #585D9D;
+    padding: 8px 15px;
+    margin-left: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+  }
+  
+  .login-btn:hover, .signup-btn:hover {
+    background-color: #8E94F2;
+    color: white;
+  }
+  
+  .signup-btn {
+    background-color: #8E94F2;
+    color: #585D9D;
+  }
+  
+  .signup-btn:hover {
+    background-color: #8E94F2;
+  }
+  
