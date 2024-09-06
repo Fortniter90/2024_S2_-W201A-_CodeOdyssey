@@ -59,11 +59,10 @@
 
 .complete {
     background-image: linear-gradient(135deg, var(--background-dark), var(--purple-accent));
-    background-image: linear-gradient(135deg, var(--background-dark), var(--purple-accent));
 }
 
 .current {
-    background-image: linear-gradient(135deg, var(--java-light), var(--java-medium), var(--java-dark));
+    background-image: linear-gradient(135deg, var(--java-light), var(--java-medium));
 }
 
 .incomplete {

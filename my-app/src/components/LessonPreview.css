@@ -1,0 +1,99 @@
+.lesson-preview {
+    background-color: var(--white);
+    border-radius: 25px;
+    width: fit-content;
+    height: fit-content;
+    position: relative;
+    padding: 15px;
+    width: 100%;
+}
+
+.lesson-status {
+    color: #DBD9D9;
+    text-align: right;
+    margin: 0;
+}
+
+.lesson-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.lesson-tag {
+    position: relative;
+    left: -15px;
+    color: var(--white);
+    padding: 10px 10px 10px 40px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.tag-complete {
+    background-image: linear-gradient(135deg, var(--background-dark), var(--purple-accent));
+}
+
+.tag-current {
+    background-image: linear-gradient(135deg, var(--java-light), var(--java-medium));;
+}
+
+.tag-incomplete {
+    background-image: linear-gradient(135deg, #DBD9D9, #DBD9D9);
+}
+
+.lesson-title {
+    margin: 5px;
+}
+
+.title-complete {
+    color: var(--logo-purple);
+}
+
+.title-current {
+    color: var(--java-dark);
+}
+
+.title-incomplete {
+    color: #5F5F5F;
+}
+
+.lesson-contents {
+    color: var(--dark-blue);
+    margin: 0 25px;
+}
+
+.lesson-buttons {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.button {
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: 10px;
+    border-radius: 25px;
+    padding: 5px 15px;
+    border: 2px solid var(--logo-purple);
+}
+
+.solid-button {
+    color: var(--white);
+    background-color: var(--logo-purple);
+}
+
+.solid-button:hover {
+    background-color: #424679;
+    border: 2px solid #424679;
+    transition: background-color 0.3s, border 0.3s;
+}
+
+.outline-button {
+    color: var(--logo-purple);
+    background-color: var(--white);
+}
+
+.outline-button:hover {
+    color: var(--white);
+    background-color: var(--logo-purple);
+    transition: background-color 0.3s, color 0.3s;
+}

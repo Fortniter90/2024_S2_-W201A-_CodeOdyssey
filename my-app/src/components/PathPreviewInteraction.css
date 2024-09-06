@@ -1,0 +1,20 @@
+.path-preview-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.learning {
+    margin: 10px;
+    max-width: calc(50% - 20px); /* Subtracting margin from the total width */
+    box-sizing: border-box;
+}
+
+.lesson {
+    margin: 10px;
+    width: calc(100% - 20px); /* Subtracting margin from the total width */
+    max-width: 1000px;
+    box-sizing: border-box
+}

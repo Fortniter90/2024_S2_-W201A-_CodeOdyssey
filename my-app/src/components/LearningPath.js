@@ -1,25 +1,7 @@
 import { useState } from "react";
 import "./LearningPath.css";
 
-const LearningPath = () => {
-
-    // Hard coding levels to test display -- replace later
-    const levels = [
-        { id: 1, name: "Printing to the Console", status: "complete" },
-        { id: 2, name: "Basic Syntax and Variables", status: "complete" },
-        { id: 3, name: "If-Else Statements", status: "current" },
-        { id: 4, name: "For and While Loops", status: "incomplete" },
-        { id: 5, name: "Functions", status: "incomplete" },
-    ];
-
-    const [selectedLevel, setSelectedLevel] = useState(null);
-
-    // Handles opening level information page (for testing purposes)
-    const handleLevelClick = (id) => {
-        setSelectedLevel(id);
-        console.log(`Opens level ${id}`);
-    };
-
+const LearningPath = ({ levels, handleLevelClick, selectedLevel }) => {
     return (
         <div className="learning-path">
             <div className="path-header">
