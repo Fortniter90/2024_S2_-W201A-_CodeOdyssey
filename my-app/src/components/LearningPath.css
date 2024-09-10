@@ -1,18 +1,34 @@
-.learning-path {
+.overall-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+    box-sizing: border-box;
     background-color: var(--white);
     border-radius: 25px;
+    height: calc(100vh - 150px);
+}
+
+.learning-path {
+    border-radius: 25px 0 0 25px;
     width: fit-content;
     height: fit-content;
     position: relative;
     overflow: hidden;
+    width: 100%;
+    min-width: 150px;
+    max-width: 350px;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 .path-header {
     padding: 10px 20px 10px 20px;
+    background-color: var(--logo-purple);
 }
 
 .path-title {
-    color: var(--logo-purple);
+    color: var(--white);
     margin: 10px 0;
 }
 
@@ -20,6 +36,8 @@
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow-y: auto;
+    height: calc(100% - 69px);
 }
 
 .level-box-wrapper {
@@ -47,12 +65,15 @@
     display: inline-block;
     width: 40px;
     height: 40px;
+    min-width: 40px;  /* Prevents shrinking */
+    min-height: 40px; /* Prevents shrinking */
+    max-width: 40px;  /* Prevents growing */
+    max-height: 40px; /* Prevents growing */
     border-radius: 50%;
     color: var(--white); /* Text color inside the circle */
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-right: 10px; /* Space between circle and title */
     font-size: 22px;
     z-index: 2
 }
@@ -88,9 +109,9 @@
     background-color: #DBD9D9;
     z-index: 0;
     top: 80%;
-    left: 14%;
     transform: translateX(-50%);
     z-index: 1;
+    margin-left: 5px;
 }
 
 .complete-complete,
@@ -113,4 +134,141 @@
         transparent 15px 
     );
     border-radius: 10px;
+}
+
+.line-align {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.lesson-preview {
+    position: relative;
+    padding: 15px 20px;
+    width: 100%;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.lesson-preview::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 100%;
+}
+
+.lesson-preview.edge-complete::before {
+    background-color: var(--background-dark);
+}
+
+.lesson-preview.edge-current::before {
+    background-color: var(--java-light);
+}
+
+.lesson-preview.edge-incomplete::before {
+    background-color: #DBD9D9;
+}
+
+.lesson-status {
+    color: #DBD9D9;
+    text-align: right;
+    margin: 0;
+}
+
+.lesson-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.lesson-tag {
+    position: relative;
+    left: -15px;
+    color: var(--white);
+    padding: 10px 10px 10px 40px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.tag-complete {
+    background-image: linear-gradient(90deg, var(--background-dark), var(--purple-accent));
+}
+
+.tag-current {
+    background-image: linear-gradient(90deg, var(--java-light), var(--java-medium));;
+}
+
+.tag-incomplete {
+    background-image: linear-gradient(90deg, #DBD9D9, #DBD9D9);
+}
+
+.lesson-title {
+    margin: 5px;
+}
+
+.title-complete {
+    color: var(--logo-purple);
+}
+
+.title-current {
+    color: var(--java-dark);
+}
+
+.title-incomplete {
+    color: #5F5F5F;
+}
+
+.lesson-contents {
+    color: var(--dark-blue);
+    margin: 5px 25px;
+    height: calc(100% - 150px);
+}
+
+.lesson-title {
+    margin: 0;
+    font-size: 42px;
+}
+
+.lesson-info {
+    color: var(--dark-blue);
+}
+
+.lesson-buttons {
+    text-align: right;
+    align-self: flex-end;
+    margin-top: 20px;
+}
+
+.button {
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: 10px;
+    border-radius: 25px;
+    padding: 5px 15px;
+    border: 2px solid var(--logo-purple);
+}
+
+.solid-button {
+    color: var(--white);
+    background-color: var(--logo-purple);
+}
+
+.solid-button::hover {
+    background-color: #424679;
+    border: 2px solid #424679;
+    transition: background-color 0.3s, border 0.3s;
+}
+
+.outline-button {
+    color: var(--logo-purple);
+    background-color: var(--white);
+}
+
+.outline-button::hover {
+    color: var(--white);
+    background-color: var(--logo-purple);
+    transition: background-color 0.3s, color 0.3s;
 }
