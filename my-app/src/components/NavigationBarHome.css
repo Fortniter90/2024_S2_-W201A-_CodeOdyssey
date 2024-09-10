@@ -1,4 +1,3 @@
-/*Testing random colours at the moment, will ad actual interface colours at the end*/
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -6,7 +5,7 @@
     background-color: #8E94F2; 
     padding: 10px 20px;
     border-bottom: 2px solid #EFE7FF; 
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto', Roboto;
     border-radius: 25px;
   }
   
@@ -44,9 +43,9 @@
   
   .login-btn, .signup-btn {
     background-color: transparent;
-    border: 2px solid #585D9D; 
+    border: 3px solid #585D9D; 
     color: #585D9D;
-    padding: 8px 15px;
+    padding: 8px 30px;
     margin-left: 10px;
     font-size: 14px;
     font-weight: bold;

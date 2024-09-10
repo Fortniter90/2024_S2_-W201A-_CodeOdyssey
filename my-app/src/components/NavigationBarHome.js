@@ -18,11 +18,10 @@ const NavigationBarHome = () => {
         </div>
         <div className="navbar-right">
           <button className="login-btn">LOGIN</button>
-          <button className="signup-btn">SIGN IN</button>
+          <button className="signup-btn">SIGN UP</button>
         </div>
       </div>
     );
   };
   
   export default NavigationBarHome;
-

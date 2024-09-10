@@ -5,7 +5,6 @@ function App() {
   return (
     <div>
       <NavigationBarHome />
-      Template to start coding
     </div>
   );
 }
