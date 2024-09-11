@@ -2,14 +2,14 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext';
 
 const LoginStatus = () => {
-  const { isAuthenticated, currentUser } = useAuth(); // Accessing context values
+  const { isAuthenticated, currentUser } = useAuth();
 
   return (
     <div>
       {isAuthenticated ? (
-        <p>Logged in as: {currentUser.email}</p>  // Displaying user's email if logged in
+        <p>Logged in as: {currentUser.email}</p>
       ) : (
-        <p>Not logged in</p>  // Message if not logged in
+        <p>Not logged in</p>
       )}
     </div>
   );

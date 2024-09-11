@@ -7,12 +7,12 @@ const LoginComponent = () => {
   const [password, setPassword] = useState('');
 
   const loginHandler = async (e) => {
-    e.preventDefault();  // Corrected typo here
+    e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
       alert("Login successful!");
     } catch (error) {
-      alert(`Error: ${error.message}`);  // Improved error message display
+      alert(`Error: ${error.message}`);
     }
   };
 

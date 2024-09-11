@@ -1,12 +1,22 @@
 import './App.css';
+import { AuthProvider } from './context/AuthContext';
+import SignOutComponent from './components/SignOut';
+import AuthStatus from './components/AuthStatus'
 import LoginComponent from './components/Login';
+import SignUpComponent from './components/SignUp';
 
 function App() {
   return (
-    <div>
-      Template to start coding
+    <AuthProvider>
+      Login
       <LoginComponent />
-    </div>
+      SignUp
+      <SignUpComponent />
+      SignOut <br />
+      <SignOutComponent /><br />
+      Status
+      <AuthStatus />
+    </AuthProvider>
   );
 }
 
