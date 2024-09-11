@@ -1,4 +1,5 @@
 import "./NavigationBarHome.css";
+import { Link } from 'react-router-dom';
 
 const NavigationBarHome = () => {
     return (
@@ -9,11 +10,15 @@ const NavigationBarHome = () => {
               <span>COURSES <span className="dropdown-icon">&#x25BC;</span></span>
             </li>
             <li className="nav-item">
+              <Link to="/resources" className="nav-link">
               <span>RESOURCES</span>
-            </li>
-            <li className="nav-item">
-              <span>ABOUT US</span>
-            </li>
+              </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/about" className="nav-link">
+                <span>ABOUT US</span>
+                </Link>
+                </li>
           </ul>
         </div>
         <div className="navbar-right">
@@ -22,6 +27,7 @@ const NavigationBarHome = () => {
         </div>
       </div>
     );
-  };
-  
-  export default NavigationBarHome;
+};
+
+export default NavigationBarHome;
+
