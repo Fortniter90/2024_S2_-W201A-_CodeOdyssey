@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 :root {
     --white: #FFFCFA;
 	--dark-blue: #13315C;
@@ -22,6 +24,9 @@
 	--c-dark: #0077B6;
 }
 
+body {
+	font-family: 'Roboto', sans-serif;
+}
 /* 
 Logo Fonts: Ultra - Solway
 Header Font: Fira Code
