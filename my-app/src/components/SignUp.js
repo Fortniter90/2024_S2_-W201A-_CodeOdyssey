@@ -6,7 +6,8 @@ const SignUpComponent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const signUpHandler = async () => {
+  const signUpHandler = async (e) => {
+    e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       alert("SignUp successful!");
