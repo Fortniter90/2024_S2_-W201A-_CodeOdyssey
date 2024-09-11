@@ -14,6 +14,6 @@ function App() {
       <Achievements />
     </div>
   );
-}
+};
 
 export default App;

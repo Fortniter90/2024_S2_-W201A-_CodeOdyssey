@@ -24,7 +24,6 @@ const HeaderOptions = () => {
                 </div>
                 <div className="header-right">
 
-                    {/* change both of these to img, using text as a placeholder */}
                     <button className="search-icn">
                     <img src={searchIcon} alt="Search icon" />
                     </button>

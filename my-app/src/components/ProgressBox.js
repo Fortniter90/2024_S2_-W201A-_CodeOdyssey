@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import "./ProgressBox.css";
 
 const ProgressBox = () => {
-    const [progress1, setProgress1] = useState(5); // Example progress value for box 1
-    const [progress2, setProgress2] = useState(7); // Example progress value for box 2
+    const [progress1] = useState(5); 
+    const [progress2] = useState(7);
 
     return (
         <div className="progress-box">
@@ -12,8 +12,8 @@ const ProgressBox = () => {
             </div>
             <div className="progress-content">
                 <div className="progress-item">
-                    <div className="progress-item-box">
-                        <span className="progress-text">LANGUAGE1</span>
+                    <div className="progress-item-box progress-item-box1">
+                        <span className="progress-text">Python</span>
                         <div className="progress-completed">
                         <span className="progress-status">Completed 5/10</span>
                         </div>
@@ -26,8 +26,8 @@ const ProgressBox = () => {
                     </div>
                 </div>
                 <div className="progress-item">
-                    <div className="progress-item-box">
-                        <span className="progress-text">LANGUAGE2</span>
+                    <div className="progress-item-box progress-item-box2">
+                        <span className="progress-text">avaScript</span>
                         <div className="progress-completed">
                         <span className="progress-status">Completed 7/10</span>
                         </div>
