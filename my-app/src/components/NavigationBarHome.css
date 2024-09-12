@@ -1,3 +1,4 @@
+/* General Navigation Bar Styling */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -9,17 +10,18 @@
   border-radius: 25px;
 }
 
-/*Links for the left side*/
+/* Links for the left side */
 .navbar-left .nav-links {
   display: flex;
   list-style-type: none;
 }
 
 .navbar-left .nav-item {
+  position: relative;
   margin-right: 20px;
 }
 
-/*Style for navigation text*/
+/* Style for navigation text */
 .navbar-left .nav-item span {
   font-weight: bold;
   color: white;
@@ -31,12 +33,36 @@
   color: #D3D1F3; 
 }
 
-/*Dropdown icons for courses (TBF)*/
+/* Dropdown menu styling */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px); 
+  left: 0;
+  background-color: #2A4175;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 200px;
+}
+
+.dropdown-item {
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #1F2F54;
+}
+
+/* Style for the dropdown icon */
 .dropdown-icon {
   margin-left: 5px;
 }
 
-/*Right side buttons*/
+/* Right side buttons */
 .navbar-right {
   display: flex;
 }
@@ -71,7 +97,3 @@
   text-decoration: none;
   color: white;
 }
-
-
-
-
