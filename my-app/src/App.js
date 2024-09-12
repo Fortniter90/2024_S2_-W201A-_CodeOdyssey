@@ -1,23 +1,22 @@
 import './App.css';
 import { AuthProvider } from './context/AuthContext';
-import SignOutComponent from './components/SignOut';
-import AuthStatus from './components/AuthStatus'
 import LoginComponent from './components/Login';
-import SignUpComponent from './components/SignUp';
 
 function App() {
   return (
-    <AuthProvider>
-      Login
-      <LoginComponent />
-      SignUp
-      <SignUpComponent />
-      SignOut <br />
-      <SignOutComponent /><br />
-      Status
-      <AuthStatus />
-    </AuthProvider>
+    <div className="container">
+      <div className="image-half" style={{
+        backgroundImage: `url(${'loginBackground.png'})`
+      }}></div >
+      <div className="right-half"></div>
+      <div className="login-half">
+        <AuthProvider>
+          <LoginComponent />
+        </AuthProvider>
+      </div>
+    </div>
   );
 }
 
 export default App;
+
