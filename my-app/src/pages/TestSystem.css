@@ -1,0 +1,82 @@
+/* TestSystem.css */
+
+
+.test-system {
+    margin: 20px;
+    font-family: Fira Code, Fira Code;
+  }
+  
+  textarea {
+    width: 50%;
+    height: 150px;
+    margin: 10px 0;
+    padding: 10px;
+    font-family: monospace;
+  }
+  
+  .buttons {
+    margin: 10px 0;
+  }
+  
+  button {
+    margin-right: 10px;
+    padding: 10px 20px;
+    background-color: #71B39A;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: Roboto;
+  }
+
+
+  button:hover {
+    background-color: #396E59;
+  }
+  
+  .result {
+    margin-top: 20px;
+    font-size: 18px;
+  }
+  
+  .answer {
+    margin-top: 20px;
+  }
+  
+  pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    width: 50%;
+  }
+
+  .header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+  }
+  
+  /*Styling for the quit button*/
+  .quit-button {
+    background-color: #F4845F;
+    color: white;
+    border: none;
+    padding: 10px 37px;
+    cursor: pointer;
+    border-radius: 37px;
+    font-size: 14px;
+    font-family: Roboto;
+  }
+  
+  .quit-button:hover {
+    background-color: #F25C54;
+  }
+
+  h2 {
+    color: #585D9D;
+  }
+
+  p {
+    color: #13315C;
+  }
+  

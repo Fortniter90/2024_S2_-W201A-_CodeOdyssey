@@ -1,9 +1,11 @@
 import './App.css';
+import React from 'react';
+import TestSystem from './pages/TestSystem';
 
 function App() {
   return (
     <div>
-      Template to start coding
+      <TestSystem />
     </div>
   );
 }
