@@ -1,9 +1,10 @@
 import './App.css';
+import TextTest from './components/TextTest';
 
 function App() {
   return (
     <div>
-      Template to start coding
+      <TextTest/>
     </div>
   );
 }
