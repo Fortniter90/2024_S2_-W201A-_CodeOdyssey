@@ -1,7 +1,8 @@
-import { useState } from "react";
-import "./LearningPath.css";
+import { useState } from 'react';
+import './LearningPath.css';
 
-const LearningPath2 = () => {
+// Main LearningPath component
+const LearningPath = () => {
 
     // Hard coding levels to test display -- replace later
     const levels = [
@@ -22,45 +23,50 @@ const LearningPath2 = () => {
         { id: 15, name: "Functions", status: "incomplete", description: "Text for lesson 5" },
     ];
 
+    // Find the first lesson marked as 'current' or defauly to first lesson
     const initialLesson = levels.find(level => level.status === 'current') || levels[0];
     const [selectedLesson, setSelectedLesson] = useState(initialLesson);
 
-    // Handles opening level information page (for testing purposes)
+    // Function to handle clicking on a level
     const handleLevelClick = (id) => {
-        const selected = levels.find((level) => level.id === id);
+        const selected = levels.find((level) => level.id === id); // Find the selected level
         setSelectedLesson(selected);
-        console.log(`Opens level ${id}`);
     };
 
-
     return (
-        <div className="overall-box">
-                <LearningPath 
-                    levels={levels} 
-                    handleLevelClick={handleLevelClick} 
-                    selectedLevel={selectedLesson ? selectedLesson.id : null} 
-                />
+        <div className='overall-box'>
+            {/* Displaying the list of levels */}
+            <LessonMenu 
+                levels={levels} 
+                handleLevelClick={handleLevelClick} 
+                selectedLevel={selectedLesson ? selectedLesson.id : null} 
+            />
 
-                {selectedLesson && (
-                    <LessonPreview lesson={selectedLesson} />
-                )}
+            {/* Displaying the information for the selected level */}
+            {selectedLesson && (
+                <LessonPreview lesson={selectedLesson} />
+            )}
         </div>
     );
 };
 
-const LearningPath = ({ levels, handleLevelClick, selectedLevel }) => {
+// LessonMenu component to display the list of levels/lessons
+const LessonMenu = ({ levels, handleLevelClick, selectedLevel }) => {
     return (
-        <div className="learning-path">
-            <div className="path-header">
-                <h2 className="path-title roboto-bold">Learning Path</h2>
+        <div className='learning-path'>
+            <div className='path-header'>
+                <h2 className='roboto-bold'>Learning Path</h2>
             </div>
 
-            <div className="levels-list roboto-medium">
+            {/* List of lessons */}
+            <div className='levels-list roboto-medium'>
                 {levels.map((level, index) => (
-                    <div key={level.id} className="level-box-wrapper">
+                    <div key={level.id} className='level-box-wrapper'>
                         <div className={`level-box ${selectedLevel === level.id ? 'selected' : ''}`} onClick={() => handleLevelClick(level.id)}>
-                            <div className="line-align">
+                            <div className='line-align'>
                                 <span className={`number-circle ${level.status}`}>{level.id}</span>
+                                
+                                {/* Displaying a line between lessons */}
                                 {index < levels.length - 1 && (
                                     <div className={`line ${level.status}-${levels[index + 1].status}`}/>
                                 )}
@@ -74,35 +80,28 @@ const LearningPath = ({ levels, handleLevelClick, selectedLevel }) => {
     );
 };
 
+// LessonPreview component to show details of the selected lesson
 const LessonPreview = ({ lesson }) => {
-    
-    // Testing button presses
-    const beginLessonClick = () => {
-        console.log("Begin lesson");
-    };
-
-    const practiceExercisesClick = () => {
-        console.log("Practice exercises");
-    };
-
     return (
         <div className={`lesson-preview edge-${lesson.status}`}>
-            <div className="lesson-header">
-                <h2 className={`lesson-tag tag-${lesson.status} roboto-bold`}>Lesson {lesson.id}</h2>
-                <p className="lesson-status roboto-bold">{lesson.status.toUpperCase()}</p>
-                
+            <div className='lesson-header'>
+                {/* Display the lesson ID and status */}
+                <h2 className={`tag-${lesson.status} roboto-bold`}>Lesson {lesson.id}</h2>
+                <p className='roboto-bold'>{lesson.status.toUpperCase()}</p>
             </div>
 
-            <div className="lesson-contents roboto-regular">
-                <h1 className={`lesson-title title-${lesson.status} fira-code`}>{lesson.name}</h1>
-                <p className="lesson-info">{lesson.description}</p>
+            {/* Display the lesson name and description */}
+            <div className='lesson-contents roboto-regular'>
+                <h1 className={`title-${lesson.status} fira-code`}>{lesson.name}</h1>
+                <p>{lesson.description}</p>
             </div>
 
-            <div className="lesson-buttons">
-                <button className="button solid-button roboto-bold" onClick={() => console.log("Begin lesson")}>
+            {/* Buttons for beginning the lesson or practicing exercises */}
+            <div className='lesson-buttons'>
+                <button className='button solid-button roboto-bold' onClick={() => console.log("Begin lesson")}>
                     BEGIN LESSON
                 </button>
-                <button className="button outline-button roboto-bold" onClick={() => console.log("Practice exercises")}>
+                <button className='button outline-button roboto-bold' onClick={() => console.log("Practice exercises")}>
                     PRACTICE EXERCISES
                 </button>
             </div>
@@ -110,4 +109,4 @@ const LessonPreview = ({ lesson }) => {
     );
 };
 
-export default LearningPath2;
+export default LearningPath;
