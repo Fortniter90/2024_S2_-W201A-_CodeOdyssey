@@ -83,7 +83,7 @@ function TestSystem() {
     <div className="test-system">
       {/* Quit button and header */}
         <div className="header">
-            <button className="quit-button" onClick={handleQuit}>Q U I T</button>
+            <button className="quit-button" onClick={handleQuit}>&#x2190;      Go Back</button>
             </div>
       {/* Displays the current question */}      
       <h2>Lesson 1: Introduction to Java</h2>
