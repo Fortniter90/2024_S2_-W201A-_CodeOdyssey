@@ -1,17 +1,15 @@
 import './App.css';
 import NavigationBarHome from './components/NavigationBarHome';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ResourcesPage from './pages/ResourcesPage';
-import AboutUsPage from './pages/AboutUsPage';
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppRoutes from './routes/Routes';
 
 function App() {
   return (
     <Router>
       <NavigationBarHome />
-      <Routes>
-        <Route path="/resources" element={<ResourcesPage />} />
-        <Route path="/about" element={<AboutUsPage />} />
-      </Routes>
+      <div>
+        <AppRoutes />
+      </div>
     </Router>
   );
 }
