@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, writeBatch } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
 import { db } from '../config/firebase';
 import DatabaseTable from './DatabaseTable';
-import Button from './Button'; // Assuming you have a Button component
+import Button from './Button';
 import './DatabaseManagement.css';
 
 const TestManagement = () => {
@@ -20,6 +19,7 @@ const TestManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5;
 
+  // Fetching courses
   const fetchCourses = async () => {
     try {
       const coursesCollection = collection(db, 'courses');
@@ -31,6 +31,7 @@ const TestManagement = () => {
     }
   };
 
+  // Fetching lessons based on the selected course
   const fetchLessons = async (courseId) => {
     if (!courseId) return;
 
@@ -44,6 +45,7 @@ const TestManagement = () => {
     }
   };
 
+  // Fetching tests based on the selected lesson
   const fetchTests = async (lessonId) => {
     if (!lessonId) return;
 
@@ -57,22 +59,26 @@ const TestManagement = () => {
     }
   };
 
+  // Fetching courses when the component first mounts
   useEffect(() => {
     fetchCourses();
   }, []);
 
+  // Fetching lessons whenever a course is selected
   useEffect(() => {
     if (selectedCourse) {
       fetchLessons(selectedCourse);
     }
   }, [selectedCourse]);
 
+  // Fetching tests whenever a lesson is selected
   useEffect(() => {
     if (selectedLesson) {
       fetchTests(selectedLesson);
     }
   }, [selectedLesson]);
 
+  // Shifting test numbers when a new test is added in between existing tests
   const shiftTestNumbers = async (lessonId, newNumber) => {
     const batch = writeBatch(db);
     const testsToShift = tests.filter(test => test.number >= newNumber);
@@ -85,6 +91,7 @@ const TestManagement = () => {
     await batch.commit();
   };
 
+  // Getting the next available test number for the current lesson
   const getNextTestNumber = () => {
     if (tests.length === 0) {
       return 1; 
@@ -95,6 +102,7 @@ const TestManagement = () => {
     return lastTest.number + 1;
   };  
 
+  // Handle opening the modal for adding a new test
   const handleAdd = () => {
     const nextTestNumber = getNextTestNumber();
     setFormData({ title: '', content: '', number: nextTestNumber }); 
@@ -102,6 +110,7 @@ const TestManagement = () => {
     setIsModalOpen(true);
   };  
 
+  // Handle saving a new or edited test
   const handleSave = async () => {
     if (!formData.title || !formData.content || !formData.number || !selectedLesson) {
       setErrorMessage('All fields must be filled out!');
@@ -138,12 +147,14 @@ const TestManagement = () => {
     }
   };
 
+  // Handle clicking the edit button for a test
   const handleEdit = (test) => {
     setFormData({ title: test.title, content: test.content, number: test.number });
     setEditingTest(test);
     setIsModalOpen(true);
   };
 
+  // Handle deleting a test
   const handleDelete = async (testId) => {
     try {
       await deleteDoc(doc(db, `courses/${selectedCourse}/lessons/${selectedLesson}/tests`, testId));
@@ -157,11 +168,13 @@ const TestManagement = () => {
 
   return (
     <div className='management roboto-regular'>
+      {/* Header section */}
       <div className='management-header'>
         <h1 className='roboto-bold'>Test Management</h1>
         <Button text={'Add New Test'} action={handleAdd} />
       </div>
 
+      {/* Dropdown to select a course for displaying lessons */}
       <div className='table-filter'>
         <h3>Course Selection: </h3>
         <select className='roboto-regular' onChange={(e) => setSelectedCourse(e.target.value)} value={selectedCourse}>
@@ -172,6 +185,7 @@ const TestManagement = () => {
         </select>
       </div>
 
+      {/* Dropdown to select a lessons for displaying tests */}
       <div className='table-filter'>
         <h3>Lesson Selection: </h3>
         <select className='roboto-regular' onChange={(e) => setSelectedLesson(e.target.value)} value={selectedLesson}>
@@ -182,6 +196,7 @@ const TestManagement = () => {
         </select>
       </div>
 
+      {/* Table displaying the list of courses */}
       <DatabaseTable
         title="Test"
         data={tests}
@@ -198,6 +213,7 @@ const TestManagement = () => {
         totalItems={tests.length}
       />
 
+      {/* Modal for adding or editing lessons */}
       {isModalOpen && (
         <div className='modal-overlay'>
           <div className='modal'>
@@ -247,6 +263,7 @@ const TestManagement = () => {
         </div>
       )}
 
+      {/* Display error or success messages */}
       {errorMessage && <div className="error-message">{errorMessage}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
     </div>

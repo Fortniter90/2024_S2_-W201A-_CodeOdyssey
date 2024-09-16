@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 const DeveloperDashboard = () => {
     const [activeTab, setActiveTab] = useState('courses');
 
+    // Function to render the appropriate management component based on the active tab
     const managementTab = () => {
         switch (activeTab) {
             case 'courses':
@@ -23,12 +24,14 @@ const DeveloperDashboard = () => {
     return (
         <div className='developer-dashboard'>
             <div className='page-content'>
+                {/* Tab buttons for selecting Courses, Lessons, or Tests management */}
                 <div className='developer-tabs'>
                     <button className={`developer-tabs-button roboto-bold ${activeTab == 'courses' ? 'active' : ''}`} onClick={() => setActiveTab('courses')}>Courses</button>
                     <button className={`developer-tabs-button roboto-bold ${activeTab == 'lessons' ? 'active' : ''}`} onClick={() => setActiveTab('lessons')}>Lessons</button>
                     <button className={`developer-tabs-button roboto-bold ${activeTab == 'tests' ? 'active' : ''}`} onClick={() => setActiveTab('tests')}>Tests</button>
                 </div>
 
+                {/* Display the appropriate management component based on the active tab */}
                 <div className='developer-management'>
                     <div>Developer Dashboard -- account name -- <Link to={'/'}>go to home page</Link></div>
                     {managementTab()}

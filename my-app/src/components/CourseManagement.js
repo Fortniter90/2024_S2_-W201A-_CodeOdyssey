@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
 import { db } from '../config/firebase';
 import Button from './Button';
 import DatabaseTable from './DatabaseTable';
@@ -14,11 +13,9 @@ const CourseManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-
-  
-  const auth = getAuth();
   const rowsPerPage = 5;
 
+  // Fetch all courses
   const fetchCourses = async () => {
     try {
       const coursesCollection = collection(db, 'courses');
@@ -30,16 +27,19 @@ const CourseManagement = () => {
     }
   };
 
+  // Fetch courses when the component mounts
   useEffect(() => {
     fetchCourses();
   }, []);
 
+  // Handle opening form to add a new course
   const handleAdd = () => {
     setFormData({ title: '', description: '' });
     setEditingCourse(null);
     setIsModalOpen(true); 
   };
 
+  // Save a new course or update an existing one
   const handleSave = async () => {
     if (!formData.title || !formData.description) {
       setErrorMessage('All fields must be filled out!');
@@ -47,17 +47,23 @@ const CourseManagement = () => {
     }
 
     try {
+      // If editing, update the existing course
       if (editingCourse) {
         const courseRef = doc(db, 'courses', editingCourse.id); 
         await updateDoc(courseRef, { ...formData });
         setSuccessMessage('Course updated successfully!');
 
-      } else {
+      } 
+      else {
+        // If adding a new course, create a new document
         await addDoc(collection(db, 'courses'), { ...formData });
         setSuccessMessage('Course added successfully!');
       }
 
+      //Close modal
       setIsModalOpen(false);
+
+      // Reset data form and clear states
       setFormData({ title: '', description: '' });
       setEditingCourse(null);
       setErrorMessage('');
@@ -70,12 +76,14 @@ const CourseManagement = () => {
     }
   };
 
+  // Handle editing an existing course
   const handleEdit = (course) => {
     setFormData({ title: course.title, description: course.description });
     setEditingCourse(course);
     setIsModalOpen(true);
   };
 
+  // Handle deleting a course
   const handleDelete = async (courseId) => {
     try {
       const lessonsQuery = query(collection(db, 'lessons'), where('courseId', '==', courseId));
@@ -97,14 +105,15 @@ const CourseManagement = () => {
     }
   };
 
-
   return (
     <div className='management roboto-regular'>
+      {/* Header section */}
       <div className='management-header'>
           <h1 className='roboto-bold'>Course Management</h1>
           <Button text={'Add New Course'} action={handleAdd}/>
       </div>
       
+      {/* Table displaying the list of courses */}
       <DatabaseTable
         title="Course"
         data={courses}
@@ -122,6 +131,7 @@ const CourseManagement = () => {
         totalItems={courses.length}
       />
 
+      {/* Modal for adding or editing courses */}
       {isModalOpen && (
         <div className='modal-overlay'>
           <div className='modal'>
@@ -145,6 +155,7 @@ const CourseManagement = () => {
         </div>
       )}
 
+      {/* Error and success message display */}
       {errorMessage && <div className="error-message">{errorMessage}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
     </div>

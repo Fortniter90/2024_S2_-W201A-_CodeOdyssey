@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, writeBatch } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
 import { db } from '../config/firebase';
 import DatabaseTable from './DatabaseTable';
 import Button from './Button';
@@ -18,6 +17,7 @@ const LessonManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5;
 
+  // Fetch all courses from Firestore
   const fetchCourses = async () => {
     try {
       const coursesCollection = collection(db, 'courses');
@@ -29,6 +29,7 @@ const LessonManagement = () => {
     }
   };
 
+  // Fetch lessons for the selected course from Firestore
   const fetchLessons = async (courseId) => {
     if (!courseId) return;
 
@@ -42,16 +43,19 @@ const LessonManagement = () => {
     }
   };
 
+  // Load courses
   useEffect(() => {
     fetchCourses();
   }, []);
 
+  // Fetch lessons when the selected course changes
   useEffect(() => {
     if (selectedCourse) {
       fetchLessons(selectedCourse);
     }
   }, [selectedCourse]);
 
+  // Shift lesson numbers if a new lesson is inserted
   const shiftLessonNumbers = async (courseId, newNumber) => {
     const batch = writeBatch(db);
     const lessonsToShift = lessons.filter(lesson => lesson.number >= newNumber);
@@ -64,6 +68,7 @@ const LessonManagement = () => {
     await batch.commit();
   };
 
+  // Get the next lesson number in the sequence
   const getNextLessonNumber = () => {
     if (lessons.length === 0) {
       return 1; 
@@ -74,6 +79,7 @@ const LessonManagement = () => {
     return lastLesson.number + 1;
   };  
 
+  // Open the modal for adding a new lesson
   const handleAdd = () => {
     const nextLessonNumber = getNextLessonNumber();
     setFormData({ title: '', content: '', number: nextLessonNumber });
@@ -81,6 +87,7 @@ const LessonManagement = () => {
     setIsModalOpen(true);
   };  
 
+  // Save a new or edited lesson
   const handleSave = async () => {
     if (!formData.title || !formData.content || !formData.number || !selectedCourse) {
       setErrorMessage('All fields must be filled out!');
@@ -118,12 +125,14 @@ const LessonManagement = () => {
     }
   };
 
+  // Handle lesson edit by populating form with selected lesson data
   const handleEdit = (lesson) => {
     setFormData({ title: lesson.title, content: lesson.content, number: lesson.number });
     setEditingLesson(lesson);
     setIsModalOpen(true);
   };
 
+  // Handle lesson deletion
   const handleDelete = async (lessonId) => {
     try {
       await deleteDoc(doc(db, `courses/${selectedCourse}/lessons`, lessonId));
@@ -137,11 +146,13 @@ const LessonManagement = () => {
 
   return (
     <div className='management roboto-regular'>
+      {/* Header section with title and Add New Lesson button */}
       <div className='management-header'>
           <h1 className='roboto-bold'>Lesson Management</h1>
           <Button text={'Add New Lesson'} action={handleAdd}/>
       </div>
 
+      {/* Dropdown to select a course for displaying lessons */}
       <div className='table-filter'>
         <h3>Course Selection: </h3>
           <select className='roboto-regular' onChange={(e) => setSelectedCourse(e.target.value)} value={selectedCourse}>
@@ -152,7 +163,7 @@ const LessonManagement = () => {
         </select>
       </div>
       
-
+      {/* Table displaying the lessons of the selected course */}
       <DatabaseTable
         title="Lesson"
         data={lessons}
@@ -169,6 +180,7 @@ const LessonManagement = () => {
         totalItems={lessons.length}
       />
 
+      {/* Modal for adding or editing lessons */}
       {isModalOpen && (
         <div className='modal-overlay'>
           <div className='modal'>
@@ -207,6 +219,7 @@ const LessonManagement = () => {
         </div>
       )}
 
+      {/* Display error or success messages */}
       {errorMessage && <div className="error-message">{errorMessage}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
     </div>

@@ -26,7 +26,7 @@ const LessonTemplate = () => {
           setTests(lessonList);
       };
       fetchTests();
-    }, [courseId]);
+    }, [courseId, lessonId]);
 
 
   if (!lesson) return <div>Loading...</div>;

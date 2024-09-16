@@ -1,3 +1,4 @@
+/* Base button styles */
 .button {
     text-decoration: none;
     cursor: pointer;
@@ -9,17 +10,20 @@
     background-color: var(--logo-purple);
 }
 
+/* Hover state for button */
 .button::hover {
     background-color: #424679;
     border: 2px solid #424679;
     transition: background-color 0.3s, border 0.3s;
 }
 
+/* Additional class for outlined button style */
 .outline {
     color: var(--logo-purple);
     background-color: var(--white);
 }
 
+/* Hover state for outlined button */
 .outline:hover {
     color: var(--white);
     background-color: var(--logo-purple);
