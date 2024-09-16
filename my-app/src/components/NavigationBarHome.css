@@ -1,5 +1,7 @@
 /* General Navigation Bar Styling */
 .navbar {
+  position: sticky; /*Positions the navigation bar so that is fixed at the top when scrolling*/
+  top:0;
   display: flex;
   justify-content: space-between;
   align-items: center;
