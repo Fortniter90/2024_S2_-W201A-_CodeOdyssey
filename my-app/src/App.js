@@ -1,8 +1,8 @@
 import './App.css';
 import NavigationBarHome from './components/NavigationBarHome';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ResourcesPage from './components/ResourcesPage';
-import AboutUsPage from './components/AboutUsPage';
+import ResourcesPage from './pages/ResourcesPage';
+import AboutUsPage from './pages/AboutUsPage';
 
 function App() {
   return (

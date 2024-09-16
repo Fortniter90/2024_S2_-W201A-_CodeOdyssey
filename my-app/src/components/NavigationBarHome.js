@@ -13,6 +13,11 @@ const NavigationBarHome = () => {
     <div className="navbar">
       <div className="navbar-left">
         <ul className="nav-links">
+        <li className="nav-item">
+            <Link to="/" className="nav-link">
+              <span>HOME</span>
+            </Link>
+          </li>
           <li className="nav-item">
             <span onClick={toggleDropdown}>
               COURSES <span className="dropdown-icon">&#x25BC;</span>
