@@ -1,22 +1,15 @@
 import './App.css';
-import { AuthProvider } from './context/AuthContext';
-import LoginComponent from './components/Login';
+import { BrowserRouter as Router } from 'react-router-dom'
+import AppRoutes from './routes/Routes';
 
 function App() {
   return (
-    <div className="container">
-      <div className="image-half" style={{
-        backgroundImage: `url(${'loginBackground.png'})`
-      }}></div >
-      <div className="right-half"></div>
-      <div className="login-half">
-        <AuthProvider>
-          <LoginComponent />
-        </AuthProvider>
+    <Router>
+      <div>
+        <AppRoutes />  {/* Load the routing logic */}
       </div>
-    </div>
+    </Router>
   );
 }
 
 export default App;
-
