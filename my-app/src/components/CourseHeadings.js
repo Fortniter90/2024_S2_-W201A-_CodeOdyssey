@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useRef, useEffect } from 'react';
 import { FaCircleInfo } from 'react-icons/fa6';
+import { db } from '../config/firebase';
 import './CourseHeadings.css';
 
 // Predefined gradients
