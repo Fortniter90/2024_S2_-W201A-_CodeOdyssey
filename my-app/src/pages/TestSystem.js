@@ -5,7 +5,7 @@ import './TestSystem.css';
 //Array of questions and their correct answers for the test.
 const questions = [
   {
-    question: "Write a Java program to print 'Hello, World!'",
+    question: "1. Write a Java program to print 'Hello, World!'",
     correctAnswer: 
     `public class Main {
       public static void main(String[] args) {
@@ -14,7 +14,7 @@ const questions = [
 }` //Correct Java Code for "Hello World Program".
   },
   {
-    question: "Write a Java program that declares an integer variable and assigns the value 10 to it.",
+    question: "2. Write a Java program that declares an integer variable and assigns the value 10 to it.",
     correctAnswer: 
     `public class Main {
     public static void main(String[] args) {
@@ -23,7 +23,7 @@ const questions = [
 }`// Correct Java code for variable assignment.
   },
   {
-    question: "Write a Java program that prints the sum of 5 and 10.",
+    question: "3. Write a Java program that prints the sum of 5 and 10.",
     correctAnswer: 
     `public class Main {
     public static void main(String[] args) {
