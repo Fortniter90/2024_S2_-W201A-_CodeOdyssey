@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from './FirebaseConfig';
+import { auth } from '../config/FirebaseConfig';
 
 const LoginComponent = () => {
   const [email, setEmail] = useState('');
@@ -19,16 +19,16 @@ const LoginComponent = () => {
   return (
     <div>
       <form onSubmit={loginHandler}>
+        <label htmlFor="email">Email:</label>
         <input
-          class="loginInput"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           required
         />
+        <label htmlFor="password">Password:</label>
         <input
-          class="loginInput"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
