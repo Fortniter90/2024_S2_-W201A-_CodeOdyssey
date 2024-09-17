@@ -1,31 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import './LearningPath.css';
 
 // Main LearningPath component
-const LearningPath = () => {
+const LearningPath = ({ courseId = "XiDFQFOkRXhBtoeYFwcA" }) => {
+    const [levels, setLevels] = useState([]);
+    const [selectedLesson, setSelectedLesson] = useState(null);
 
-    // Hard coding levels to test display -- replace later
-    const levels = [
-        { id: 1, name: "Printing to the Console", status: "complete", description: "Text for lesson 1" },
-        { id: 2, name: "Basic Syntax and Variables", status: "complete", description: "Text for lesson 2" },
-        { id: 3, name: "If-Else Statements", status: "current", description: "Text for lesson 3" },
-        { id: 4, name: "For and While Loops", status: "incomplete", description: "Text for lesson 4" },
-        { id: 5, name: "Functions", status: "incomplete", description: "Text for lesson 5" },
-        { id: 6, name: "Lots and Lots and Lots and Lots of Text", status: "incomplete", description: "Text for lesson 5" },
-        { id: 7, name: "Functions", status: "incomplete", description: "Text for lesson 5" },
-        { id: 8, name: "Functions", status: "incomplete", description: "Text for lesson 5" },
-        { id: 9, name: "Functions", status: "incomplete", description: "Text for lesson 5" },
-        { id: 10, name: "Functions", status: "incomplete", description: "Text for lesson 5" },
-        { id: 11, name: "Functions", status: "incomplete", description: "Text for lesson 5" },
-        { id: 12, name: "Functions", status: "incomplete", description: "Text for lesson 5" },
-        { id: 13, name: "Functions", status: "incomplete", description: "Text for lesson 5" },
-        { id: 14, name: "Functions", status: "incomplete", description: "Text for lesson 5" },
-        { id: 15, name: "Functions", status: "incomplete", description: "Text for lesson 5" },
-    ];
+    // Fetch lessons from Firestore based on courseId
+    useEffect(() => {
+        const fetchLessons = async () => {
+            const lessonsCollection = collection(db, `courses/${courseId}/lessons`);
+            const lessonsQuery = query(lessonsCollection, orderBy('number'));
+            const lessonSnapshot = await getDocs(lessonsQuery);
+            const lessonList = lessonSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setLevels(lessonList);
 
-    // Find the first lesson marked as 'current' or defauly to first lesson
-    const initialLesson = levels.find(level => level.status === 'current') || levels[0];
-    const [selectedLesson, setSelectedLesson] = useState(initialLesson);
+            if (lessonList.length > 0) {
+                setSelectedLesson(lessonList[0]);
+            }
+        };
+        fetchLessons();
+    }, [courseId]);
+
+    if (!levels) return <div>Loading...</div>;
 
     // Function to handle clicking on a level
     const handleLevelClick = (id) => {
@@ -64,14 +63,14 @@ const LessonMenu = ({ levels, handleLevelClick, selectedLevel }) => {
                     <div key={level.id} className='level-box-wrapper'>
                         <div className={`level-box ${selectedLevel === level.id ? 'selected' : ''}`} onClick={() => handleLevelClick(level.id)}>
                             <div className='line-align'>
-                                <span className={`number-circle ${level.status}`}>{level.id}</span>
+                                <span className={`number-circle incomplete`}>{level.number}</span>
                                 
                                 {/* Displaying a line between lessons */}
                                 {index < levels.length - 1 && (
-                                    <div className={`line ${level.status}-${levels[index + 1].status}`}/>
+                                    <div className={`line incomplete-incomplete`}/>
                                 )}
                             </div>
-                            <span className={`${level.status}-name`}>{level.name}</span>
+                            <span className={`incomplete-name`}>{level.title}</span>
                         </div>
                     </div>
                 ))}
@@ -83,16 +82,16 @@ const LessonMenu = ({ levels, handleLevelClick, selectedLevel }) => {
 // LessonPreview component to show details of the selected lesson
 const LessonPreview = ({ lesson }) => {
     return (
-        <div className={`lesson-preview edge-${lesson.status}`}>
+        <div className={`lesson-preview edge-incomplete`}>
             <div className='lesson-header'>
                 {/* Display the lesson ID and status */}
-                <h2 className={`tag-${lesson.status} roboto-bold`}>Lesson {lesson.id}</h2>
-                <p className='roboto-bold'>{lesson.status.toUpperCase()}</p>
+                <h2 className={`tag-incomplete roboto-bold`}>Lesson {lesson.number}</h2>
+                <p className='roboto-bold'>INCOMPLETE</p>
             </div>
 
             {/* Display the lesson name and description */}
             <div className='lesson-contents roboto-regular'>
-                <h1 className={`title-${lesson.status} fira-code`}>{lesson.name}</h1>
+                <h1 className={`title-incomplete fira-code`}>{lesson.title}</h1>
                 <p>{lesson.description}</p>
             </div>
 

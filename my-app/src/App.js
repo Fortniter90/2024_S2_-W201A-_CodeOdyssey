@@ -1,14 +1,15 @@
-import './App.css';
-import LearningPath from "./components/LearningPath";
+import { BrowserRouter as Router } from 'react-router-dom'
+import AppRoutes from './routes/Routes';
 
 function App() {
   return (
-    <div>
-      <div className="course">
-        <LearningPath/>
+    <Router>
+      <div>
+        <AppRoutes /> 
       </div>
-    </div>
+    </Router>
   );
+  
 }
 
 export default App;
