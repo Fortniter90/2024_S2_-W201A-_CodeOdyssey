@@ -1,0 +1,131 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+.container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+/* Left half for background image */
+.image-half {
+    flex: 1;
+    background-size: cover;
+    background-position: center;
+    height: 100%;
+    width: 40%;
+}
+
+/* Right half is for spacing or additional UI, if needed */
+.right-half {
+    flex: 1;
+    background-color: #f0f0f5;
+    height: 100%;
+    width: 60%;
+    margin: 10%;
+}
+
+/* Login form area */
+.login-half {
+    position: absolute;
+    right: 0%;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: white;
+    padding: 40px;
+    border-radius: 5rem 0 0 5rem; 
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+    width: 56%;
+    height: 100%;
+}
+
+.login-half h1 {
+    text-align: center;
+    color: #6A63F6;
+    margin-top: 20%;
+    margin-bottom: 20px;
+}
+
+.login-half form {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    width: 400px;
+    border-radius: 5px;
+    margin-left: 25%;
+}
+
+.login-half input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #6A63F6;
+    border-radius: 2rem;
+}
+
+.login-half button {
+    padding: 10px;
+    background-color: #6A63F6;
+    color: white;
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.login-half button:hover {
+    background-color: #5845d6;
+}
+
+.signup-half {
+    position: absolute;
+    right: 0%;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: white;
+    padding: 40px;
+    border-radius: 5rem 0 0 5rem; 
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+    width: 56%;
+    height: 100%;
+}
+
+.signup-half h1 {
+    text-align: center;
+    color: #6A63F6;
+    margin-top: 20%;
+    margin-bottom: 20px;
+}
+
+.signup-half form {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    width: 400px;
+    border-radius: 5px;
+    margin-left: 25%;
+}
+
+.signup-half input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #6A63F6;
+    border-radius: 2rem;
+}
+
+.signup-half button {
+    padding: 10px;
+    background-color: #6A63F6;
+    color: white;
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.signup-half button:hover {
+    background-color: #5845d6;
+}
