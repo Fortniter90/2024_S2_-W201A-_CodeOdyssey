@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../config/FirebaseConfig';
-import { db } from '../config/FirebaseConfig';
+import { auth } from '../config/firebase';
+import { db } from '../config/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 
 const SignUpComponent = () => {
