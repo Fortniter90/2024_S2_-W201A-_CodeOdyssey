@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
       } else {
         setCurrentUser(null);
         setIsAuthenticated(false);
-        setUsersName(null); // Optionally reset the user's name
+        setUsersName(null);
       }
     };
 
@@ -42,13 +42,13 @@ export const AuthProvider = ({ children }) => {
           console.log("No such document!");
         }
       } catch (error) {
-        console.error("Error loading user name:", error); // Improved error message
+        console.error("Error loading user name:", error);
       }
     };
 
     const unsubscribe = onAuthStateChanged(auth, initializeUser);
     return () => unsubscribe(); // Clean up the listener
-  }, []); // Empty dependency array
+  }, []);
 
   return (
     <AuthContext.Provider value={{ currentUser, isAuthenticated, usersName }}>

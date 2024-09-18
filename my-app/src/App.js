@@ -6,7 +6,7 @@ function App() {
   return (
     <Router>
       <div>
-        <AppRoutes />  {/* Load the routing logic */}
+        <AppRoutes />
       </div>
     </Router>
   );

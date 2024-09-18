@@ -8,7 +8,6 @@ const SignUpComponent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const progressArray = [false, false, false, false, false];
 
   const signUpHandler = async (e) => {
     e.preventDefault();
@@ -20,7 +19,6 @@ const SignUpComponent = () => {
       const userCred = await createUserWithEmailAndPassword(auth, email, password);
       await setDoc(doc(db, 'users', userCred.user.uid), {
         name: name,
-        javaProgress: progressArray,
       });
       alert("SignUp successful!");
     } catch (error) {
