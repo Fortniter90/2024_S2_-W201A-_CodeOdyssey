@@ -11,7 +11,7 @@ const TestManagement = () => {
   const [tests, setTests] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedLesson, setSelectedLesson] = useState('');
-  const [formData, setFormData] = useState({ title: '', content: '', number: '' });
+  const [formData, setFormData] = useState({ number: '', title: '', question: '', answer: '', hint: '' });
   const [editingTest, setEditingTest] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -105,14 +105,14 @@ const TestManagement = () => {
   // Handle opening the modal for adding a new test
   const handleAdd = () => {
     const nextTestNumber = getNextTestNumber();
-    setFormData({ title: '', content: '', number: nextTestNumber }); 
+    setFormData({ number: nextTestNumber, question: '', answer: '', hint: '' }); 
     setEditingTest(null);
     setIsModalOpen(true);
   };  
 
   // Handle saving a new or edited test
   const handleSave = async () => {
-    if (!formData.title || !formData.content || !formData.number || !selectedLesson) {
+    if ( !formData.number || !formData.question || !formData.answer || !selectedLesson) {
       setErrorMessage('All fields must be filled out!');
       return;
     }
@@ -137,7 +137,7 @@ const TestManagement = () => {
       }
 
       setIsModalOpen(false);
-      setFormData({ title: '', content: '', number: '' });
+      setFormData({ number: '', question: '', answer: '', hint: '' });
       setEditingTest(null);
       setErrorMessage('');
       fetchTests(selectedLesson);
@@ -149,7 +149,7 @@ const TestManagement = () => {
 
   // Handle clicking the edit button for a test
   const handleEdit = (test) => {
-    setFormData({ title: test.title, content: test.content, number: test.number });
+    setFormData({ number: test.number, title: test.title, question: test.question, answer: test.answer, hint: test.hint });
     setEditingTest(test);
     setIsModalOpen(true);
   };
@@ -202,8 +202,9 @@ const TestManagement = () => {
         data={tests}
         columns={[
           { header: 'Test Number', key: 'number' },
-          { header: 'Test Title', key: 'title' },
-          { header: 'Content', key: 'content' }
+          { header: 'Question', key: 'question' },
+          { header: 'Answer', key: 'answer' },
+          { header: 'Hint', key: 'hint' }
         ]}
         onEdit={handleEdit}
         onDelete={handleDelete}
@@ -240,23 +241,30 @@ const TestManagement = () => {
                 </option>
               ))}
             </select>
+
             <input
               type="number"
               placeholder="Test Number"
               value={formData.number}
               onChange={(e) => setFormData({ ...formData, number: e.target.value })}
             />
-                        <input
+            <input
               type="text"
-              placeholder="Test Title"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              placeholder="Question"
+              value={formData.question}
+              onChange={(e) => setFormData({ ...formData, question: e.target.value })}
             />
             <textarea
-              placeholder="Test Content"
-              value={formData.content}
-              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+              placeholder="Answer"
+              value={formData.answer}
+              onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
             />
+            <textarea
+              placeholder="Hint (optional)"
+              value={formData.hint}
+              onChange={(e) => setFormData({ ...formData, hint: e.target.value })}
+            />
+
             <Button text={editingTest ? 'Update Test' : 'Add Test'} action={handleSave} />
             <Button text="Cancel" type="outline" action={() => setIsModalOpen(false)} />
           </div>

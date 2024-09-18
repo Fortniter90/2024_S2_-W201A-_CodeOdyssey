@@ -9,7 +9,7 @@ const LessonManagement = () => {
   const [courses, setCourses] = useState([]);
   const [lessons, setLessons] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('');
-  const [formData, setFormData] = useState({ title: '', content: '', number: '' });
+  const [formData, setFormData] = useState({ number: '', title: '', content: [] });
   const [editingLesson, setEditingLesson] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -56,13 +56,13 @@ const LessonManagement = () => {
   }, [selectedCourse]);
 
   // Shift lesson numbers if a new lesson is inserted
-  const shiftLessonNumbers = async (courseId, newNumber) => {
+  const shiftLessonNumbers = async (courseId, newNumber, increment=true) => {
     const batch = writeBatch(db);
-    const lessonsToShift = lessons.filter(lesson => lesson.number >= newNumber);
+    const lessonsToShift = lessons.filter(lesson => (increment ? lesson.number >= newNumber : lesson.number > newNumber));
 
     lessonsToShift.forEach(lesson => {
       const lessonRef = doc(db, `courses/${courseId}/lessons`, lesson.id);
-      batch.update(lessonRef, { number: lesson.number + 1 });
+      batch.update(lessonRef, { number: increment ? lesson.number + 1 : lesson.number - 1 });
     });
 
     await batch.commit();
@@ -75,21 +75,20 @@ const LessonManagement = () => {
     }
   
     const lastLesson = lessons.reduce((prev, current) => (prev.number > current.number ? prev : current));
-  
     return lastLesson.number + 1;
   };  
 
   // Open the modal for adding a new lesson
   const handleAdd = () => {
     const nextLessonNumber = getNextLessonNumber();
-    setFormData({ title: '', content: '', number: nextLessonNumber });
+    setFormData({ number: nextLessonNumber, title: '', desciprtion: '', content: [] });
     setEditingLesson(null);
     setIsModalOpen(true);
   };  
 
   // Save a new or edited lesson
   const handleSave = async () => {
-    if (!formData.title || !formData.content || !formData.number || !selectedCourse) {
+    if (!formData.number || !formData.title || !formData.description || !selectedCourse) {
       setErrorMessage('All fields must be filled out!');
       return;
     }
@@ -99,12 +98,18 @@ const LessonManagement = () => {
     try {
       if (editingLesson) {
         const lessonRef = doc(db, `courses/${selectedCourse}/lessons`, editingLesson.id);
+
+        if (lessonNumber !== editingLesson.number) {
+          await shiftLessonNumbers(selectedCourse, editingLesson.number, false); // Shift down
+          await shiftLessonNumbers(selectedCourse, lessonNumber); // Shift up
+        }
+
         await updateDoc(lessonRef, formData);
         setSuccessMessage('Lesson updated successfully!');
 
-      } else {
+      } 
+      else {
         await shiftLessonNumbers(selectedCourse, lessonNumber);
-
         await addDoc(collection(db, `courses/${selectedCourse}/lessons`), {
           ...formData,
           number: lessonNumber,
@@ -114,9 +119,10 @@ const LessonManagement = () => {
       }
 
       setIsModalOpen(false);
-      setFormData({ title: '', content: '', number: '' });
+      setFormData({ number: '', title: '', desciprtion: '', content: [] });
       setEditingLesson(null);
       setErrorMessage('');
+
       fetchLessons(selectedCourse);
 
     } catch (error) {
@@ -127,7 +133,7 @@ const LessonManagement = () => {
 
   // Handle lesson edit by populating form with selected lesson data
   const handleEdit = (lesson) => {
-    setFormData({ title: lesson.title, content: lesson.content, number: lesson.number });
+    setFormData({ number: lesson.number, title: lesson.title, description: lesson.description, content: lesson.content });
     setEditingLesson(lesson);
     setIsModalOpen(true);
   };
@@ -135,14 +141,46 @@ const LessonManagement = () => {
   // Handle lesson deletion
   const handleDelete = async (lessonId) => {
     try {
-      await deleteDoc(doc(db, `courses/${selectedCourse}/lessons`, lessonId));
-      setSuccessMessage('Lesson deleted successfully!');
-      fetchLessons(selectedCourse);
+      // Get the lesson number to shift others
+      const lessonToDelete = lessons.find(lesson => lesson.id === lessonId);
+  
+      if (lessonToDelete) {
+        await deleteDoc(doc(db, `courses/${selectedCourse}/lessons`, lessonId));
+        await shiftLessonNumbers(selectedCourse, lessonToDelete.number, false); // Shift down
+  
+        setSuccessMessage('Lesson deleted successfully!');
+        fetchLessons(selectedCourse);
+      }
+  
     } catch (error) {
       console.error('Error deleting lesson:', error);
       setErrorMessage('Error deleting lesson. Please try again.');
     }
   };
+
+  const addContent = () => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      content: [...prevFormData.content, { type: 'text', content: '' }]
+    }));
+  };
+  
+  const removeContent = (index) => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      content: prevFormData.content.filter((_, i) => i !== index)
+    }));
+  };
+  
+  const handleContentChange = (index, field, value) => {
+    const newContent = [...formData.content];
+    newContent[index] = { ...newContent[index], [field]: value };
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      content: newContent
+    }));
+  };
+  
 
   return (
     <div className='management roboto-regular'>
@@ -169,7 +207,8 @@ const LessonManagement = () => {
         data={lessons}
         columns={[
           { header: 'Lesson Number', key: 'number' },
-          { header: 'Lesson Title', key: 'title' },
+          { header: 'Title', key: 'title' },
+          { header: 'Description', key: 'description' },
           { header: 'Content', key: 'content' }
         ]}
         onEdit={handleEdit}
@@ -178,6 +217,12 @@ const LessonManagement = () => {
         setCurrentPage={setCurrentPage}
         rowsPerPage={rowsPerPage}
         totalItems={lessons.length}
+        renderCell={(key, value) => {
+          if (key === 'content') {
+            return typeof value === 'object' ? JSON.stringify(value) : value;
+          }
+          return value;
+        }}
       />
 
       {/* Modal for adding or editing lessons */}
@@ -204,15 +249,58 @@ const LessonManagement = () => {
             />
             <input
               type="text"
-              placeholder="Lesson Title"
+              placeholder="Title"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             />
             <textarea
-              placeholder="Lesson Content"
-              value={formData.content}
-              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+              placeholder="Lesson Description"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             />
+
+            {/* Dynamic Content Management */}
+            {formData.content.map((item, index) => (
+              <div key={index} className='content-item'>
+                <select
+                  value={item.type}
+                  onChange={(e) => handleContentChange(index, 'type', e.target.value)}
+                >
+                  <option value="text">Text</option>
+                  <option value="code">Code</option>
+                </select>
+
+                {item.type === 'text' && (
+                  <textarea
+                    placeholder="Content"
+                    value={item.content}
+                    onChange={(e) => handleContentChange(index, 'content', e.target.value)}
+                  />
+                )}
+
+                {item.type === 'code' && (
+                  <div>
+                    <textarea
+                      placeholder="Code Input"
+                      value={item.input}
+                      onChange={(e) => handleContentChange(index, 'input', e.target.value)}
+                      rows={25}
+                    />
+                    <textarea
+                      placeholder="Code Output"
+                      value={item.output}
+                      onChange={(e) => handleContentChange(index, 'output', e.target.value)}
+                      rows={25}
+                    />
+                  </div>
+                )}
+
+                <button onClick={() => removeContent(index)}>Remove</button>
+              </div>
+            ))}
+            
+            <button onClick={addContent}>Add Content</button>
+
             <Button text={editingLesson ? 'Update Lesson' : 'Add Lesson'} action={handleSave} />
             <Button text="Cancel" type="outline" action={() => setIsModalOpen(false)} />
           </div>

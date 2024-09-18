@@ -24,7 +24,9 @@ const TestTemplate = () => {
         <Link to={`/course/${courseId}`}>Back</Link>
 
         <h1>{test.title}</h1>
-        <p>{test.content}</p>
+        <p><strong>Question:</strong> {test.question}</p>
+        <p><strong>Answer:</strong> {test.answer}</p>
+        {test.hint && <p><strong>Hint:</strong> {test.hint}</p>}
     </div>
   );
 };

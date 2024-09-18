@@ -32,7 +32,9 @@ button {
   padding: 20px;
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: fit-content;
+  width: 500px; /* Adjust width as needed */
+  max-height: 80vh; /* Set a maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
   text-align: center;
   z-index: 1001;
   display: flex;

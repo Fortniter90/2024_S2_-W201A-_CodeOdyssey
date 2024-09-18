@@ -39,20 +39,19 @@ const CourseTemplate = () => {
 
   return (
     <div>
-        <Link to={'../'}>Back</Link>
+      <Link to={'../'}>Back</Link>
 
       <h1>Showing Course: {course.title}</h1>
       <p><strong>Description:</strong> {course.description}</p>
 
       <h2>Lessons for {course.title}</h2>
-      
+
       <ul>
         {lessons.map((lesson) => (
           <li key={lesson.id}>
             <Link to={`/course/${courseId}/lesson/${lesson.id}`}>
               <h3>{lesson.title}</h3>
               <p><strong>Lesson Number:</strong> {lesson.number}</p>
-              <p><strong>Content:</strong> {lesson.content}</p>
             </Link>
           </li>
         ))}

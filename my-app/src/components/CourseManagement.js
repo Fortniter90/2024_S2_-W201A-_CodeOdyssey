@@ -144,7 +144,7 @@ const CourseManagement = () => {
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             />
             <textarea
-              placeholder="Course Content"
+              placeholder="Information"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             />
