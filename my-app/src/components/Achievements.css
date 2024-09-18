@@ -4,11 +4,11 @@
     justify-content: space-between;
     display: flex;
     flex-direction: row;
-    top: 90%;
-    right: 10%;
+    top: 90vh;
+    right: 5vw;
     transform: translateY(-50%);
-    width: 1000px;
-    height: 400px;
+    width: 59.5vw;
+    height: 30vh;
     background-color: #ffffff;
     border: 2px solid #ffffff;
     border-radius: 50px 50px 50px 50px;
@@ -18,7 +18,7 @@
 }
 
 .achiv-box-item {
-    margin: 10px;
+    margin: 30px;
     display: flex;
     flex-direction: row; 
     align-items: center;

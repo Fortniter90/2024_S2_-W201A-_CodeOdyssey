@@ -27,7 +27,7 @@ const ProgressBox = () => {
                 </div>
                 <div className="progress-item">
                     <div className="progress-item-box progress-item-box2">
-                        <span className="progress-text">avaScript</span>
+                        <span className="progress-text">JavaScript</span>
                         <div className="progress-completed">
                         <span className="progress-status">Completed 7/10</span>
                         </div>
