@@ -1,0 +1,101 @@
+/* General Navigation Bar Styling */
+.navbar {
+  position: sticky; /*Positions the navigation bar so that is fixed at the top when scrolling*/
+  top:0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #8E94F2; 
+  padding: 10px 20px;
+  border-bottom: 2px solid #EFE7FF; 
+  font-family: 'Roboto', Roboto;
+  border-radius: 25px;
+}
+
+/* Links for the left side */
+.navbar-left .nav-links {
+  display: flex;
+  list-style-type: none;
+}
+
+.navbar-left .nav-item {
+  position: relative;
+  margin-right: 20px;
+}
+
+/* Style for navigation text */
+.navbar-left .nav-item span {
+  font-weight: bold;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.navbar-left .nav-item span:hover {
+  color: #D3D1F3; 
+}
+
+/* Dropdown menu styling */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px); 
+  left: 0;
+  background-color: #2A4175;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 200px;
+}
+
+.dropdown-item {
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #1F2F54;
+}
+
+/* Style for the dropdown icon */
+.dropdown-icon {
+  margin-left: 5px;
+}
+
+/* Right side buttons */
+.navbar-right {
+  display: flex;
+}
+
+.login-btn, .signup-btn {
+  background-color: transparent;
+  border: 3px solid #585D9D; 
+  color: #585D9D;
+  padding: 8px 30px;
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.login-btn:hover, .signup-btn:hover {
+  background-color: #8E94F2;
+  color: white;
+}
+
+.signup-btn {
+  background-color: #8E94F2;
+  color: #585D9D;
+}
+
+.signup-btn:hover {
+  background-color: #8E94F2;
+}
+
+.navbar-left .nav-link {
+  text-decoration: none;
+  color: white;
+}

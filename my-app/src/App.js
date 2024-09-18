@@ -1,19 +1,18 @@
-import './App.css';
-import HeaderOptions from './components/HeaderOptions';
-import ProfilePicture from './components/ProfilePicture';
-import ProgressBox from './components/ProgressBox';
-import Achievements from './components/Achievements';
-
+import { BrowserRouter as Router } from 'react-router-dom'
+import NavigationBarHome from './components/NavigationBarHome';
+import AppRoutes from './routes/Routes';
 
 function App() {
   return (
-    <div>
-      <HeaderOptions />
-      <ProfilePicture />
-      <ProgressBox />
-      <Achievements />
-    </div>
+    <Router>
+      <NavigationBarHome />
+      <div>
+        <AppRoutes />
+      </div>
+    </Router>
   );
-};
+  
+}
 
 export default App;
+
