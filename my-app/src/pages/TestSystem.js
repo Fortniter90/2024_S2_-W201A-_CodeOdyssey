@@ -7,7 +7,7 @@ import './TestSystem.css';
 const TestSystem = ({ courseId="WhWBHUFHy6M3eOHSxKfd", lessonId="vMDGQYKRWM8qdh5je5U2" }) => {
   const [tests, setTests] = useState(null);
   const [currentTestIndex, setCurrentTestIndex] = useState(0); // Track current test index
-  const [userAnswer, setUserAnswer] = useState(''); // Track user input
+  const [userAnswer, setUserAnswers] = useState(''); // Track user input
   const [showAnswer, setShowAnswer] = useState(false); // Show correct answer toggle
   const [isCorrect, setIsCorrect] = useState(null); // Track if user's answer is correct
 
@@ -23,6 +23,8 @@ const TestSystem = ({ courseId="WhWBHUFHy6M3eOHSxKfd", lessonId="vMDGQYKRWM8qdh5
         const testList = testSnapshot.docs.map((doc) => doc.data());
         //Update thge state with the fetched tests
         setTests(testList);
+        //Initialize userAnsers array with empty strings
+        setUserAnswers(Array(testList.length).fill(''));
 
       } catch (error) {
         //Log any errors that occur during the fetch
@@ -60,7 +62,6 @@ const TestSystem = ({ courseId="WhWBHUFHy6M3eOHSxKfd", lessonId="vMDGQYKRWM8qdh5
   // Function to go to the next test
   const handleNextTest = () => {
     setCurrentTestIndex((prev) => (prev + 1) % tests.length); // Loop to the next test
-    setUserAnswer(''); // Clear user's input
     setIsCorrect(null); // Reset correctness
     setShowAnswer(false); // Hide correct answer
   };
@@ -68,9 +69,14 @@ const TestSystem = ({ courseId="WhWBHUFHy6M3eOHSxKfd", lessonId="vMDGQYKRWM8qdh5
   // Function to go to the previous test
   const handlePreviousTest = () => {
     setCurrentTestIndex((prev) => (prev - 1 + tests.length) % tests.length); // Loop to the previous test
-    setUserAnswer('');
     setIsCorrect(null);
     setShowAnswer(false);
+  };
+
+  const handleUserInputChange = (e) => {
+    const updatedAnswers = [...userAnswer];
+    updatedAnswers[currentTestIndex] = e.target.value; // Update the specific test's answer
+    setUserAnswers(updatedAnswers);
   };
 
   // Handle quit button
@@ -91,18 +97,15 @@ const TestSystem = ({ courseId="WhWBHUFHy6M3eOHSxKfd", lessonId="vMDGQYKRWM8qdh5
       <h2>{currentTest.number}. {currentTest.question}</h2>
 
       <textarea
-        value={userAnswer}
-        onChange={(e) => setUserAnswer(e.target.value)}
+        value={userAnswer[currentTestIndex]} // Keep the answer for the current test
+        onChange={handleUserInputChange} // Update answer for the current test
         placeholder="Enter your code here..."
       />
 
       <div className="buttons">
         <button onClick={handleCheckAnswer}>Run Code</button>
         <button onClick={handleShowAnswer}>Show Answer</button>
-        {currentTestIndex !== 0 ? 
-          <button onClick={handlePreviousTest}>Previous Test</button> :
-          <></>
-        }
+        {currentTestIndex !== 0 && <button onClick={handlePreviousTest}>Previous Test</button>}
         {currentTestIndex === tests.length - 1 ? 
           <button onClick={handleNextTest}>Finish Test</button> :
           <button onClick={handleNextTest}>Next Test</button>
