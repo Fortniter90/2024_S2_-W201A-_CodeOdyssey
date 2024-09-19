@@ -5,9 +5,9 @@ import LessonManagement from '../components/LessonManagement';
 import TestManagement from '../components/TestManagement';
 import { Link } from 'react-router-dom';
 
-
+// DeveloperDashboard to allow developers to easily manage course, lesson, and test information
 const DeveloperDashboard = () => {
-    const [activeTab, setActiveTab] = useState('courses');
+    const [activeTab, setActiveTab] = useState('courses'); // State to track the currently active tab
 
     // Function to render the appropriate management component based on the active tab
     const managementTab = () => {

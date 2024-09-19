@@ -1,13 +1,16 @@
+/* Set background color */
 .developer-dashboard {
     background-color: var(--python-light);
     height: 100vh;
 }
 
+/* Manage layout */
 .page-content {
     display: flex;
     margin-left: 50px;
 }
 
+/* Align tabs */
 .developer-tabs {
     display: flex;
     flex-direction: column;
@@ -36,6 +39,7 @@
     background-color: var(--white);
 }
 
+/* Management area */
 .developer-management {
     background-color: var(--white);
     padding: 40px;

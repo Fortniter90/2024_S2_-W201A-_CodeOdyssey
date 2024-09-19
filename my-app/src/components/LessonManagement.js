@@ -6,12 +6,17 @@ import Button from './Button';
 import './DatabaseManagement.css';
 
 const LessonManagement = () => {
+  // State for courses, lessons, and selected IDs
   const [courses, setCourses] = useState([]);
   const [lessons, setLessons] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('');
+
+  // State for form data and modal management
   const [formData, setFormData] = useState({ number: '', title: '', content: [] });
   const [editingLesson, setEditingLesson] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // State for messages and pagination
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [currentPage, setCurrentPage] = useState(1);

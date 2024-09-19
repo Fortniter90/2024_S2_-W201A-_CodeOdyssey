@@ -7,11 +7,16 @@ import './DatabaseManagement.css';
 import { fetchCourses } from '../utils/dataFetching';
 
 const CourseManagement = () => {
+  // State for courses
   const [courses, setCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+
+  // State for form data and modal management
   const [formData, setFormData] = useState({ title: '', description: '' });
   const [editingCourse, setEditingCourse] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // State for messages and pagination
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const rowsPerPage = 5;

@@ -1,3 +1,4 @@
+/* Table styles */
 .management-table {
     max-width: 100%;
     width: 100%;
@@ -44,6 +45,7 @@
     position: relative;
 }
 
+/* Container for the menu */
 .menu-container .menu-trigger {
     background-color: transparent;
     border: none;
@@ -94,6 +96,7 @@
     background-color: var(--white);
 }
 
+/* Styling for page navigation */
 .pagination {
     display: flex;
     align-items: center;
