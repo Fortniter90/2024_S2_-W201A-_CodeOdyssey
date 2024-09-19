@@ -1,3 +1,4 @@
+/*Button styling for the test button*/
 .test-button {
     background-color: #585D9D;
     color: white;
@@ -9,6 +10,7 @@
     font-family: Roboto;
   }
   
+  /*Hover effect for the test button*/
   .test-button:hover {
     background-color: #8E94F2;
   }

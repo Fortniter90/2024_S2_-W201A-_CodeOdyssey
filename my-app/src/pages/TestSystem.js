@@ -1,125 +1,122 @@
-// This is a test system so that the user can test their knowledge throughout the duration of the courses.
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import './TestSystem.css';
 
-//Array of questions and their correct answers for the test.
-const questions = [
-  {
-    question: "1. Write a Java program to print 'Hello, World!'",
-    correctAnswer: 
-    `public class Main {
-      public static void main(String[] args) {
-          System.out.println("Hello, World!");
-    }
-}` //Correct Java Code for "Hello World Program".
-  },
-  {
-    question: "2. Write a Java program that declares an integer variable and assigns the value 10 to it.",
-    correctAnswer: 
-    `public class Main {
-    public static void main(String[] args) {
-        int num = 10;
-    }
-}`// Correct Java code for variable assignment.
-  },
-  {
-    question: "3. Write a Java program that prints the sum of 5 and 10.",
-    correctAnswer: 
-    `public class Main {
-    public static void main(String[] args) {
-        int sum = 5 + 10;
-        System.out.println(sum);
-    }
-}` //Correct Java code for the sum calculation.
-  }
-];
+const TestSystem = ({ courseId="WhWBHUFHy6M3eOHSxKfd", lessonId="vMDGQYKRWM8qdh5je5U2" }) => {
+  const [tests, setTests] = useState(null);
+  const [currentTestIndex, setCurrentTestIndex] = useState(0); // Track current test index
+  const [userAnswer, setUserAnswer] = useState(''); // Track user input
+  const [showAnswer, setShowAnswer] = useState(false); // Show correct answer toggle
+  const [isCorrect, setIsCorrect] = useState(null); // Track if user's answer is correct
 
-function TestSystem() {
-  //Stating variables to track the current question, user input, whether to show the answer, and if the answer is correct.
-  const [currentQuestion, setCurrentQuestion] = useState(0); //Tracks the current question index.
-  const [userAnswer, setUserAnswer] = useState(''); //Tracks the users answer input.
-  const [showAnswer, setShowAnswer] = useState(false); //Controls whether the correct answer is displayed.
-  const [isCorrect, setIsCorrect] = useState(null); //Tracks if the users answer is correct or not.
+  useEffect(() => {
+    //useEffect to fetch tests whenever courseID or lessonID changes
+    const fetchTest = async () => {
+      try {
+        //Define the collection path for the tests based on the courseID and lessonID
+        const testsCollection = collection(db, `courses/${courseId}/lessons/${lessonId}/tests`);
+        //Fetch documents from the specified tests collection
+        const testSnapshot = await getDocs(testsCollection);
+        //Map the fetched documents to an array of test data
+        const testList = testSnapshot.docs.map((doc) => doc.data());
+        //Update thge state with the fetched tests
+        setTests(testList);
 
-  //FUnction to check if the users answer matches the correct answer.
+      } catch (error) {
+        //Log any errors that occur during the fetch
+        console.error('Error fetching tests:', error);
+
+        //Set tests state to an empty array in case of error
+        setTests([]);
+      }
+    };
+
+
+    //Call the fetchTest functions to initiate the data fetching
+    fetchTest();
+  }, [courseId, lessonId]);
+
+  //Display a loading message if tests are still being fetched or if no tests are found
+  if (!tests || tests.length === 0) return <div>Loading...</div>;
+
+  const currentTest = tests[currentTestIndex];
+
+  // Function to check user's answer
   const handleCheckAnswer = () => {
-    if (userAnswer.trim() === questions[currentQuestion].correctAnswer.trim()) {
-      setIsCorrect(true); //Set to true of the users answer is correct.
+    if (userAnswer.trim() === currentTest.answer.trim()) {
+      setIsCorrect(true); // Correct answer
     } else {
-      setIsCorrect(false); //Set to false if the users answer is incorrect.
+      setIsCorrect(false); // Incorrect answer
     }
   };
 
-  //Function to show the correct answer.
+  // Function to show the correct answer
   const handleShowAnswer = () => {
     setShowAnswer(true);
   };
 
-  //Function to go to the next question.
-  const handleNextQuestion = () => {
-    setCurrentQuestion((prev) => (prev + 1) % questions.length); //Move to the next question, loop back if at the end.
-    setUserAnswer(''); //Clear the users input.
-    setIsCorrect(null); // Reset the result status
-    setShowAnswer(false); //Hide the answer.
+  // Function to go to the next test
+  const handleNextTest = () => {
+    setCurrentTestIndex((prev) => (prev + 1) % tests.length); // Loop to the next test
+    setUserAnswer(''); // Clear user's input
+    setIsCorrect(null); // Reset correctness
+    setShowAnswer(false); // Hide correct answer
   };
 
-  //Function to go to the previous question.
-  const handlePreviousQuestion = () => {
-    setCurrentQuestion((prev) => (prev - 1 + questions.length) % questions.length); //Move to the previous question, loop back if at the start.
+  // Function to go to the previous test
+  const handlePreviousTest = () => {
+    setCurrentTestIndex((prev) => (prev - 1 + tests.length) % tests.length); // Loop to the previous test
     setUserAnswer('');
     setIsCorrect(null);
     setShowAnswer(false);
   };
 
-  //Handling the Quit Button Click
+  // Handle quit button
   const handleQuit = () => {
     const confirmQuit = window.confirm("Are you sure you want to quit the test? All progress will be lost!");
     if (confirmQuit) {
-        window.location.href = '/'; //Need to change this to redirect to dahsboard page!.
+      window.location.href = '/'; // Redirect to dashboard (change as needed)
     }
   };
 
+  // Renders the TestSystem component displaying the current test question, user input, and navigation buttons
   return (
     <div className="test-system">
-      {/* Quit button and header */}
-        <div className="header">
-            <button className="quit-button" onClick={handleQuit}>&#x2190;      Go Back</button>
-            </div>
-      {/* Displays the current question */}      
-      <h2>Lesson 1: Introduction to Java</h2>
-      <p>{questions[currentQuestion].question}</p>
+      <div className="header">
+        <button className="quit-button" onClick={handleQuit}>&#x2190; Go Back</button>
+      </div>
 
-      {/* Textarea for the user to input their answer */}
-      <textarea 
-        value={userAnswer} 
-        onChange={(e) => setUserAnswer(e.target.value)} 
+      <h2>{currentTest.number}. {currentTest.question}</h2>
+
+      <textarea
+        value={userAnswer}
+        onChange={(e) => setUserAnswer(e.target.value)}
         placeholder="Enter your code here..."
       />
 
-      {/* Buttons for checking the answer, showing the answer, and navigating between exercises */}
       <div className="buttons">
         <button onClick={handleCheckAnswer}>Run Code</button>
         <button onClick={handleShowAnswer}>Show Answer</button>
-        <button onClick={handlePreviousQuestion}>Previous Exercise</button>
-        <button onClick={handleNextQuestion}>Next Exercise</button>
+        <button onClick={handlePreviousTest}>Previous Test</button>
+        <button onClick={handleNextTest}>Next Test</button>
       </div>
 
-      {/* Display the result if the answer is correct or incorrect */}
       {isCorrect !== null && (
         <div className="result">
-          {isCorrect ? <p>Correct!</p> : <p>Incorrect.Please Try Again!</p>}
+          {isCorrect ? <p>Correct!</p> : <p>Incorrect. Please Try Again!</p>}
         </div>
       )}
-      
-      {/* Display the correct answer if requested */}
+
       {showAnswer && (
         <div className="answer">
           <h3>Correct Answer:</h3>
-          <pre>{questions[currentQuestion].correctAnswer}</pre>
+          <pre>{currentTest.answer}</pre>
         </div>
       )}
     </div>
   );
-}
+};
 
 export default TestSystem;
