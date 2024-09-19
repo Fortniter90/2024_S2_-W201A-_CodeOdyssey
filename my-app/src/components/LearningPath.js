@@ -1,50 +1,68 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { fetchLessons, fetchUserCourseProgress } from '../utils/dataFetching';
 import './LearningPath.css';
 
 // Main LearningPath component
-const LearningPath = ({ courseId = "XiDFQFOkRXhBtoeYFwcA" }) => {
-    const [levels, setLevels] = useState([]);
-    const [selectedLesson, setSelectedLesson] = useState(null);
+const LearningPath = ({ courseId = "WhWBHUFHy6M3eOHSxKfd", }) => {
+    const [levels, setLevels] = useState([]);                   // State to hold lesson levels
+    const [selectedLesson, setSelectedLesson] = useState(null); // State for currently selected lesson
 
-    // Fetch lessons from Firestore based on courseId
+    // Hardcoded userId for testing
+    const userId = "lRBv2UvYYYPipLGH97p6W0L6DB62";
+
+    // Fetch lessons and user progress when component mounts or the courseId/userId changes
     useEffect(() => {
-        const fetchLessons = async () => {
-            const lessonsCollection = collection(db, `courses/${courseId}/lessons`);
-            const lessonsQuery = query(lessonsCollection, orderBy('number'));
-            const lessonSnapshot = await getDocs(lessonsQuery);
-            const lessonList = lessonSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setLevels(lessonList);
+        const fetchLessonsAndProgress = async () => {
+            try {
+                // Fetch lessons from Firestore
+                const lessonData = await fetchLessons(courseId);
+                const lessonList = Object.entries(lessonData).map(([id, data]) => ({ id, ...data }));
 
-            if (lessonList.length > 0) {
-                setSelectedLesson(lessonList[0]);
+                // Fetch user progress for the specific course
+                const userProgress = await fetchUserCourseProgress(userId, courseId);
+                const progressData = userProgress || { completedLessons: [], latestLesson: '' };
+
+                // Mark lessons as completed or current based on user progress
+                const updatedLessons = lessonList.map((lesson) => ({
+                    ...lesson,
+                    isCompleted: progressData.completedLessons.includes(lesson.id),
+                    isCurrent: progressData.latestLevel === lesson.id
+                }));
+
+                setLevels(updatedLessons); // Update levels state with fetched lessons
+
+                // Set the latest lesson as selected by default
+                const currentLesson = updatedLessons.find(lesson => lesson.isCurrent) || updatedLessons[0];
+                setSelectedLesson(currentLesson);
+
+            } catch (error) {
+                console.error("Error fetching lessons and progress:", error);
             }
         };
-        fetchLessons();
-    }, [courseId]);
 
-    if (!levels) return <div>Loading...</div>;
+        fetchLessonsAndProgress();
+    }, [courseId, userId]);
 
-    // Function to handle clicking on a level
+    // Show loading message if no levels are loaded yet
+    if (!levels.length) return <div>Loading...</div>;
+
+    // Handle lesson selecction when a level is clicked
     const handleLevelClick = (id) => {
-        const selected = levels.find((level) => level.id === id); // Find the selected level
+        const selected = levels.find(level => level.id === id);
         setSelectedLesson(selected);
     };
 
     return (
         <div className='overall-box'>
-            {/* Displaying the list of levels */}
+            {/* Display the list of levels */}
             <LessonMenu 
                 levels={levels} 
                 handleLevelClick={handleLevelClick} 
                 selectedLevel={selectedLesson ? selectedLesson.id : null} 
             />
 
-            {/* Displaying the information for the selected level */}
-            {selectedLesson && (
-                <LessonPreview lesson={selectedLesson} />
-            )}
+            {/* Display information for the selected lesson */}
+            {selectedLesson && <LessonPreview lesson={selectedLesson} />}
         </div>
     );
 };
@@ -63,14 +81,14 @@ const LessonMenu = ({ levels, handleLevelClick, selectedLevel }) => {
                     <div key={level.id} className='level-box-wrapper'>
                         <div className={`level-box ${selectedLevel === level.id ? 'selected' : ''}`} onClick={() => handleLevelClick(level.id)}>
                             <div className='line-align'>
-                                <span className={`number-circle incomplete`}>{level.number}</span>
+                                <span className={`number-circle ${level.isCompleted ? 'complete' : level.isCurrent ? 'current' : 'incomplete'}`}>{level.number}</span>
                                 
                                 {/* Displaying a line between lessons */}
                                 {index < levels.length - 1 && (
-                                    <div className={`line incomplete-incomplete`}/>
+                                    <div className={`line ${level.isCompleted ? 'complete' : 'incomplete'}-${level.isCompleted ? 'complete' : level.isCurrent ? 'current' : 'incomplete'}`}/>
                                 )}
                             </div>
-                            <span className={`incomplete-name`}>{level.title}</span>
+                            <span className={`${level.isCompleted ? 'complete' : level.isCurrent ? 'current' : 'incomplete'}-name`}>{level.title}</span>
                         </div>
                     </div>
                 ))}
@@ -82,16 +100,16 @@ const LessonMenu = ({ levels, handleLevelClick, selectedLevel }) => {
 // LessonPreview component to show details of the selected lesson
 const LessonPreview = ({ lesson }) => {
     return (
-        <div className={`lesson-preview edge-incomplete`}>
+        <div className={`lesson-preview edge-${lesson.isCompleted ? 'complete' : lesson.isCurrent ? 'current' : 'incomplete'}`}>
             <div className='lesson-header'>
                 {/* Display the lesson ID and status */}
-                <h2 className={`tag-incomplete roboto-bold`}>Lesson {lesson.number}</h2>
+                <h2 className={`tag-${lesson.isCompleted ? 'complete' : lesson.isCurrent ? 'current' : 'incomplete'} roboto-bold`}>Lesson {lesson.number}</h2>
                 <p className='roboto-bold'>INCOMPLETE</p>
             </div>
 
             {/* Display the lesson name and description */}
             <div className='lesson-contents roboto-regular'>
-                <h1 className={`title-incomplete fira-code`}>{lesson.title}</h1>
+                <h1 className={`title-${lesson.isCompleted ? 'complete' : lesson.isCurrent ? 'current' : 'incomplete'} fira-code`}>{lesson.title}</h1>
                 <p>{lesson.description}</p>
             </div>
 
