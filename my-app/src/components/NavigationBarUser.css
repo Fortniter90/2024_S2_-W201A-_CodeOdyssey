@@ -1,0 +1,62 @@
+/*Main navigation bar container*/
+.navbar {
+    position: sticky; /* Sticks the navbar at the top when scrolling */
+    top: 0;/*Ensures the navbar stays at the very top of the page*/
+    display: flex; /*Users flexbox for layout*/
+    justify-content: space-between; /* Spaces out left and right content*/
+    align-items: center; /*Vertically centers the item in the nav bar*/
+    background-color: #8E94F2;/*Background colour of the nav bar*/
+    padding: 10px 20px; /*Padding around the nav bar content*/
+    border-bottom: 2px solid #EFE7FF; /*Adds a bottom border to the nav bar*/
+    font-family: 'Roboto', Roboto; /*Font*/
+    border-radius: 25px; /*Rounds the corners of the nav bar*/
+  }
+  
+  /*Flex container for the left side navigation links*/
+  .navbar-left .nav-links {
+    display: flex; /*Displays the links in a row*/
+    list-style-type: none; /*Removes the default bullet points from the list*/
+  }
+  
+  /*Individual navigation item styling*/
+  .navbar-left .nav-item {
+    position: relative; /*Enables positioning of dropdown or other content*/
+    margin-right: 20px; /*Adds space netween each nav item*/
+  }
+  
+  /*Styling for the text inside the navigation links*/
+  .navbar-left .nav-item span { 
+    font-weight: bold; /*Maks the text bold*/
+    color: white; /*White text colour*/
+    font-size: 16px; /*Sets the fint size*/
+    cursor: pointer; /*Changes curser to pointer when hovering*/
+  }
+  
+  /*Hover effect for the navigation links*/
+  .navbar-left .nav-item span:hover {
+    color: #D3D1F3; /*Colour for the hover text*/
+  }
+  
+  /* Setting the profile icon on the right */
+  .navbar-right {
+    display: flex; /*Alligns all the items in a row*/
+    align-items: center; /*Vertically centers the profile icon*/
+  }
+  
+  /*Styling for the profile icon*/
+  .profile-icon {
+    font-size: 30px; /*Sets the size of the profile icon*/
+    color: #585D9D; /*Sets the colour*/
+    cursor: pointer; /*Changes curser to pointer when hovering*/
+  }
+
+  /*Hover effect for the profile icon*/
+  .profile-icon:hover {
+    color: white; /*Chnages the icon colour to white on hover*/
+  }
+  
+  /*Styling for the dropdown icon next to courses text*/
+  .dropdown-icon {
+    margin-left: 5px; /*Adds some space between the text and dropdown icon*/
+  }
+  
