@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./ProgressBox.css";
 
 const ProgressBox = () => {
+    /* change UseState value based on completion of progress from 0-10, 0 = empty, 10 = full */ 
     const [progress1] = useState(5); 
     const [progress2] = useState(7);
 

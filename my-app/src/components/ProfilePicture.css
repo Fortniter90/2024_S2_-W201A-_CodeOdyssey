@@ -1,3 +1,4 @@
+/* general container for profile section */
 .profile-container {
     position: absolute;
     left: 20%;
@@ -6,6 +7,7 @@
     padding-left: 10px;
 }
 
+/* styling for profile picture image */
 .profile-picture {
     width: 500px;
     height: 500px;
@@ -13,12 +15,14 @@
     object-position: center;
 }
 
+/* styling for username text*/
 .username-text {
     margin-top: 0px;
     font-size: 50px;
     color: darkblue;
 }
 
+/* styling for 'edit profile' button */
 .edit-profile {
     background: var(--purple-accent); 
     border: 2px solid var(--purple-accent); 
