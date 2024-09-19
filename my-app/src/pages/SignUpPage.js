@@ -1,5 +1,6 @@
 import './AuthPage.css';
 import '../App.css'
+import DeleteUserComponent from '../components/DeleteUser';
 import { AuthProvider } from '../context/AuthContext';
 import SignUpComponent from '../components/SignUp.js';
 import AuthStatus from '../components/AuthStatus'
@@ -8,24 +9,34 @@ import { Link } from 'react-router-dom';
 function SignUpPage() {
   return (
     <div className="container">
+      {/* Left side background image */}
       <div className="image-half" style={{
-        backgroundImage: `url(${'loginBackground.png'})`
+        backgroundImage: `url(${'loginBackground.png'})`  // Inline style to set background image
       }}></div >
+
+      {/* Right side placeholder for any additional content */}
       <div className="right-half"></div>
+
+      {/* Signup form container */}
       <div className="signup-half">
-        <h1>User SignUP</h1>
+        <h1>User SignUp</h1>
+
+        {/* Wrap components with AuthProvider to manage authentication state */}
         <AuthProvider>
-          <SignUpComponent />
-          <AuthStatus />
+          <SignUpComponent />   {/* Sign up form */}
+          <AuthStatus />        {/* Display whether the user is signed in or not */}
+          <DeleteUserComponent />
         </AuthProvider>
+
+        {/* Link to login page */}
         <p>
           Have an account? <Link to="/login">Login</Link>
         </p>
       </div>
     </div>
-
   );
 }
+
 
 export default SignUpPage;
 
