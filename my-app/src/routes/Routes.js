@@ -9,6 +9,7 @@ import AboutUsPage from '../pages/AboutUsPage';
 import LearningPath from '../components/LearningPath';
 import LoggedInHomePage from '../pages/LoggedInHomePage';
 import LoggedOutHomePage from '../pages/LoggedOutHomePage';
+import HintTest from '../pages/HintTest';
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -22,6 +23,7 @@ const AppRoutes = () => {
         <Route path="/resources" element={<ResourcesPage />} />
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/learningpath" element={<LearningPath />} /> 
+        <Route path="/hinttest" element={<HintTest />} />
     </Routes>
   );
 };
