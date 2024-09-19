@@ -4,6 +4,7 @@ import { db } from '../config/firebase';
 import Button from './Button';
 import DatabaseTable from './DatabaseTable';
 import './DatabaseManagement.css';
+import { fetchCourses } from '../utils/dataFetching';
 
 const CourseManagement = () => {
   const [courses, setCourses] = useState([]);
@@ -16,20 +17,18 @@ const CourseManagement = () => {
   const rowsPerPage = 5;
 
   // Fetch all courses
-  const fetchCourses = async () => {
+  const loadCourses = async () => {
     try {
-      const coursesCollection = collection(db, 'courses');
-      const courseSnapshot = await getDocs(coursesCollection);
-      const courseList = courseSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setCourses(courseList);
+      const courseList = await fetchCourses();
+      setCourses(Object.values(courseList)); // Adjust based on fetchCourses return type
     } catch (error) {
-      console.error('Error fetching courses:', error);
+      console.error('Error loading courses:', error);
     }
   };
 
   // Fetch courses when the component mounts
   useEffect(() => {
-    fetchCourses();
+    loadCourses();
   }, []);
 
   // Handle opening form to add a new course
@@ -68,7 +67,7 @@ const CourseManagement = () => {
       setEditingCourse(null);
       setErrorMessage('');
 
-      fetchCourses();
+      loadCourses();
 
     } catch (error) {
       console.error('Error saving course:', error);
@@ -97,7 +96,7 @@ const CourseManagement = () => {
       await deleteDoc(doc(db, 'courses', courseId));
       setSuccessMessage('Course deleted successfully!');
 
-      fetchCourses();
+      loadCourses();
       
     } catch (error) {
       console.error('Error deleting course:', error);
