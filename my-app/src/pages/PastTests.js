@@ -1,22 +1,73 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import './PastTests.css';
+import { fetchUserAnswer, fetchTests, fetchLessons } from '../utils/DataFetching';
 
-function PastTests() {
-  const navigate = useNavigate();
+function PastTest() {
+  const [answersData, setAnswersData] = useState([]);
+  const [testsData, setTestsData] = useState({});
+  const [lessonsData, setLessonsData] = useState({});
+  const [error, setError] = useState(null);
 
-  const handleBack = () => {
-    navigate('/'); // Navigate back to the page where "Review Past Tests" button is (Need to add that here)
-  };
+  useEffect(() => {
+    const getAnswerData = async () => {
+      try {
+        // Array of answer IDs to fetch
+        const answerIds = ["TUdD7CP9EVbbwsc2gUsY", "nrJnhgnEyAVG4WjVOTZx"];
+        
+        // Fetch answers data
+        const answersPromises = answerIds.map(id => fetchUserAnswer("lRBv2UvYYYPipLGH97p6W0L6DB62", id));
+        const answers = await Promise.all(answersPromises);
+        setAnswersData(answers);
+
+        if (answers.length > 0) {
+          const firstAnswer = answers[0];
+          
+          // Fetch all tests for the course and lesson
+          const allTests = await fetchTests(firstAnswer.courseId, firstAnswer.lessonId);
+          setTestsData(allTests);
+          
+          // Fetch lesson data
+          const allLessons = await fetchLessons(firstAnswer.courseId);
+          setLessonsData(allLessons);
+        }
+      } catch (error) {
+        setError("Error fetching data.");
+      }
+    };
+
+    getAnswerData();
+  }, []);
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  if (answersData.length === 0 || Object.keys(testsData).length === 0 || Object.keys(lessonsData).length === 0) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
-      <h1>Past Tests</h1>
-      <p>This page will display all your past tests.</p>
-      <button onClick={handleBack}>Back</button> {/* This is the back button */}
+      <h1>User Answer Details</h1>
+      {answersData.map((answerData, index) => {
+        const testData = testsData[answerData.testId];
+        const lessonData = lessonsData[answerData.lessonId];
+
+        return (
+          <div key={answerData.testId}>
+            <h2>{lessonData.title}</h2>
+            {testData && (
+              <div>
+                <p><strong>Test Question:</strong> {testData.question}</p>
+                <p><strong>Correct Answer:</strong> {testData.answer}</p>
+              </div>
+            )}
+            <p><strong>User Answer:</strong> {answerData.userAnswer}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-export default PastTests;
-
-
+export default PastTest;

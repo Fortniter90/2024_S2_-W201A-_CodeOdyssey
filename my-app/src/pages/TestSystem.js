@@ -99,8 +99,14 @@ const TestSystem = ({ courseId="WhWBHUFHy6M3eOHSxKfd", lessonId="vMDGQYKRWM8qdh5
       <div className="buttons">
         <button onClick={handleCheckAnswer}>Run Code</button>
         <button onClick={handleShowAnswer}>Show Answer</button>
-        <button onClick={handlePreviousTest}>Previous Test</button>
-        <button onClick={handleNextTest}>Next Test</button>
+        {currentTestIndex !== 0 ? 
+          <button onClick={handlePreviousTest}>Previous Test</button> :
+          <></>
+        }
+        {currentTestIndex === tests.length - 1 ? 
+          <button onClick={handleNextTest}>Finish Test</button> :
+          <button onClick={handleNextTest}>Next Test</button>
+        }
       </div>
 
       {isCorrect !== null && (
