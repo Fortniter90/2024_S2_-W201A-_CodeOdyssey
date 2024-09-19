@@ -16,7 +16,6 @@ function LoginPage() {
         <h1>User Login</h1>
         <AuthProvider>
           <LoginComponent />
-          <AuthStatus />
         </AuthProvider>
         <p>
           Don't have an account? <Link to="/signup">Sign Up</Link>

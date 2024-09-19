@@ -1,5 +1,6 @@
 :root {
     --white: #FFFCFA;
+    --white-trans: #fffcfa80;
 	--dark-blue: #13315C;
 	
 	--logo-purple: #585D9D;
@@ -60,9 +61,15 @@
     font-style: normal;
 }
 
-
-
-/* Testing */
 body {
-    background-color: #CDDAFD;
+    background-image: linear-gradient(var(--background-dark), var(--background-medium), var(--background-light));
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    color: var(--dark-blue);
+    overflow: auto;
 }

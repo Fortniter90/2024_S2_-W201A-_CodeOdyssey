@@ -1,0 +1,36 @@
+/* Main content container styling */
+.main-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    color: var(--logo-purple);
+}
+
+.main-content p {
+    font-size: clamp(60px, 5vw, 120px);
+    line-height: clamp(55px, 5vw, 80px);
+    letter-spacing: -0.5px;
+    width: fit-content;
+}
+
+/* Logo styling */
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 200px;
+    line-height: clamp(55px, 3vw, 80px);
+}
+
+.top-logo {
+    color: var(--purple-accent);
+    margin: 0;
+    font-size: clamp(85px, 4vw, 170px);
+}
+
+.bottom-logo {
+    color: var(--logo-purple);
+    margin: 0;
+    font-size: clamp(85px, 5vw, 170px);
+}
