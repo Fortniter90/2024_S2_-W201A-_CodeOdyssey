@@ -1,5 +1,4 @@
 import './AuthPage.css';
-import '../App.css'
 import { AuthProvider } from '../context/AuthContext';
 import LoginComponent from '../components/Login';
 import { Link } from 'react-router-dom';

@@ -56,6 +56,21 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
+    const loadUserData = async (user) => {
+      try {
+        const docRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setUserCourses(data.courses || {});
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error);
+      }
+    };
+
     // Sets up authentication state listener
     const unsubscribe = onAuthStateChanged(auth, initializeUser);
     return () => unsubscribe(); // Clean up the listener when unmounted
