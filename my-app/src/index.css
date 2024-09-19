@@ -6,7 +6,7 @@
 	--purple-accent: #8E94F2;
 	
 	--background-light: #EEF2FB;
-	--background-meduim: #DFE7FC;
+	--background-medium: #DFE7FC;
 	--background-dark: #CDDAFD;
 	
 	--python-light: #B4D9BC;
@@ -25,7 +25,7 @@
 .fira-code {
     font-family: "Fira Code", monospace;
     font-optical-sizing: auto;
-    font-weight: 400;
+    font-weight: 500;
     font-style: normal;
 }
 
@@ -42,6 +42,12 @@
     font-style: normal;
 }
 
+.roboto-bold {
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
 .ultra-regular {
     font-family: "Ultra", serif;
     font-weight: 400;
@@ -52,4 +58,11 @@
     font-family: "Solway", serif;
     font-weight: 400;
     font-style: normal;
+}
+
+
+
+/* Testing */
+body {
+    background-color: #CDDAFD;
 }
