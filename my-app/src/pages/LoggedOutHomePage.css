@@ -1,5 +1,4 @@
-
-
+/* Main content container styling */
 .main-content {
     display: flex;
     flex-direction: row;
@@ -15,6 +14,7 @@
     width: fit-content;
 }
 
+/* Logo styling */
 .logo {
     display: flex;
     flex-direction: column;

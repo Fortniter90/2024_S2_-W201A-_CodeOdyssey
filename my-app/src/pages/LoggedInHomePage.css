@@ -1,3 +1,4 @@
+/* Main content container for the home page */
 .home-page-content {
     display: flex;
     flex-direction: column;
@@ -9,6 +10,7 @@
     color: var(--logo-purple);
 }
 
+/* Container for recent levels section */
 .recent-levels-container {
     width: calc(100% - 100px);
     margin: 25px 0;
@@ -33,6 +35,7 @@
     position: absolute;
 }
 
+/* Individual level item styling */
 .recent-levels {
     border-radius: 20px;
     padding: 10px;
