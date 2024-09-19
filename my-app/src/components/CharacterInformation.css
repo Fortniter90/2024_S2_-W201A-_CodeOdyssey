@@ -1,0 +1,34 @@
+/* Defines a flexbox container to center its children both vertically and horizontally, and arranges them in a column with padding */
+.character-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  /* Styles the image with a fixed width and maintains the aspect ratio; adds margin below the image for spacing */
+  .capy-image {
+    width: 450px;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  /* Styles the button with padding, font size, background color, rounded corners, and a smooth transition effect on hover */
+  .switch-button {
+    padding: 11px 28px;
+    font-size: 16px;
+    font: Roboto;
+    cursor: pointer;
+    background-color: #71B39A;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Changes the background color when hovered for visual feedback */
+  .switch-button:hover {
+    background-color: #396E59;
+  }
+  
