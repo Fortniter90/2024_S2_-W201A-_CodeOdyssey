@@ -16,7 +16,6 @@ function SignUpPage() {
         <h1>User SignUP</h1>
         <AuthProvider>
           <SignUpComponent />
-          <AuthStatus />
         </AuthProvider>
         <p>
           Have an account? <Link to="/login">Login</Link>

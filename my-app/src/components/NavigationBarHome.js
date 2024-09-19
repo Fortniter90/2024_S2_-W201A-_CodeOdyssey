@@ -1,13 +1,23 @@
 import "./NavigationBarHome.css";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react'; 
+import Button from "./Button";
 
 const NavigationBarHome = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
+
+  const goToLogin = () => {
+    navigate('/login');
+  }
+
+  const goToSignUp = () => {
+    navigate('/signup');
+  }
 
   return (
     <div className="navbar">
@@ -43,8 +53,8 @@ const NavigationBarHome = () => {
         </ul>
       </div>
       <div className="navbar-right">
-        <button className="login-btn">LOGIN</button>
-        <button className="signup-btn">SIGN UP</button>
+        <Button text={"LOGIN"} color={"var(--logo-purple)"} action={goToLogin}/>
+        <Button text={"SIGN UP"} type={"outline"} color={"var(--logo-purple)"} action={goToSignUp}/>
       </div>
     </div>
   );

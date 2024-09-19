@@ -3,11 +3,17 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { db } from '../config/firebase';
 import { doc, setDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpComponent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const navigate = useNavigate();
+
+  const goToHomePage = () => {
+    navigate('/');
+  }
 
   const signUpHandler = async (e) => {
     e.preventDefault();
@@ -20,7 +26,7 @@ const SignUpComponent = () => {
       await setDoc(doc(db, 'users', userCred.user.uid), {
         name: name,
       });
-      alert("SignUp successful!");
+      goToHomePage();
     } catch (error) {
       alert(error.message);
     }

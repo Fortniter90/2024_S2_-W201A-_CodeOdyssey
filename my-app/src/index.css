@@ -1,12 +1,13 @@
 :root {
     --white: #FFFCFA;
+    --white-trans: #fffcfa80;
 	--dark-blue: #13315C;
 	
 	--logo-purple: #585D9D;
 	--purple-accent: #8E94F2;
 	
 	--background-light: #EEF2FB;
-	--background-meduim: #DFE7FC;
+	--background-medium: #DFE7FC;
 	--background-dark: #CDDAFD;
 	
 	--python-light: #B4D9BC;
@@ -42,6 +43,12 @@
     font-style: normal;
 }
 
+.roboto-bold {
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
 .ultra-regular {
     font-family: "Ultra", serif;
     font-weight: 400;
@@ -52,4 +59,16 @@
     font-family: "Solway", serif;
     font-weight: 400;
     font-style: normal;
+}
+
+body {
+    background-image: linear-gradient(var(--background-dark), var(--background-medium), var(--background-light));
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    color: var(--dark-blue);
 }
