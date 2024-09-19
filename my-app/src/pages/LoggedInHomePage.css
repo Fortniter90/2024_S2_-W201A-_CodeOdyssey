@@ -1,0 +1,59 @@
+.home-page-content {
+    display: flex;
+    flex-direction: column;
+    margin: 50px;
+}
+
+.home-page-content h1 {
+    font-size: 50px;
+    color: var(--logo-purple);
+}
+
+.recent-levels-container {
+    width: calc(100% - 100px);
+    margin: 25px 0;
+    display: flex;
+    background-color: var(--white);
+    width: fit-content;
+    padding: 10px;
+    border-radius: 20px;
+    border-top-left-radius: 0;
+    position: relative;
+}
+
+.recent-levels-title {
+    background-color: var(--white);
+    padding: 10px 20px;
+    border-radius: 20px 20px 0 0; 
+    margin-bottom: 10px; 
+    font-size: 18px;
+    font-weight: bold;
+    top: -50px;
+    left: 0px;
+    position: absolute;
+}
+
+.recent-levels {
+    border-radius: 20px;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: var(--white);
+    padding: 20px;
+    margin: 10px;
+}
+
+.recent-levels p {
+    margin: 0;
+    margin-bottom: 10px;
+    align-self: last baseline;
+}
+
+.recent-levels h3 {
+    font-size: 42px;
+    line-height: 34px;
+    margin: 0;
+}

@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [usersName, setUsersName] = useState(null);
+  const [usersCourses, setUserCourses] = useState({});
 
   useEffect(() => {
     const initializeUser = async (user) => {
@@ -22,6 +23,7 @@ export const AuthProvider = ({ children }) => {
         setCurrentUser(user);
         setIsAuthenticated(true);
         await loadName(user);
+        await loadUserData(user);
       } else {
         setCurrentUser(null);
         setIsAuthenticated(false);
@@ -46,12 +48,27 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
+    const loadUserData = async (user) => {
+      try {
+        const docRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setUserCourses(data.courses || {});
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error);
+      }
+    };
+
     const unsubscribe = onAuthStateChanged(auth, initializeUser);
     return () => unsubscribe(); // Clean up the listener
   }, []);
 
   return (
-    <AuthContext.Provider value={{ currentUser, isAuthenticated, usersName }}>
+    <AuthContext.Provider value={{ currentUser, isAuthenticated, usersName, usersCourses }}>
       {children}
     </AuthContext.Provider>
   );

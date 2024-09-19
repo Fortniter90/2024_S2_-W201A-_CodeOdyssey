@@ -1,7 +1,6 @@
 import "./NavigationBarHome.css";
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react'; 
-import Button from "./Button";
 
 const NavigationBarHome = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -53,8 +52,8 @@ const NavigationBarHome = () => {
         </ul>
       </div>
       <div className="navbar-right">
-        <Button text={"LOGIN"} color={"var(--logo-purple)"} action={goToLogin}/>
-        <Button text={"SIGN UP"} type={"outline"} color={"var(--logo-purple)"} action={goToSignUp}/>
+        <button className="login-btn" onClick={goToLogin}>LOGIN</button>
+        <button className="signup-btn" onClick={goToSignUp}>SIGN UP</button>
       </div>
     </div>
   );
