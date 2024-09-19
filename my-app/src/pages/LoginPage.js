@@ -2,7 +2,6 @@ import './AuthPage.css';
 import '../App.css'
 import { AuthProvider } from '../context/AuthContext';
 import LoginComponent from '../components/Login';
-import AuthStatus from '../components/AuthStatus'
 import { Link } from 'react-router-dom';
 
 function LoginPage() {
@@ -23,7 +22,6 @@ function LoginPage() {
         {/* Wrap components with AuthProvider to manage auth state */}
         <AuthProvider>
           <LoginComponent />   {/* Login form */}
-          <AuthStatus />       {/* Display whether the user is logged in or not */}
         </AuthProvider>
 
         {/* Link to sign up page */}

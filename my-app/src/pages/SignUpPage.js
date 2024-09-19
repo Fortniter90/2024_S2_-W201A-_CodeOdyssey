@@ -1,9 +1,7 @@
 import './AuthPage.css';
 import '../App.css'
-import DeleteUserComponent from '../components/DeleteUser';
 import { AuthProvider } from '../context/AuthContext';
 import SignUpComponent from '../components/SignUp.js';
-import AuthStatus from '../components/AuthStatus'
 import { Link } from 'react-router-dom';
 
 function SignUpPage() {
