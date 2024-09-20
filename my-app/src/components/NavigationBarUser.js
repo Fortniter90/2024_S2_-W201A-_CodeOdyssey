@@ -31,6 +31,10 @@ const NavigationBarUser = () => {
     navigate('/resources');
   }
 
+  const toProfile = () => {
+    navigate('/profile');
+  }
+
   // Function to handle course selection and navigation
   const handleCourseSelect = (courseId) => {
       navigate(`/course/${courseId}`);
@@ -89,7 +93,7 @@ const NavigationBarUser = () => {
         </ul>
       </div>
       {/*Right side of the nav bar containing the profile icon*/}
-      <div className="navbar-right">
+      <div className="navbar-right" onClick={() => toProfile()}>
         {/*Profile icon, will change colour on hover*/}
         <CgProfile className="profile-icon" />
       </div>
