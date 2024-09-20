@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
         setCurrentUser(null);
         setIsAuthenticated(false);
         setUsersId(null);
-        setUsersName(null); 
+        setUsersName(null);
         setUserCourses({});
         console.log("User logged out.");
       }
@@ -85,7 +85,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     // Provides states to the rest of the program
-    <AuthContext.Provider value={{ currentUser, isAuthenticated, usersId, usersName, usersCourses }}>
+    <AuthContext.Provider value={{ currentUser, isAuthenticated, usersId, usersName, usersCourses, setCurrentUser, setIsAuthenticated, setUsersName }}>
       {children}
     </AuthContext.Provider>
   );
