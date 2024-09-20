@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import './TestSystem.css';
 
@@ -18,7 +18,8 @@ const TestSystem = ({ courseId="WhWBHUFHy6M3eOHSxKfd", lessonId="vMDGQYKRWM8qdh5
         //Define the collection path for the tests based on the courseID and lessonID
         const testsCollection = collection(db, `courses/${courseId}/lessons/${lessonId}/tests`);
         //Fetch documents from the specified tests collection
-        const testSnapshot = await getDocs(testsCollection);
+        const testsQuery = query(testsCollection, orderBy('number'));
+        const testSnapshot = await getDocs(testsQuery);
         //Map the fetched documents to an array of test data
         const testList = testSnapshot.docs.map((doc) => doc.data());
         //Update thge state with the fetched tests

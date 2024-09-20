@@ -1,5 +1,5 @@
 import { db } from "../config/firebase";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, query, orderBy } from "firebase/firestore";
 
 // Fetch all courses 
 export const fetchCourses = async () => {
@@ -37,7 +37,8 @@ export const fetchLessons = async (courseId) => {
 export const fetchTests = async (courseId, lessonId) => {
     try {
         const testsCollection = collection(db, `courses/${courseId}/lessons/${lessonId}/tests`);
-        const testsSnapshot = await getDocs(testsCollection);
+        const testsQuery = query(testsCollection, orderBy('number'));
+        const testsSnapshot = await getDocs(testsQuery);
         const testsData = {};
         testsSnapshot.forEach((doc) => {
             testsData[doc.id] = doc.data();
