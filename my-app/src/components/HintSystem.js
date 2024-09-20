@@ -14,11 +14,14 @@ const HintSystem = ({ hint, testId }) => {
 
     // Effect to handle visibility of the initial prompt
     useEffect(() => {
-        // Show the prompt if it hasn't been shown before
+        console.log("Checking if the timer prompt has been seen:", hasSeenTimer);
+        
         if (!hasSeenTimer) {
+            console.log("Showing timer tool for the first time.");
             setTimerTool(true); // Make the prompt visible
 
             const id = setTimeout(() => {
+                console.log("Hiding timer tool after 10 seconds.");
                 setTimerTool(false); // Hide the prompt after 10 seconds if no interaction
             }, 10000);
 
@@ -26,22 +29,27 @@ const HintSystem = ({ hint, testId }) => {
             return () => clearTimeout(id); // Cleanup timer on component unmount
 
         } else {
+            console.log("Hiding timer tool since it has been shown before.");
             setTimerTool(false); // Hide the prompt after it has been shown once
         }
-    }, []);
+    }, [hasSeenTimer]);
 
     // Function to start the timer for showing the hint
     const startTimer = (customDelay = delay) => {
+        console.log("Starting timer with delay:", customDelay);
+
         if (timerId) {
             clearTimeout(timerId); // Clear the previous timer if any
         }
 
         // Set a new timer to show prompt after the specified delay
         const id = setTimeout(() => {
+            console.log("Prompting for hint after delay.");
             setShowPrompt(true);
 
             // After 30 seconds, hide the prompt automatically
             const promptId = setTimeout(() => {
+                console.log("Hiding prompt after 30 seconds.");
                 setShowPrompt(false);
             }, 30000) // 30 seconds (30000 ms)
 
@@ -54,11 +62,11 @@ const HintSystem = ({ hint, testId }) => {
     // Handle form submission to set the custom timer
     const handleSetTimer = (e) => {
         e.preventDefault();
-
         const minutes = parseInt(e.target.minutes.value, 10) || 0;
         const seconds = parseInt(e.target.seconds.value, 10) || 0;
         const customDelay = (minutes * 60 + seconds) * 1000; // Convert to milliseconds
 
+        console.log("Setting custom timer:", customDelay);
         setDelay(customDelay > 0 ? customDelay : 300000); // Use 5 minutes if no valid delay is set
 
         startTimer(customDelay); // Start the timer
@@ -67,6 +75,8 @@ const HintSystem = ({ hint, testId }) => {
 
     // Effect to reset the hint and start the timer when a new test is selected
     useEffect(() => {
+        console.log("New test selected, resetting hint and starting timer.");
+
         setShowHint(false); // Hide the hint when a new question is shown
 
         if (timerId) {
@@ -81,6 +91,8 @@ const HintSystem = ({ hint, testId }) => {
 
     // Handle clicking the hint button
     const handleHintButtonClick = () => {
+        console.log("Hint button clicked.");
+        
         if (timerId) {
             clearTimeout(timerId); // Stop the timer
         }

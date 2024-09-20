@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { fetchCourses, fetchLessons } from "../utils/dataFetching.js";
 import SignOutComponent from "../components/SignOut";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import NavigationBarUser from "../components/NavigationBarUser.js";
+import CharacterInformation from "../components/CharacterInformation.js";
+import DeleteUser from "../components/DeleteUser.js";
 import "./LoggedInHomePage.css";
 
 // Predefined gradients
@@ -99,12 +101,17 @@ const LoggedInHomePage = () => {
         navigate(`/pasttests`);
     }
 
+    const goToDeveloperDashboard = () => {
+        navigate(`/developerdashboard`);
+    }
+
     return (
         <div className='home-page'>
             <NavigationBarUser />
             <SignOutComponent/>
-
+            
             <button onClick={() => goToPastTests()}>Review Past Tests</button>
+            <button onClick={() => goToDeveloperDashboard()}>See Developer Dashboard</button>
 
             <div className='home-page-content'>
                 <h1 className='fira-code'>Welcome, {usersName || 'User'}</h1>
@@ -147,6 +154,8 @@ const LoggedInHomePage = () => {
                 </div>
             </div>
             
+            <CharacterInformation />
+            <DeleteUser />
         </div>
     );
 };

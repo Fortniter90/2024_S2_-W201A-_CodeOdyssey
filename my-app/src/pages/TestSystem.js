@@ -120,7 +120,7 @@ const TestSystem = ({ courseId, lessonId }) => {
         <button className="quit-button" onClick={handleQuit}>&#x2190; Go Back</button>
       </div>
 
-      <HintSystem hint={currentTest.hint} testId={currentTest.number} />
+      <HintSystem hint={currentTest.hint} testId={currentTest.id} />
 
       <h2>{currentTest.number}. {currentTest.question}</h2>
 
