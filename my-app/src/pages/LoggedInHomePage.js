@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { fetchCourses, fetchLessons } from "../utils/dataFetching.js";
 import SignOutComponent from "../components/SignOut";
 import { useNavigate } from 'react-router-dom';
+import NavigationBarUser from "../components/NavigationBarUser.js";
 import "./LoggedInHomePage.css";
 
 // Predefined gradients
@@ -14,7 +15,7 @@ const gradients = {
 
 // HomePage for when the user is logged in
 const LoggedInHomePage = () => {
-    const { currentuser, isAuthenticated, usersName, usersCourses } = useAuth();    // Extracting user info
+    const { currentuser, isAuthenticated, usersId, usersName, usersCourses } = useAuth();    // Extracting user info
     const [courseDetails, setCourseDetails] = useState({});                         // State to hold course details
     const [lessonDetails, setLessonDetails] = useState({});                         // State to hold
     const [loading, setLoading] = useState(true);                                   // State to manage loading status
@@ -26,19 +27,25 @@ const LoggedInHomePage = () => {
         const fetchData = async () => {
             try {
                 if (isAuthenticated) {
+                    console.log("Fetching courses...");
+    
                     // Fetch all courses
                     const fetchedCourses = await fetchCourses();
+                    console.log("Fetched courses:", fetchedCourses);
                     setCourseDetails(fetchedCourses);
-
+    
                     // Fetch lessons for each course
                     const lessonPromises = Object.keys(usersCourses).map(async (courseId) => {
+                        console.log(`Fetching lessons for courseId: ${courseId}`);
                         if (fetchedCourses[courseId]) {
                             const fetchedLessons = await fetchLessons(courseId);
+                            console.log(`Fetched lessons for courseId ${courseId}:`, fetchedLessons);
                             return { [courseId]: fetchedLessons };
                         }
+                        console.warn(`CourseId ${courseId} not found in fetchedCourses.`);
                         return null;
                     });
-
+    
                     // Fetch lesson details
                     const lessonResults = await Promise.all(lessonPromises);
                     const allLessons = lessonResults.reduce((acc, lessons) => {
@@ -47,19 +54,21 @@ const LoggedInHomePage = () => {
                         }
                         return acc;
                     }, {});
-
+    
+                    console.log("All fetched lessons:", allLessons);
                     setLessonDetails(allLessons);
                 }
             } catch (error) {
-                setError(error);
                 console.error("Error fetching data:", error);
+                setError(error);
             } finally {
                 setLoading(false);
             }
         };
-
+    
         fetchData();
     }, [usersCourses, isAuthenticated]);
+    
 
     // Redirecting if the user is not authenticated
     if (!isAuthenticated) {
@@ -78,17 +87,24 @@ const LoggedInHomePage = () => {
 
     // Function to navigate to the selected course
     const goToCourse = (courseId) => {
-        console.log("Going to course that was clicked", courseId);
+        navigate(`/course/${courseId}`);
     }
 
     // Function to navigate to the selected lesson
     const goToLesson = (courseId, lessonId) => {
-        console.log("Going to lesson that was clicked", courseId, lessonId);
+        navigate(`/course/${courseId}/lesson/${lessonId}`);
+    }
+
+    const goToPastTests = () => {
+        navigate(`/pasttests`);
     }
 
     return (
         <div className='home-page'>
+            <NavigationBarUser />
             <SignOutComponent/>
+
+            <button onClick={() => goToPastTests()}>Review Past Tests</button>
 
             <div className='home-page-content'>
                 <h1 className='fira-code'>Welcome, {usersName || 'User'}</h1>
@@ -100,7 +116,7 @@ const LoggedInHomePage = () => {
                     {Object.keys(usersCourses || {}).map((courseId) => {
                         const course = usersCourses[courseId];
                         const courseData = courseDetails[courseId] || {};
-                        const latestLessonId = course.latestLevel;
+                        const latestLessonId = course.currentLesson;
                         const latestLesson = lessonDetails[courseId]?.[latestLessonId] || {};
                         const completedLessonNames = course.completedLessons
                             .map(lessonId => lessonDetails[courseId]?.[lessonId]?.title || 'Unknown Lesson')
