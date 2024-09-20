@@ -10,6 +10,7 @@
     border-bottom: 2px solid #EFE7FF; /*Adds a bottom border to the nav bar*/
     font-family: 'Roboto', Roboto; /*Font*/
     border-radius: 25px; /*Rounds the corners of the nav bar*/
+    z-index: 1002;
   }
   
   /*Flex container for the left side navigation links*/

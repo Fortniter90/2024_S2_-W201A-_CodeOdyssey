@@ -6,6 +6,7 @@ import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import './LessonTemplate.css';
 import Button from '../components/Button';
+import NavigationBarUser from '../components/NavigationBarUser';
 
 const LessonTemplate = () => {
   const { courseId, lessonId } = useParams();
@@ -34,13 +35,15 @@ const LessonTemplate = () => {
   }, [courseId, lessonId]);
 
   const goToTests = () => {
-    navigate(`/course/${courseId}/lesson/uh/${lessonId}`);
+    navigate(`/course/${courseId}/lesson/${lessonId}/test`);
   };
 
   if (!lesson) return <div>Loading...</div>;
 
   return (
     <div>
+      <NavigationBarUser />
+
       <Link to={`/course/${courseId}`} className='go-back-link roboto-medium'>
         <FaArrowLeftLong />
         Go Back

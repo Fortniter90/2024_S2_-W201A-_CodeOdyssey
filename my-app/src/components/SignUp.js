@@ -26,6 +26,7 @@ const SignUpComponent = () => {
       // Saves user's name to firestore database in the users collection using their UID
       await setDoc(doc(db, 'users', userCred.user.uid), {
         name: name,
+        courses: {},
       });
       goToHomePage();
     } catch (error) {

@@ -1,104 +1,132 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { collection, getDocs } from 'firebase/firestore';
+import { useNavigate, useParams } from 'react-router-dom';
+import { collection, getDocs, orderBy, query, setDoc, doc, addDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import './TestSystem.css';
+import HintSystem from '../components/HintSystem';
+import { useAuth } from '../context/AuthContext';
 
-const TestSystem = ({ courseId="WhWBHUFHy6M3eOHSxKfd", lessonId="vMDGQYKRWM8qdh5je5U2" }) => {
+const TestSystem = ({ courseId, lessonId }) => {
+  const { usersId } = useAuth();  // Get the user ID from the Auth context
   const [tests, setTests] = useState(null);
   const [currentTestIndex, setCurrentTestIndex] = useState(0); // Track current test index
-  const [userAnswer, setUserAnswers] = useState(''); // Track user input
+  const [userAnswers, setUserAnswers] = useState([]); // Track user input for all tests
   const [showAnswer, setShowAnswer] = useState(false); // Show correct answer toggle
   const [isCorrect, setIsCorrect] = useState(null); // Track if user's answer is correct
+  const navigate = useNavigate();
 
   useEffect(() => {
-    //useEffect to fetch tests whenever courseID or lessonID changes
-    const fetchTest = async () => {
-      try {
-        //Define the collection path for the tests based on the courseID and lessonID
-        const testsCollection = collection(db, `courses/${courseId}/lessons/${lessonId}/tests`);
-        //Fetch documents from the specified tests collection
-        const testSnapshot = await getDocs(testsCollection);
-        //Map the fetched documents to an array of test data
-        const testList = testSnapshot.docs.map((doc) => doc.data());
-        //Update thge state with the fetched tests
-        setTests(testList);
-        //Initialize userAnsers array with empty strings
-        setUserAnswers(Array(testList.length).fill(''));
+      // Fetch tests from Firestore based on courseId and lessonId
+      const fetchTest = async () => {
+          try {
+              const testsCollection = collection(db, `courses/${courseId}/lessons/${lessonId}/tests`);
+              const testsQuery = query(testsCollection, orderBy('number'));
+              const testSnapshot = await getDocs(testsQuery);
+              
+              // Map over the docs to include the ID along with the data
+              const testList = testSnapshot.docs.map((doc) => ({
+                  id: doc.id, // Store the document ID
+                  ...doc.data() // Spread the rest of the test data
+              }));
+              
+              setTests(testList);
+              setUserAnswers(Array(testList.length).fill('')); // Initialize empty answers for each test
+          } catch (error) {
+              console.error('Error fetching tests:', error);
+              setTests([]);
+          }
+      };
+  
+      fetchTest();
+  }, [courseId, lessonId]);  
 
-      } catch (error) {
-        //Log any errors that occur during the fetch
-        console.error('Error fetching tests:', error);
+  const currentTest = tests ? tests[currentTestIndex] : null;
 
-        //Set tests state to an empty array in case of error
-        setTests([]);
-      }
-    };
-
-
-    //Call the fetchTest functions to initiate the data fetching
-    fetchTest();
-  }, [courseId, lessonId]);
-
-  //Display a loading message if tests are still being fetched or if no tests are found
-  if (!tests || tests.length === 0) return <div>Loading...</div>;
-
-  const currentTest = tests[currentTestIndex];
-
-  // Function to check user's answer
   const handleCheckAnswer = () => {
-    if (userAnswer.trim() === currentTest.answer.trim()) {
+    if (userAnswers[currentTestIndex].trim() === currentTest.answer.trim()) {
       setIsCorrect(true); // Correct answer
     } else {
       setIsCorrect(false); // Incorrect answer
     }
   };
 
-  // Function to show the correct answer
-  const handleShowAnswer = () => {
-    setShowAnswer(true);
-  };
+  const handleShowAnswer = () => setShowAnswer(true);
 
-  // Function to go to the next test
   const handleNextTest = () => {
-    setCurrentTestIndex((prev) => (prev + 1) % tests.length); // Loop to the next test
-    setIsCorrect(null); // Reset correctness
-    setShowAnswer(false); // Hide correct answer
+    setCurrentTestIndex((prev) => (prev + 1) % tests.length);
+    setIsCorrect(null);
+    setShowAnswer(false);
   };
 
-  // Function to go to the previous test
   const handlePreviousTest = () => {
-    setCurrentTestIndex((prev) => (prev - 1 + tests.length) % tests.length); // Loop to the previous test
+    setCurrentTestIndex((prev) => (prev - 1 + tests.length) % tests.length);
     setIsCorrect(null);
     setShowAnswer(false);
   };
 
   const handleUserInputChange = (e) => {
-    const updatedAnswers = [...userAnswer];
-    updatedAnswers[currentTestIndex] = e.target.value; // Update the specific test's answer
+    const updatedAnswers = [...userAnswers];
+    updatedAnswers[currentTestIndex] = e.target.value;
     setUserAnswers(updatedAnswers);
   };
 
-  // Handle quit button
   const handleQuit = () => {
-    const confirmQuit = window.confirm("Are you sure you want to quit the test? All progress will be lost!");
-    if (confirmQuit) {
-      window.location.href = '/'; // Redirect to dashboard (change as needed)
+    if (window.confirm("Are you sure you want to quit the test? All progress will be lost!")) {
+      navigate(`/course/${courseId}`);
     }
   };
 
-  // Renders the TestSystem component displaying the current test question, user input, and navigation buttons
+  // Function to save answers to Firestore
+  const saveAnswers = async () => {
+    try {
+      if (!usersId) {
+        alert('User ID is not available. Please log in.');
+        return;
+      }
+  
+      console.log('Saving answers for user:', usersId);
+  
+      for (let i = 0; i < tests.length; i++) {
+        const answerData = {
+          courseId,
+          lessonId,
+          testId: tests[i].id, // Make sure this is the correct test ID
+          userAnswer: userAnswers[i]
+        };
+  
+        console.log('Saving answer data:', answerData);
+  
+        // Automatically generate a unique ID when adding a new answer document
+        const docRef = await addDoc(collection(db, `users/${usersId}/answers`), answerData);
+        console.log('Document written with ID: ', docRef.id);
+      }
+  
+      alert('Answers saved successfully!');
+    } catch (error) {
+      console.error('Error saving answers:', error);
+      alert('Failed to save answers. Please try again.');
+    }
+
+    navigate(`/course/${courseId}`);
+  };  
+
+  if (!tests) return <div>Loading...</div>;
+
+  if (tests.length === 0) return <div>No tests avaliable.</div>;
+
   return (
     <div className="test-system">
       <div className="header">
         <button className="quit-button" onClick={handleQuit}>&#x2190; Go Back</button>
       </div>
 
+      <HintSystem hint={currentTest.hint} testId={currentTest.number} />
+
       <h2>{currentTest.number}. {currentTest.question}</h2>
 
       <textarea
-        value={userAnswer[currentTestIndex]} // Keep the answer for the current test
-        onChange={handleUserInputChange} // Update answer for the current test
+        value={userAnswers[currentTestIndex]}
+        onChange={handleUserInputChange}
         placeholder="Enter your code here..."
       />
 
@@ -107,7 +135,7 @@ const TestSystem = ({ courseId="WhWBHUFHy6M3eOHSxKfd", lessonId="vMDGQYKRWM8qdh5
         <button onClick={handleShowAnswer}>Show Answer</button>
         {currentTestIndex !== 0 && <button onClick={handlePreviousTest}>Previous Test</button>}
         {currentTestIndex === tests.length - 1 ? 
-          <button onClick={handleNextTest}>Finish Test</button> :
+          <button onClick={saveAnswers}>Save and Finish</button> :
           <button onClick={handleNextTest}>Next Test</button>
         }
       </div>

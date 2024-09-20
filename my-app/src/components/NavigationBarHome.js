@@ -1,9 +1,13 @@
 import "./NavigationBarHome.css";
+import React, { useState, useEffect } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react'; 
 
 const NavigationBarHome = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const toggleDropdown = () => {
@@ -17,6 +21,28 @@ const NavigationBarHome = () => {
   const goToSignUp = () => {
     navigate('/signup');
   }
+
+  // Function to handle course selection and navigation
+  const handleCourseSelect = (courseId) => {
+      navigate(`/course/${courseId}`);
+  };
+
+  useEffect(() => {
+      const fetchCourses = async () => {
+          try {
+              const coursesCollection = collection(db, 'courses');
+              const courseSnapshot = await getDocs(coursesCollection);
+              const courseList = courseSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+              setCourses(courseList);
+          } catch (error) {
+              console.error('Error fetching courses:', error);
+          } finally {
+              setLoading(false);
+          }
+      };
+
+      fetchCourses();
+  }, []);
 
   return (
     <div className="navbar">
@@ -33,9 +59,15 @@ const NavigationBarHome = () => {
             </span>
             {isDropdownOpen && (
               <ul className="dropdown-menu">
-                <li className="dropdown-item">Java</li>
-                <li className="dropdown-item">Python</li>
-                <li className="dropdown-item">C</li>
+                {courses.map(course => (
+                    <li
+                        key={course.id}
+                        className="dropdown-item"
+                        onClick={() => handleCourseSelect(course.id)}
+                    >
+                        {course.title}
+                    </li>
+                ))}
               </ul>
             )}
           </li>
