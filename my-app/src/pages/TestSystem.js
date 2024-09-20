@@ -5,7 +5,7 @@ import { db } from '../config/firebase';
 import './TestSystem.css';
 import HintSystem from '../components/HintSystem';
 import { useAuth } from '../context/AuthContext';
-import CompilerComponent from '../components/submitCode';
+import CompilerComponent from '../components/SubmitCode';
 import CodeEditor from '../components/CodeEditor';
 
 const TestSystem = ({ courseId, lessonId }) => {
@@ -52,27 +52,31 @@ const TestSystem = ({ courseId, lessonId }) => {
       setIsCorrect(false); // Incorrect answer
     }
   };
-
+  // Toggle showing the correct answer
   const handleShowAnswer = () => setShowAnswer(true);
 
+  // Moves to the next test, cycling through the list
   const handleNextTest = () => {
     setCurrentTestIndex((prev) => (prev + 1) % tests.length);
     setIsCorrect(null);
     setShowAnswer(false);
   };
 
+  // Moves to the previous test
   const handlePreviousTest = () => {
     setCurrentTestIndex((prev) => (prev - 1 + tests.length) % tests.length);
     setIsCorrect(null);
     setShowAnswer(false);
   };
 
+  // Updates the users anser for the test
   const handleUserInputChange = (e) => {
     const updatedAnswers = [...userAnswers];
     updatedAnswers[currentTestIndex] = e.target.value;
     setUserAnswers(updatedAnswers);
   };
 
+  // Quits the test and navigates back to course page
   const handleQuit = () => {
     if (window.confirm("Are you sure you want to quit the test? All progress will be lost!")) {
       navigate(`/course/${courseId}`);
@@ -93,7 +97,7 @@ const TestSystem = ({ courseId, lessonId }) => {
         const answerData = {
           courseId,
           lessonId,
-          testId: tests[i].id, // Make sure this is the correct test ID
+          testId: tests[i].id,
           userAnswer: userAnswers[i]
         };
 
