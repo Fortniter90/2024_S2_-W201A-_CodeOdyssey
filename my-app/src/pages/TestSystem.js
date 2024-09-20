@@ -128,6 +128,7 @@ const TestSystem = ({ courseId, lessonId }) => {
 
       <h2>{currentTest.number}. {currentTest.question}</h2>
 
+      <CodeEditor onCodeChange={setCode} /> {/* Update code in state */}
       <CompilerComponent code={code} /> {/* Submit the current code */}
 
       <div className="buttons">
@@ -150,7 +151,7 @@ const TestSystem = ({ courseId, lessonId }) => {
           <h3>Correct Answer:</h3>
           <pre>{currentTest.answer}</pre>
         </div>
-      )}     
+      )}
     </div>
   );
 };
