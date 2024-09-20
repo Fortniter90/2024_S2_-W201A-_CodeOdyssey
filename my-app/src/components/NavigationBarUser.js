@@ -1,10 +1,15 @@
-import "./NavigationBarHome.css";
+// Importing the CSS file for the styling component.
+import "./NavigationBarUser.css";
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const NavigationBarHome = () => {
+//Import the profile icon from the react-icons library.
+import { CgProfile } from "react-icons/cg";
+
+//Defining the NavigationBarUser copmponent.
+const NavigationBarUser = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,12 +19,16 @@ const NavigationBarHome = () => {
     setDropdownOpen(!isDropdownOpen);
   };
 
-  const goToLogin = () => {
-    navigate('/login');
+  const toDashboard = () => {
+    navigate('/');
   }
 
-  const goToSignUp = () => {
-    navigate('/signup');
+  const toCourses = () => {
+    navigate('/course');
+  }
+
+  const toRecourses = () => {
+    navigate('/resources');
   }
 
   // Function to handle course selection and navigation
@@ -45,17 +54,19 @@ const NavigationBarHome = () => {
   }, []);
 
   return (
+    //Main navigation bar container.
     <div className="navbar">
+        {/*Left side of the nav bar containing the navigation links*/}
       <div className="navbar-left">
         <ul className="nav-links">
-        <li className="nav-item">
-            <Link to="/" className="nav-link">
-              <span>HOME</span>
-            </Link>
+            {/*List item for the Dashoard link*/}
+          <li className="nav-item">
+            <span onClick={() => toDashboard()}>DASHBOARD</span>
           </li>
+          {/* List item for the courses link with a dropdown icon*/}
           <li className="nav-item">
             <span onClick={toggleDropdown}>
-              COURSES <span className="dropdown-icon">&#x25BC;</span>
+              COURSES <span onClick={() => toCourses()} className="dropdown-icon">&#x25BC;</span>
             </span>
             {isDropdownOpen && (
               <ul className="dropdown-menu">
@@ -71,24 +82,20 @@ const NavigationBarHome = () => {
               </ul>
             )}
           </li>
+          {/* List item for resources link */}
           <li className="nav-item">
-            <Link to="/resources" className="nav-link">
-              <span>RESOURCES</span>
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/about" className="nav-link">
-              <span>ABOUT US</span>
-            </Link>
+            <span onClick={() => toRecourses()}>RESOURCES</span>
           </li>
         </ul>
       </div>
+      {/*Right side of the nav bar containing the profile icon*/}
       <div className="navbar-right">
-        <button className="login-btn" onClick={goToLogin}>LOGIN</button>
-        <button className="signup-btn" onClick={goToSignUp}>SIGN UP</button>
+        {/*Profile icon, will change colour on hover*/}
+        <CgProfile className="profile-icon" />
       </div>
     </div>
   );
 };
 
-export default NavigationBarHome;
+//Exporting the NavigationBaruser component to be used in other parts of the app.
+export default NavigationBarUser;

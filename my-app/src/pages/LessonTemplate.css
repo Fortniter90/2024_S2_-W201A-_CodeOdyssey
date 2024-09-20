@@ -1,0 +1,53 @@
+.go-back-link {
+    display: flex;
+    align-items: center; /* Vertically align icon and text */
+    color: gray; /* Set text and icon color to gray */
+    text-decoration: none; /* Remove underline */
+    font-size: 14px;
+}
+
+.go-back-link:hover {
+    color: darkgray; /* Optional: change color on hover */
+}
+
+.go-back-link svg {
+    margin-right: 8px; /* Add space between the icon and text */
+    font-size: 18px; /* Adjust icon size if needed */
+}
+
+
+
+/* Header for the lesson */
+.lesson-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+/* Header styling for the lesson number */
+.tag {
+    position: relative;
+    font-size: 30px;
+    left: -15px;
+    color: var(--white);
+    padding: 10px 10px 10px 40px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.tag-blue {
+    background-image: linear-gradient(90deg, var(--c-light), var(--c-medium));;
+}
+
+.title {
+    color: var(--dark-blue);
+    font-size: 30px;
+    margin-left: 5px;
+}
+
+.lesson-content pre {
+    background-color: var(--white);
+    padding: 10px;
+    border-radius: 5px;
+    width: 50%;
+}

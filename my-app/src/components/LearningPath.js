@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { fetchLessons, fetchUserCourseProgress } from '../utils/dataFetching';
 import './LearningPath.css';
+import { useNavigate } from 'react-router-dom';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 // Main LearningPath component
-const LearningPath = ({ courseId = "WhWBHUFHy6M3eOHSxKfd", }) => {
+const LearningPath = ({ courseId, userId }) => {
     const [levels, setLevels] = useState([]);                   // State to hold lesson levels
     const [selectedLesson, setSelectedLesson] = useState(null); // State for currently selected lesson
-
-    // Hardcoded userId for testing
-    const userId = "lRBv2UvYYYPipLGH97p6W0L6DB62";
 
     // Fetch lessons and user progress when component mounts or the courseId/userId changes
     useEffect(() => {
@@ -20,13 +20,16 @@ const LearningPath = ({ courseId = "WhWBHUFHy6M3eOHSxKfd", }) => {
 
                 // Fetch user progress for the specific course
                 const userProgress = await fetchUserCourseProgress(userId, courseId);
-                const progressData = userProgress || { completedLessons: [], latestLesson: '' };
+                const progressData = userProgress || { completedLessons: [], currentLesson: '' };
+
+                // Ensure completedLessons is an array
+                const completedLessons = progressData.completedLessons || [];
 
                 // Mark lessons as completed or current based on user progress
                 const updatedLessons = lessonList.map((lesson) => ({
                     ...lesson,
-                    isCompleted: progressData.completedLessons.includes(lesson.id),
-                    isCurrent: progressData.latestLevel === lesson.id
+                    isCompleted: completedLessons.includes(lesson.id),
+                    isCurrent: progressData.currentLesson    === lesson.id
                 }));
 
                 setLevels(updatedLessons); // Update levels state with fetched lessons
@@ -46,7 +49,7 @@ const LearningPath = ({ courseId = "WhWBHUFHy6M3eOHSxKfd", }) => {
     // Show loading message if no levels are loaded yet
     if (!levels.length) return <div>Loading...</div>;
 
-    // Handle lesson selecction when a level is clicked
+    // Handle lesson selection when a level is clicked
     const handleLevelClick = (id) => {
         const selected = levels.find(level => level.id === id);
         setSelectedLesson(selected);
@@ -62,7 +65,7 @@ const LearningPath = ({ courseId = "WhWBHUFHy6M3eOHSxKfd", }) => {
             />
 
             {/* Display information for the selected lesson */}
-            {selectedLesson && <LessonPreview lesson={selectedLesson} />}
+            {selectedLesson && <LessonPreview levels={levels} courseId={courseId} userId={userId} lesson={selectedLesson} />}
         </div>
     );
 };
@@ -98,28 +101,60 @@ const LessonMenu = ({ levels, handleLevelClick, selectedLevel }) => {
 };
 
 // LessonPreview component to show details of the selected lesson
-const LessonPreview = ({ lesson }) => {
+const LessonPreview = ({ levels, courseId, userId, lesson }) => {
+    const navigate = useNavigate();
+
+    const toTests = () => {
+        navigate(`/course/${courseId}/lesson/${lesson.id}/test`);
+    }
+    
+    const beginLesson = async () => {
+        try {
+            // Update the user's current lesson and completed lessons in Firestore
+            const userRef = doc(db, 'users', userId);
+    
+            // Create a list of completed lessons
+            const completedLessons = levels
+                .filter(level => level.number <= lesson.number) // Include current and previous levels
+                .map(level => level.id);
+    
+            // Find the index of the current lesson
+            const currentLessonIndex = levels.findIndex(level => level.id === lesson.id);
+            
+            // Determine the next lesson
+            const nextLesson = levels[currentLessonIndex + 1];
+    
+            // Update the user's course data
+            await updateDoc(userRef, {
+                [`courses.${courseId}.completedLessons`]: completedLessons,
+                [`courses.${courseId}.currentLesson`]: nextLesson ? nextLesson.id : null // Set to next lesson ID or null if it doesn't exist
+            });
+    
+            // Navigate to the lesson page
+            navigate(`/course/${courseId}/lesson/${lesson.id}`);
+        } catch (error) {
+            console.error("Error updating current lesson:", error);
+        }
+    }    
+
     return (
         <div className={`lesson-preview edge-${lesson.isCompleted ? 'complete' : lesson.isCurrent ? 'current' : 'incomplete'}`}>
             <div className='lesson-header'>
-                {/* Display the lesson ID and status */}
                 <h2 className={`tag-${lesson.isCompleted ? 'complete' : lesson.isCurrent ? 'current' : 'incomplete'} roboto-bold`}>Lesson {lesson.number}</h2>
                 <p className='roboto-bold'>INCOMPLETE</p>
             </div>
 
-            {/* Display the lesson name and description */}
             <div className='lesson-contents roboto-regular'>
                 <h1 className={`title-${lesson.isCompleted ? 'complete' : lesson.isCurrent ? 'current' : 'incomplete'} fira-code`}>{lesson.title}</h1>
                 <p>{lesson.description}</p>
             </div>
 
-            {/* Buttons for beginning the lesson or practicing exercises */}
             <div className='lesson-buttons'>
-                <button className='button solid-button roboto-bold' onClick={() => console.log("Begin lesson")}>
+                <button className='button solid-button roboto-bold' onClick={beginLesson}>
                     BEGIN LESSON
                 </button>
-                <button className='button outline-button roboto-bold' onClick={() => console.log("Practice exercises")}>
-                    PRACTICE EXERCISES
+                <button className='button outline-button roboto-bold' onClick={toTests}>
+                    PRACTICE TESTS
                 </button>
             </div>
         </div>

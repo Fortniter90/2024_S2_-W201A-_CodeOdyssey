@@ -16,6 +16,7 @@ export function useAuth() {
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [usersId, setUsersId] = useState(null);
   const [usersName, setUsersName] = useState(null);
   const [usersCourses, setUserCourses] = useState({});
 
@@ -23,49 +24,69 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Function that initializes the user state when the auth state is changed
     const initializeUser = async (user) => {
-      // Checks if user is authenticated
       if (user) {
+        console.log("User authenticated:", user.uid);
         setCurrentUser(user);
         setIsAuthenticated(true);
-        await loadName(user);
-        await loadUserData(user);
+
+        try {
+          const userId = user.uid;  // Using user.uid consistently
+          setUsersId(userId); // Store the user's ID
+
+          // Load user-specific data from Firestore
+          await loadUserData(userId);
+        } catch (error) {
+          console.error("Error during user initialization:", error);
+        }
       } else {
-        // If user is not authenticated
-        setCurrentUser(null); // Sets the currentUser to null
-        setIsAuthenticated(false); // Sets the user to unauthenticated
-        setUsersName(null); // Clears the name of the user
+        // User is not authenticated
+        setCurrentUser(null);
+        setIsAuthenticated(false);
+        setUsersId(null);
+        setUsersName(null); 
+        setUserCourses({});
+        console.log("User logged out.");
       }
     };
 
-    // Function that fetches users name from Firestore
-    const loadName = async (user) => {
+    // Function that fetches user's name and course data from Firestore
+    const loadUserData = async (userId) => {
       try {
-        const docRef = doc(db, 'users', user.uid); // Gets a reference to the users document in Firestore
-        const docSnap = await getDoc(docRef); // Fetches document snapshot
-        // Checks if document snapshot exits
-        if (docSnap.exists()) {
-          const data = docSnap.data(); // Gets data from document
-          if (data.name) {
-            setUsersName(data.name); // Sets the users name as the name from the data
+        const userDocRef = doc(db, 'users', userId);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          console.log("User data fetched:", userData);
+
+          if (userData.name) {
+            setUsersName(userData.name);
+          } else {
+            console.warn("User name not found in document.");
+          }
+
+          if (userData.courses) {
+            setUserCourses(userData.courses);
+          } else {
+            console.warn("Courses not found in document.");
           }
         } else {
-          console.log("No such document!"); // Logs if docment doesn't exists
+          console.warn("No user document found for userId:", userId);
         }
       } catch (error) {
-        console.error("Error loading user name:", error); // Logs any errors during Firestore fetch
+        console.error("Error fetching user data from Firestore:", error);
       }
     };
 
-    // Sets up authentication state listener
+    // Set up authentication state listener
     const unsubscribe = onAuthStateChanged(auth, initializeUser);
     return () => unsubscribe(); // Clean up the listener when unmounted
   }, []);
 
   return (
     // Provides states to the rest of the program
-    <AuthContext.Provider value={{ currentUser, isAuthenticated, usersName, setCurrentUser, setIsAuthenticated, setUsersName }}>
+    <AuthContext.Provider value={{ currentUser, isAuthenticated, usersId, usersName, usersCourses }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
