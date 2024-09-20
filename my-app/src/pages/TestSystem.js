@@ -97,8 +97,8 @@ const TestSystem = ({ courseId="WhWBHUFHy6M3eOHSxKfd", lessonId="vMDGQYKRWM8qdh5
       <h2>{currentTest.number}. {currentTest.question}</h2>
 
       <textarea
-        value={userAnswer[currentTestIndex]} // Keep the answer for the current test
-        onChange={handleUserInputChange} // Update answer for the current test
+        value={userAnswer[currentTestIndex]} // Keeps the answer for the current test
+        onChange={handleUserInputChange} // Updates answer for the current test
         placeholder="Enter your code here..."
       />
 
