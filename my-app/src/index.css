@@ -2,6 +2,7 @@
     --white: #FFFCFA;
     --white-trans: #fffcfa80;
 	--dark-blue: #13315C;
+	--dark-blue-trans: #13315cb9;
 	
 	--logo-purple: #585D9D;
 	--purple-accent: #8E94F2;
@@ -72,4 +73,8 @@ body {
     padding: 0;
     color: var(--dark-blue);
     overflow: auto;
+}
+
+p {
+    color: var(--dark-blue);
 }

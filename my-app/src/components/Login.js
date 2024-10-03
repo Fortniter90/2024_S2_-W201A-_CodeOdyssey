@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { useNavigate } from 'react-router-dom';
+import Button from './Button';
 
 // Component that logins user
 const LoginComponent = () => {
@@ -27,32 +28,34 @@ const LoginComponent = () => {
   };
 
   return (
-    <div>
+    <div className='roboto-regular'>
       {/* Form for user login */}
       <form onSubmit={loginHandler}>
 
         {/* Email input field */}
-        <label htmlFor="email">Email:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-        />
-
+        <div className='authpage-item'>
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        
         {/* Password input field */}
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
-
+        <div className='authpage-item'>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        
         {/* Login button*/}
-        <button className="button-20" type="submit">Login</button>
+        <Button text={"LOGIN"} type="submit" />
       </form>
     </div>
   );

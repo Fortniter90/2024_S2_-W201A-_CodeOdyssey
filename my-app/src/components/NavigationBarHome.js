@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Link, useNavigate } from 'react-router-dom';
+import { FaChevronDown } from "react-icons/fa6";
+import Button from "./Button";
 
 const NavigationBarHome = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -45,24 +47,27 @@ const NavigationBarHome = () => {
   }, []);
 
   return (
-    <div className="navbar">
+    <div className="navbar roboto-regular">
+      
       <div className="navbar-left">
         <ul className="nav-links">
-        <li className="nav-item">
+
+          <li className="nav-item">
             <Link to="/" className="nav-link">
               <span>HOME</span>
             </Link>
           </li>
+
           <li className="nav-item">
             <span onClick={toggleDropdown}>
-              COURSES <span className="dropdown-icon">&#x25BC;</span>
+              COURSES <span className="dropdown-icon"><FaChevronDown /></span>
             </span>
+
             {isDropdownOpen && (
               <ul className="dropdown-menu">
                 {courses.map(course => (
                     <li
                         key={course.id}
-                        className="dropdown-item"
                         onClick={() => handleCourseSelect(course.id)}
                     >
                         {course.title}
@@ -71,21 +76,26 @@ const NavigationBarHome = () => {
               </ul>
             )}
           </li>
+
           <li className="nav-item">
             <Link to="/resources" className="nav-link">
               <span>RESOURCES</span>
             </Link>
           </li>
+
           <li className="nav-item">
             <Link to="/about" className="nav-link">
               <span>ABOUT US</span>
             </Link>
           </li>
+
         </ul>
       </div>
+
+      {/* Navigation buttons to login and sign up */}
       <div className="navbar-right">
-        <button className="login-btn" onClick={goToLogin}>LOGIN</button>
-        <button className="signup-btn" onClick={goToSignUp}>SIGN UP</button>
+        <Button text={"LOGIN"} outline={true} action={goToLogin} color="var(--purple-accent)" backgroundColor="var(--background-dark)" />
+        <Button text={"SIGN UP"} action={goToSignUp} color="var(--purple-accent)" backgroundColor="var(--background-dark)"/>
       </div>
     </div>
   );

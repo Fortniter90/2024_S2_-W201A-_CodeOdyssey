@@ -1,3 +1,4 @@
+import CodeOdysseyLogo from '../components/assets/CodeOdysseyLogo';
 import HomeBanner from '../components/HomeBanner';
 import NavigationBarHome from '../components/NavigationBarHome';
 import './LoggedOutHomePage.css';
@@ -20,13 +21,15 @@ const LoggedOutHomePage = () => {
 
                 {/* Website logo */}
                 <div className='logo'>
-                    <h1 className='ultra-regular top-logo'>Code</h1>
-                    <h1 className='solway-regular bottom-logo'>Odyssey</h1>
+                    <CodeOdysseyLogo width='32vw'/>
                 </div>
             </div>
 
             {/* Banner about courses */}
             <HomeBanner />
+
+
+            {/* contemplating adding a footer component */}
         </div>
     );
 };

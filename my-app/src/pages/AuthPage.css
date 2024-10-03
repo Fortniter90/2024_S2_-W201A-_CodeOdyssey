@@ -1,146 +1,117 @@
-/* Reset margin, padding and hide overflow */
-body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+/* Container for authentication pages */
+.authpage {
+    display: flex;
 }
 
-/* Container for the two main halves (image and form) */
-.container {
+/* Left side of the authetication page */
+.authpage-left {
     display: flex;
-    width: 100vw;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
-    justify-content: space-between;
-    overflow: hidden;
+    width: 50%;
 }
 
-/* Left side of the page with background image */
-.image-half {
-    flex: 1;
-    background-size: cover;
-    background-position: center;
-    height: 100%;
-    width: 40%;
+.authpage-left h1 {
+    font-size: 4vw;
+    color: var(--logo-purple);
+    margin: 0;
+    margin-bottom: clamp(-25px, 1vw, -50px);
 }
 
-/* Right side placeholder content */
-.right-half {
-    flex: 1;
-    background-color: #f0f0f5;
-    height: 100%;
-    width: 60%;
-    margin: 10%;
-}
-
-/* Login form section */
-.login-half {
+/* Right side of the authentication page */
+.authpage-right {
     position: absolute;
-    right: 0%;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: white;
-    padding: 40px;
-    border-radius: 5rem 0 0 5rem;
-    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
-    width: 56%;
-    height: 100%;
+    right: 0;
+    background-color: var(--white);
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    box-shadow: 0px 5px 20px var(--background-dark);
+    width: 50%; 
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Styling for the login heading */
-.login-half h1 {
-    text-align: center;
-    color: #6A63F6;
-    margin-top: 20%;
-    margin-bottom: 20px;
+/* Button to close the login / sign up pages */
+.authpage-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--dark-blue);
+    font-size: clamp(18px, 2vmin, 24px);
+    cursor: pointer;
+    padding: 0;
 }
 
-/* Layout for the form within the login section */
-.login-half form {
+/* Layout for the important page content */
+.authpage-content {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    width: 400px;
-    border-radius: 5px;
-    margin-left: 25%;
-}
-
-/* Input fields styling */
-.login-half input {
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 2px solid #6A63F6;
-    border-radius: 2rem;
-}
-
-/* Button styling */
-.login-half button {
-    padding: 10px;
-    background-color: #6A63F6;
-    color: white;
-    border: none;
-    border-radius: 1rem;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-/* Button hover effect */
-.login-half button:hover {
-    background-color: #5845d6;
-}
-
-/* Signup form section (similar to login-half) */
-.signup-half {
-    position: absolute;
-    right: 0%;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: white;
-    padding: 40px;
-    border-radius: 5rem 0 0 5rem;
-    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
-    width: 56%;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
     height: 100%;
 }
 
-/* Styling for the signup heading */
-.signup-half h1 {
-    text-align: center;
-    color: #6A63F6;
-    margin-top: 20%;
-    margin-bottom: 20px;
+/* Styling for the authentication page headings */
+.authpage-content h1 {
+    font-size: clamp(40px, 4vw, 70px);
+    margin: 0;
 }
 
-/* Layout for the form within the signup section */
-.signup-half form {
+/* Layout for the form within each authentication section */
+.authpage-content form {
+    width: clamp(200px, 20vw, 350px);
+}
+
+/* Aligning form items */
+.authpage-content .authpage-item {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    width: 400px;
-    border-radius: 5px;
-    margin-left: 25%;
+    justify-content: flex-start;
+    margin: 15px 0;
+    width: 100%;
 }
 
-/* Input fields styling in signup */
-.signup-half input {
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 2px solid #6A63F6;
-    border-radius: 2rem;
+/* Styling for the form labels */
+.authpage-content label {
+    margin-bottom: 5px;
 }
 
-/* Signup button styling */
-.signup-half button {
-    padding: 10px;
-    background-color: #6A63F6;
-    color: white;
-    border: none;
-    border-radius: 1rem;
-    cursor: pointer;
-    margin-top: 10px;
+/* Styling for input fields */
+.authpage-content input {
+    
 }
 
-/* Button hover effect in signup */
-.signup-half button:hover {
-    background-color: #5845d6;
+.authpage-content Button {
+    width: 100%;
 }
 
+/* Navigation to get to the login or sign up screens */
+.authpage-navigation {
+    text-decoration: none;
+    color: var(--dark-blue-trans);
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: clamp(10px, 2vmin, 16px) !important;
+}
+
+.authpage-navigation svg {
+    margin-left: 6px; /* Space between the text and icon */
+}
+
+.authpage-navigation:hover {
+    color: var(--dark-blue);
+}

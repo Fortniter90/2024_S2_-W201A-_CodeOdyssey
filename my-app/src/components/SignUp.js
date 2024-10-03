@@ -4,6 +4,7 @@ import { auth } from '../config/firebase';
 import { db } from '../config/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import Button from './Button';
 
 // Component that signs a user up
 const SignUpComponent = () => {
@@ -35,44 +36,47 @@ const SignUpComponent = () => {
   };
 
   return (
-    <div className="sign-up-container">
+    <div className="roboto-regular">
       {/* Form for user signup */}
       <form onSubmit={signUpHandler} className="sign-up-form">
         {/* Email input field */}
-        <label htmlFor="email">Email:</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          required
-        />
-
+        <div className='authpage-item'>
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        
         {/* Password input field */}
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter your password"
-          required
-        />
-
+        <div className='authpage-item'>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        
         {/* Name input field */}
-        <label htmlFor="name">Name:</label>
-        <input
-          type="text"
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter your name"
-          required
-        />
-
+        <div className='authpage-item'>
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+        
         {/* Sign Up button */}
-        <button type="submit">Sign Up</button>
+        <Button text={"SIGN UP"} type="submit" />
       </form>
     </div>
   );
