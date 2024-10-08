@@ -1,0 +1,57 @@
+.java-character-container {
+  position: relative; /* Necessary to position the speech box relative to this container */
+  display: flex;
+  flex-direction: column; /* Stack the speech bubble on top of the image */
+  align-items: center; /* Center both the image and speech bubble horizontally */
+  margin-top: 20px;
+}
+
+.capybara-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.capybara-image {
+  width: 150px;
+  height: auto;
+}
+
+.info-icon {
+  font-size: 24px;
+  margin-left: 0px;
+  margin-top: -100px; 
+  cursor: pointer;
+}
+
+.speech-box {
+  position: absolute; /* Positioned absolutely above the image */
+  bottom: 110%; /* Places the speech bubble directly above the image */
+  left: 57%; /* Centers the speech bubble horizontally */
+  transform: translateX(-50%); /* Ensures the speech box is perfectly centered */
+  width: 300px;
+  padding: 20px;
+  border: 2px solid #585D9D;
+  border-radius: 50px;
+  background-color: #f9f9f9;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Roboto';
+  z-index: 1; /* Ensures the speech box appears above other elements */
+}
+
+.speech-text {
+  color: #333;
+  font-size: 16px;
+  text-align: center;
+}
+
+.speech-box::after {
+  content: '';
+  position: absolute;
+  bottom: -15px; /* The little triangle below the speech box */
+  left: 15%;
+  transform: translateX(-50%);
+  border-width: 15px 15px 0;
+  border-style: solid;
+  border-color: #585D9D transparent transparent transparent;
+}
