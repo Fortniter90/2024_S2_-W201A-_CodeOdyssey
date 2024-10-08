@@ -7,7 +7,8 @@
     box-sizing: border-box;
     background-color: var(--white);
     border-radius: 25px;
-    height: calc(100vh - 150px);
+    height: clamp(370px, 90vh, calc(90vh - 150px));
+    margin: inherit;
 }
 
 /* Container for the learning path menu */

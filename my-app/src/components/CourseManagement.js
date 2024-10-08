@@ -1,25 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
-import { db } from '../config/firebase';
-import Button from './Button';
-import DatabaseTable from './DatabaseTable';
-import './DatabaseManagement.css';
+import { FaX } from 'react-icons/fa6';
 import { fetchCourses } from '../utils/dataFetching';
+import { saveCourse } from '../utils/dataSaving';
+import Button from './Button';
+import './DatabaseManagement.css';
+import ManagementTable from './ManagementTable';
 
-const CourseManagement = () => {
+// CourseManagement Component
+const CourseManagement = ({ onSelectCourse }) => {
   // State for courses
   const [courses, setCourses] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
 
-  // State for form data and modal management
-  const [formData, setFormData] = useState({ title: '', description: '' });
-  const [editingCourse, setEditingCourse] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // State for messages and pagination
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const rowsPerPage = 5;
+  // State for adding course information
+  const [formData, setFormData] = useState({
+    title: '',
+    color: '',
+    description: ''
+  });
+
+  // States managing modal and dropdown visibility
+  const [modalActive, setModalActive] = useState(false); // Manage visibility of the modal for adding courses
+  const [courseModalActive, setCourseModalActive] = useState(false); // Manage course details modal
+  const [selectedCourse, setSelectedCourse] = useState(null); // Store the selected course for the details modal
+
+  // States for editing course information
+  const [isEditing, setIsEditing] = useState(false); // State to toggle between view and edit mode
+  const [editableCourse, setEditableCourse] = useState(selectedCourse || {}); // State for the editable fields
 
   // Fetch all courses
   const loadCourses = async () => {
@@ -36,132 +42,146 @@ const CourseManagement = () => {
     loadCourses();
   }, []);
 
-  // Handle opening form to add a new course
+  // Handle opening the "Add Course" modal
   const handleAdd = () => {
-    setFormData({ title: '', description: '' });
-    setEditingCourse(null);
-    setIsModalOpen(true); 
+    setModalActive(true);
   };
 
-  // Save a new course or update an existing one
-  const handleSave = async () => {
-    if (!formData.title || !formData.description) {
-      setErrorMessage('All fields must be filled out!');
-      return;
-    }
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Handle form submission to add a new course
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Prepare the course data
+    const newCourse = {
+      ...formData, // All user-input data from the form
+      available: false,
+      lessonCount: 0,
+      testCount: 0
+    };
 
     try {
-      // If editing, update the existing course
-      if (editingCourse) {
-        const courseRef = doc(db, 'courses', editingCourse.id); 
-        await updateDoc(courseRef, { ...formData });
-        setSuccessMessage('Course updated successfully!');
-
-      } 
-      else {
-        // If adding a new course, create a new document
-        await addDoc(collection(db, 'courses'), { ...formData });
-        setSuccessMessage('Course added successfully!');
-      }
-
-      //Close modal
-      setIsModalOpen(false);
-
-      // Reset data form and clear states
-      setFormData({ title: '', description: '' });
-      setEditingCourse(null);
-      setErrorMessage('');
-
-      loadCourses();
-
+      // Call the saveCourse function to add the new course to Firestore
+      await saveCourse(newCourse);
+      setModalActive(false);
+      setFormData({ title: '', color: '', description: '' }); // Reset form data
+      loadCourses(); // Reload the courses after adding
     } catch (error) {
-      console.error('Error saving course:', error);
-      setErrorMessage('Error saving course. Please try again.');
+      console.error('Error adding course:', error);
     }
   };
 
-  // Handle editing an existing course
-  const handleEdit = (course) => {
-    setFormData({ title: course.title, description: course.description });
-    setEditingCourse(course);
-    setIsModalOpen(true);
+  const handleCourseClick = (course) => {
+    setSelectedCourse(course);
+    setCourseModalActive(true);
   };
 
-  // Handle deleting a course
-  const handleDelete = async (courseId) => {
-    try {
-      const lessonsQuery = query(collection(db, 'lessons'), where('courseId', '==', courseId));
-      const lessonSnapshot = await getDocs(lessonsQuery);
-
-      if (!lessonSnapshot.empty) {
-        setErrorMessage('Cannot delete this course. Remove associated lessons first.');
-        return;
-      }
-
-      await deleteDoc(doc(db, 'courses', courseId));
-      setSuccessMessage('Course deleted successfully!');
-
-      loadCourses();
-      
-    } catch (error) {
-      console.error('Error deleting course:', error);
-      setErrorMessage('Error deleting course. Please try again.');
-    }
+  const handleDelete = () => {
+    console.log("delete course");
   };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  // Render no items message
+  const renderNoItems = () => <div>No courses available.</div>;
 
   return (
     <div className='management roboto-regular'>
-      {/* Header section */}
+      {/* Header for management */}
       <div className='management-header'>
-          <h1 className='roboto-bold'>Course Management</h1>
-          <Button text={'Add New Course'} action={handleAdd}/>
+        <h1 className='fira-code'>Course Management</h1>
+        <Button text={'Add Course'} action={handleAdd} />
       </div>
-      
-      {/* Table displaying the list of courses */}
-      <DatabaseTable
-        title="Course"
-        data={courses}
-        columns={[
-          { header: 'Course Title', key: 'title' },
-          { header: 'Description', key: 'description' },
-          { header: 'Lessons Count', key: 'lessonCount' },
-          { header: 'Tests Count', key: 'testCount' },
-        ]}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        rowsPerPage={rowsPerPage}
-        totalItems={courses.length}
-      />
 
-      {/* Modal for adding or editing courses */}
-      {isModalOpen && (
-        <div className='modal-overlay'>
+      {/* Modal for adding a new course */}
+      {modalActive && (
+        <>
+          <div className='overlay' onClick={() => setModalActive(false)} />
           <div className='modal'>
-            <h2>{editingCourse ? 'Update Course' : 'Add New Course'}</h2>
-            
-            <input
-              type="text"
-              placeholder="Course Title"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            />
-            <textarea
-              placeholder="Information"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            />
-          
-            <Button text={editingCourse ? 'Update Course' : 'Add Course'} action={handleSave} />
-            <Button text="Cancel" type="outline" action={() => setIsModalOpen(false)} />
+            <button className='authpage-close' onClick={() => setModalActive(false)}><FaX /></button>
+            <h2>Add New Course</h2>
+            <div className='modal-context'>
+              <form onSubmit={handleSubmit}>
+                <label>
+                  Title:
+                  <input type="text" name="title" value={formData.title} onChange={handleInputChange} required />
+                </label>
+                <label>
+                  Color:
+                  <select name="color" value={formData.color} onChange={handleInputChange} required>
+                    <option value="">Select Color</option>
+                    <option value="orange">Orange</option>
+                    <option value="green">Green</option>
+                    <option value="blue">Blue</option>
+                  </select>
+                </label>
+                <label>
+                  Description:
+                  <textarea name="description" value={formData.description} onChange={handleInputChange} required />
+                </label>
+                <div className='modal-buttons'>
+                  <Button type="submit" text="Add Course" />
+                  <Button text="Cancel" outline={true} action={() => setModalActive(false)} />
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
+        </>
       )}
 
-      {/* Error and success message display */}
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
-      {successMessage && <div className="success-message">{successMessage}</div>}
+      <ManagementTable 
+        items={courses}
+        onRowClick={handleCourseClick}
+        renderNoItems={renderNoItems}
+      />
+
+      {/* Modal displaying the information about the course */}
+      {courseModalActive && selectedCourse && (
+        <>
+          <div className='overlay' onClick={() => setCourseModalActive(false)} />
+          <div className='information-modal'>
+            <button className='authpage-close' onClick={() => setCourseModalActive(false)}><FaX /></button>
+            <h1>{selectedCourse.title}</h1>
+
+            {/* Row with availability tag and Edit button */}
+            <div className='row-availability-edit'>
+              <span className={`availability-tag ${selectedCourse.available ? "available" : "unavailable"}`}>
+                {selectedCourse.available ? "Available" : "Unavailable"}
+              </span>
+              <Button text="Edit" action={handleEdit} />
+            </div>
+
+            {/* Row with lessons and tests count */}
+            <div className='row-lesson-test'>
+              <p><strong>Lessons Count:</strong> {selectedCourse.lessonCount}</p>
+              <p><strong>Tests Count:</strong> {selectedCourse.testCount}</p>
+            </div>
+
+            {/* Description */}
+            <p><strong>Color:</strong> {selectedCourse.color}</p>
+            <p><strong>Description:</strong> {selectedCourse.description}</p>
+
+            {/* Divider */}
+            <hr className='modal-divider' />
+
+            {/* Buttons for managing course content and delete */}
+            <div className='modal-buttons'>
+              <Button text="Manage Course Content" action={() => onSelectCourse(selectedCourse)} />
+              <Button text="Delete" action={handleDelete} outline={true} />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

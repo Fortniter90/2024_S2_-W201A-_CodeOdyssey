@@ -22,8 +22,8 @@ const Button = ({ text, outline=false, action, color="var(--logo-purple)", backg
 
     // Hover styles
     const hoverStyle = {
-        backgroundColor: outline ? color : backgroundColor, // Change background on hover
-        border: `3px solid ${outline ? color : backgroundColor}`, // Change border on hover
+        backgroundColor: outline ? color : 'var(--logo-purple-dark)', // Change background on hover
+        border: `3px solid ${outline ? color : 'var(--logo-purple-dark)'}`, // Change border on hover
         color: backgroundColor, // Change color for outline button
     };
 

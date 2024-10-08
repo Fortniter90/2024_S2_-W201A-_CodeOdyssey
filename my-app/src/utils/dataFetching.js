@@ -1,50 +1,61 @@
 import { db } from "../config/firebase";
-import { collection, getDocs, doc, getDoc, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, query, orderBy, where, updateDoc } from "firebase/firestore";
 
 // Fetch all courses 
 export const fetchCourses = async () => {
     try {
-        const coursesCollection = collection(db, 'courses');
-        const coursesSnapshot = await getDocs(coursesCollection);
-        const coursesData = {};
-        coursesSnapshot.forEach((doc) => {
-            coursesData[doc.id] = doc.data();
-        });
-        return coursesData;
+      const coursesCollection = collection(db, 'courses'); // Reference to the courses collection
+      const coursesSnapshot = await getDocs(coursesCollection); // Fetch all documents in the collection
+  
+      // Map through the documents and include their IDs
+      const coursesList = coursesSnapshot.docs.map(doc => ({
+        id: doc.id, // Get the document ID
+        ...doc.data(), // Spread the document data
+      }));
+
+      return coursesList; // Return the list of courses
     } catch (error) {
-        console.error("Error fetching courses:", error);
-        throw error;
+      console.error("Error fetching courses:", error); // Handle any errors
+      throw error;
     }
-};
+  };
 
 // Fetch all lessons based on course ID
 export const fetchLessons = async (courseId) => {
+    if (!courseId) return;
+
     try {
-        const lessonsCollection = collection(db, `courses/${courseId}/lessons`);
-        const lessonsQuery = query(lessonsCollection, orderBy('number'));
-        const lessonsSnapshot = await getDocs(lessonsQuery);
-        const lessonsData = {};
-        lessonsSnapshot.forEach((doc) => {
-            lessonsData[doc.id] = doc.data();
-        });
-        return lessonsData;
+        const lessonsCollection = query(collection(db, `courses/${courseId}/lessons`), orderBy('number'));
+        const lessonSnapshot = await getDocs(lessonsCollection);
+
+        // Map through the documents and include their IDs
+        const lessonList = lessonSnapshot.docs.map(doc => ({ 
+            id: doc.id, 
+            ...doc.data() 
+        }));
+        
+        return lessonList;
     } catch (error) {
-        console.error("Error fetching lessons:", error);
+        console.error('Error fetching lessons:', error);
         throw error;
     }
 };
 
 // Fetch all tests based on course ID and lesson ID
 export const fetchTests = async (courseId, lessonId) => {
+    if (!courseId || !lessonId) return;
+
     try {
-        const testsCollection = collection(db, `courses/${courseId}/lessons/${lessonId}/tests`);
-        const testsQuery = query(testsCollection, orderBy('number'));
-        const testsSnapshot = await getDocs(testsQuery);
-        const testsData = {};
-        testsSnapshot.forEach((doc) => {
-            testsData[doc.id] = doc.data();
-        });
-        return testsData;
+        const testsCollection = query(collection(db, `courses/${courseId}/lessons/${lessonId}/tests`), orderBy('number'));
+        const testSnapshot = await getDocs(testsCollection);
+        
+        // Map through the documents and include their IDs
+        const testList = testSnapshot.docs.map(doc => ({ 
+            id: doc.id, 
+            ...doc.data() 
+        }));
+
+        return testList;
     } catch (error) {
         console.error("Error fetching tests:", error);
         throw error;
@@ -89,4 +100,58 @@ export const fetchUserCourseProgress = async (userId, courseId) => {
     } catch (error) {
         throw error;
     }
+};
+
+// Fetch all admin user accounts
+export const loadAdmins = async () => {
+    try {
+        const usersQuery = query(collection(db, 'users'), where('admin', '==', true));
+        const querySnapshot = await getDocs(usersQuery);
+        const adminUsers = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        }));
+        return adminUsers;
+    } catch (error) {
+        console.error('Error loading admins:', error);
+    }
+};
+
+export const fetchUserEmailByUID = async (uid) => {
+    try {
+        const userDocRef = doc(db, 'users', uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+            const userData = userDoc.data();
+            console.log('User email:', userData.email);
+            return userData.email;
+        } else {
+            console.log('No such user found!');
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+};
+
+// Function to fetch all users
+export const fetchAllUsers = async () => {
+    try {
+        const usersCollection = collection(db, 'users'); // Adjust 'users' to your Firestore collection name
+        const usersSnapshot = await getDocs(usersCollection);
+        const usersList = usersSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data() // Assuming your user data is stored directly in the document
+        }));
+        return usersList;
+    } catch (error) {
+        console.error("Error fetching users: ", error);
+        return []; // Return an empty array on error
+    }
+};
+
+export const setAdminStatus = async (userId, isAdmin) => {
+    // Implement the logic to update the user's admin status in Firestore
+    const userRef = doc(db, 'users', userId);
+    await updateDoc(userRef, { admin: isAdmin });
 };

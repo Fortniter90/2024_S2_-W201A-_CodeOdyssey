@@ -1,4 +1,4 @@
-const Star = ({ x, y, size = 1 }) => {
+const Star = ({ x, y, size = 1, darkBackground = false }) => {
     const scale = size === 'small' ? 0.5 : size === 'large' ? 0.75 : 1;
     
     return (
@@ -28,7 +28,7 @@ const Star = ({ x, y, size = 1 }) => {
                     26.518C22.8123 25.6278 25.6278 22.8123 26.518 
                     19.2062L31.0291 0.932697Z
                 " 
-                fill="var(--white)"
+                fill={darkBackground ? "var(--logo-purple)" : "var(--white)"}
                 transform={`scale(${scale})`}
                 transform-origin="32 32"
             />

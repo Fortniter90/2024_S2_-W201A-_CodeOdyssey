@@ -1,0 +1,17 @@
+.course-content {
+    height: auto;
+    width: calc(100% - 150px);
+    margin: 20px 75px;
+}
+
+.course-content {
+    margin: 30px auto;
+}
+
+.course-content CourseHeadings {
+
+}
+
+.course-content LearningPath {
+
+}

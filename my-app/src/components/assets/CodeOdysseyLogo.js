@@ -1,10 +1,8 @@
 import Star from "./Star";
 
-const CodeOdysseyLogo = ({ width = '100% '}) => {
+const CodeOdysseyLogo = ({ width = '100%', darkBackground = false }) => {
     return (
-        <div>
-
-
+        <div className='logo'>
             <svg 
                 xmlns="http://www.w3.org/2000/svg" 
                 width={width}
@@ -14,10 +12,10 @@ const CodeOdysseyLogo = ({ width = '100% '}) => {
             >
                 {/* Star details on the logo */}
                 <g transform="translate(590, 340)">
-                    <Star />
+                    <Star darkBackground={darkBackground} />
                 </g>
                 <g transform="translate(235, 60)">
-                    <Star size={'large'}/>
+                    <Star size={'large'} darkBackground={darkBackground} />
                 </g>
                 
                 {/* 'O' for lower part of the logo under the circle */}
@@ -49,7 +47,7 @@ const CodeOdysseyLogo = ({ width = '100% '}) => {
                         C35.385 118.984 45.596 123.478 58.953 123.478
                         Z
                     " 
-                    fill="var(--logo-purple)"
+                    fill={darkBackground ? "var(--white)" : "var(--logo-purple)"}
                     transform="translate(72, 169)"
                 />
                 
@@ -70,7 +68,7 @@ const CodeOdysseyLogo = ({ width = '100% '}) => {
                         C776.382 161.095 751.379 180.252 718.809 199.947 
                         C653.736 239.295 559.449 280.199 451.39 313.213Z
                     " 
-                    stroke="var(--white)" 
+                    stroke={darkBackground ? "var(--logo-purple)" : "var(--white)"}
                     stroke-width="10"
                 />
 
@@ -80,8 +78,8 @@ const CodeOdysseyLogo = ({ width = '100% '}) => {
                     y="35%" 
                     textAnchor="middle" 
                     alignmentBaseline="middle"
+                    fill={darkBackground ? 'var(--white)' : 'var(--purple-accent)'}
                     style={{
-                        fill: 'var(--purple-accent)',
                         margin: 0,
                         fontSize: '154px',
                         fontFamily: 'Ultra, serif',
@@ -98,8 +96,8 @@ const CodeOdysseyLogo = ({ width = '100% '}) => {
                     y="59%" 
                     textAnchor="right" 
                     alignmentBaseline="middle"
+                    fill={darkBackground ? 'var(--white)' : 'var(--logo-purple)'}
                     style={{
-                        fill: 'var(--logo-purple)',
                         margin: 0,
                         fontSize: '192px',
                         fontFamily: 'Solway, regular',
@@ -132,7 +130,7 @@ const CodeOdysseyLogo = ({ width = '100% '}) => {
                         V138.695
                         Z
                     " 
-                    fill="var(--logo-purple)"
+                    fill={darkBackground ? "var(--white)" : "var(--logo-purple)"}
                     transform="translate(72, 169)"
                 />
             </svg>

@@ -75,7 +75,7 @@ const LessonMenu = ({ levels, handleLevelClick, selectedLevel }) => {
     return (
         <div className='learning-path'>
             <div className='path-header'>
-                <h2 className='roboto-bold'>Learning Path</h2>
+                <h2 className='roboto-bold'>Lessons</h2>
             </div>
 
             {/* List of lessons */}

@@ -3,12 +3,15 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import NavigationBarUser from '../components/NavigationBarUser';
 import { useAuth } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import "./AllCourses.css";
+import Button from '../components/Button';
 
 const AllCourses = () => {
   const { isAuthenticated, usersId } = useAuth(); // Extracting user info
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -33,18 +36,29 @@ const AllCourses = () => {
     return <div>Loading course information...</div>;
   }
 
+  // Function to navigate to the selected course
+  const goToCourse = (courseId) => {
+    navigate(`/course/${courseId}`);
+  }
+
   return (
-    <div>
+    <div className='allcourses'>
       <NavigationBarUser />
-      <div>
-        <h1>Course List</h1>
-        <ul>
+
+      <div className='allcourses-container'>
+        <h1 className='fira-code'>Discover Languages</h1>
+        
+        
+        <div className='allcourses-content'>
           {courses.map(course => (
-            <li key={course.id}>
-              <Link to={`/courses/${course.id}`}>{course.title}</Link>
-            </li>
-          ))}
-        </ul>
+            <div key={course.id} className='course-block'>
+              <h2>{course.title}</h2>
+
+              <Button text={"VIEW COURSE"} />
+            </div>
+          ))} 
+
+        </div>
       </div>
     </div>
   );

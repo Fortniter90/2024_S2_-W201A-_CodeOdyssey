@@ -6,6 +6,8 @@ import NavigationBarUser from '../components/NavigationBarUser';
 import CourseHeadings from '../components/CourseHeadings';
 import LearningPath from '../components/LearningPath';
 import { useAuth } from '../context/AuthContext';
+import "./CourseTemplate.css";
+import Footer from '../components/Footer';
 
 const CourseTemplate = () => {
   const { currentuser, isAuthenticated, usersId, usersName, usersCourses } = useAuth(); // Extracting user info
@@ -76,8 +78,11 @@ const CourseTemplate = () => {
   return (
     <div>
       <NavigationBarUser />
-      <CourseHeadings name={course.title} description={course.description} backgroundColor={course.backgroundColor} />
-      <LearningPath courseId={course.id} userId={usersId} />
+
+      <div className='course-content'>
+        <CourseHeadings name={course.title} description={course.information} backgroundColor={course.backgroundColor} />
+        <LearningPath courseId={course.id} userId={usersId} />
+      </div>
     </div>
   );
 };
