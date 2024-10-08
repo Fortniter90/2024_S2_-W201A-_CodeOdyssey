@@ -1,115 +1,121 @@
-import { useState, useEffect } from 'react';
-import { FaCircleQuestion } from "react-icons/fa6";
+import { useState, useEffect, useRef } from 'react';
+import { FaCircleQuestion } from 'react-icons/fa6';
 import './HintSystem.css';
 
-// HintSystem Component: handles the display of hints for questions
-const HintSystem = ({ hint, testId }) => { 
-    const [showHint, setShowHint] = useState(false);                // Manage whether the hint is visible or not
-    const [showPrompt, setShowPrompt] = useState(false);            // Control the visibility of the hint prompt
-    const [showTimerTool, setTimerTool] = useState(true);           // Control the visibility of the timer setter
-    const [timerId, setTimerId] = useState(null);                   // Keep track of the active timer
-    const [promptTimerId, setPromptTimerId] = useState(null);       // Keep track of the active prompt delay
-    const [delay, setDelay] = useState(300000);                     // Default delay of 5 minutes (300000 ms)
-    const [hasSeenTimer, setHasSeenTimer] = useState(false);        // Track if prompt has been shown before
+const HintSystem = ({ hint, testId }) => {
+    // State variables controlling the visibility of functions
+    const [showHint, setShowHint] = useState(false);            // Hint
+    const [showPrompt, setShowPrompt] = useState(false);        // Hint prompt
+    const [showTimerTool, setTimerTool] = useState(true);       // Timer setter
+    const [remainingTime, setRemainingTime] = useState(0);      // Remaining time for the timer
+    const [hintUsed, setHintUsed] = useState(false);            // Flag to check if hint was used
 
-    // Effect to handle visibility of the initial prompt
+    // Variables for timer delays
+    const [delay, setDelay] = useState(300000);                 // Default delay of 5 minutes (300000 ms)
+    const [customDelay, setCustomDelay] = useState(0);          // Store the custom delay
+
+    // Store the timer state for each question
+    const timerStates = useRef({}); // Store the timer state for each question
+    const promptTimerIdRef = useRef(null); // Store the prompt timer ID
+
+    // Effect to manage the visibility of the hint prompt
     useEffect(() => {
-        console.log("Checking if the timer prompt has been seen:", hasSeenTimer);
-        
-        if (!hasSeenTimer) {
-            console.log("Showing timer tool for the first time.");
-            setTimerTool(true); // Make the prompt visible
-
-            const id = setTimeout(() => {
-                console.log("Hiding timer tool after 10 seconds.");
-                setTimerTool(false); // Hide the prompt after 10 seconds if no interaction
+        if (showPrompt) {
+            const promptTimeout = setTimeout(() => {
+                setShowPrompt(false); // Hide the prompt after 10 seconds
             }, 10000);
 
-            setHasSeenTimer(true); // Mark the prompt as seen
-            return () => clearTimeout(id); // Cleanup timer on component unmount
-
-        } else {
-            console.log("Hiding timer tool since it has been shown before.");
-            setTimerTool(false); // Hide the prompt after it has been shown once
+            return () => clearTimeout(promptTimeout); // Cleanup timer on unmount or prompt change
         }
-    }, [hasSeenTimer]);
+    }, [showPrompt]);
 
-    // Function to start the timer for showing the hint
-    const startTimer = (customDelay = delay) => {
-        console.log("Starting timer with delay:", customDelay);
+    // Effect to manage remaining time and handle hint visibility
+    useEffect(() => {
+        if (remainingTime > 0) {
+            const countdown = setInterval(() => {
+                setRemainingTime((prevTime) => {
+                    if (prevTime <= 1000) {
+                        clearInterval(countdown);
+                        setShowPrompt(true); // Show the hint prompt when time runs out
+                        return 0; // Stop the timer
+                    }
+                    return prevTime - 1000; // Decrease by 1 second
+                });
+            }, 1000);
 
-        if (timerId) {
-            clearTimeout(timerId); // Clear the previous timer if any
+            return () => clearInterval(countdown); // Cleanup interval on unmount or when remainingTime changes
         }
+    }, [remainingTime]);
 
-        // Set a new timer to show prompt after the specified delay
-        const id = setTimeout(() => {
-            console.log("Prompting for hint after delay.");
-            setShowPrompt(true);
-
-            // After 30 seconds, hide the prompt automatically
-            const promptId = setTimeout(() => {
-                console.log("Hiding prompt after 30 seconds.");
-                setShowPrompt(false);
-            }, 30000) // 30 seconds (30000 ms)
-
-            setPromptTimerId(promptId); // Stop the timer once the hint is shown
-        }, customDelay);
-
-        setTimerId(id); // Store timer ID
-    };
-
-    // Handle form submission to set the custom timer
+    // Function to handle form submission and set the custom timer
     const handleSetTimer = (e) => {
         e.preventDefault();
         const minutes = parseInt(e.target.minutes.value, 10) || 0;
         const seconds = parseInt(e.target.seconds.value, 10) || 0;
-        const customDelay = (minutes * 60 + seconds) * 1000; // Convert to milliseconds
+        const newCustomDelay = (minutes * 60 + seconds) * 1000; // Convert to milliseconds
 
-        console.log("Setting custom timer:", customDelay);
-        setDelay(customDelay > 0 ? customDelay : 300000); // Use 5 minutes if no valid delay is set
-
-        startTimer(customDelay); // Start the timer
-        setTimerTool(false); // Hide the prompt after setting the timer
+        setDelay(newCustomDelay > 0 ? newCustomDelay : 300000);           // Use 5 minutes if no valid delay is set
+        setRemainingTime(newCustomDelay > 0 ? newCustomDelay : 300000);   // Set remaining time
+        setTimerTool(false);                                        // Hide the timer tool after setting the timer
+        setCustomDelay(newCustomDelay);                            // Store custom delay
     };
-
-    // Effect to reset the hint and start the timer when a new test is selected
-    useEffect(() => {
-        console.log("New test selected, resetting hint and starting timer.");
-
-        setShowHint(false); // Hide the hint when a new question is shown
-
-        if (timerId) {
-            clearTimeout(timerId); // Stop the timer
-        }
-        if (promptTimerId) {
-            clearTimeout(promptTimerId); // Stop the prompt timer
-        }
-
-        startTimer(); // Start timer with the previously set delay or default delay
-    }, [testId]); // Run this effect when a new test is selected
 
     // Handle clicking the hint button
     const handleHintButtonClick = () => {
-        console.log("Hint button clicked.");
-        
-        if (timerId) {
-            clearTimeout(timerId); // Stop the timer
+        setShowHint((prevShowHint) => !prevShowHint); // Toggle the visibility of the hint
+        setShowPrompt(false); // Hide the prompt when the hint is shown
+        clearTimeout(promptTimerIdRef.current); // Clear prompt timer
+    };
+
+    // Save the current timer state when navigating away from a question
+    const saveTimerState = () => {
+        timerStates.current[testId] = {
+            remainingTime,
+            hintUsed,
+        };
+    };
+
+    // Restore the timer state when returning to a question
+    const restoreTimerState = () => {
+        const savedState = timerStates.current[testId];
+
+        if (savedState) {
+            setRemainingTime(savedState.remainingTime);
+            setHintUsed(savedState.hintUsed);
+            if (savedState.hintUsed) {
+                setShowHint(true); // Show hint if it was used
+            }
+        } else {
+            // If no saved state, set initial timer values
+            setRemainingTime(0);
+            setHintUsed(false);
+            setShowHint(false);
+            setShowPrompt(false);
+            setTimerTool(true);
         }
-        if (promptTimerId) {
-            clearTimeout(promptTimerId); // Stop the prompt timer
+    };
+
+    // Effect to handle navigation between questions
+    useEffect(() => {
+        // Restore the timer state for the new question
+        restoreTimerState();
+        
+        // Start the timer for showing the prompt after the custom delay
+        if (remainingTime === 0) {
+            setRemainingTime(delay); // Reset to default or custom delay
         }
 
-        setShowPrompt(false); // Hide the prompt if it is visible
-        setShowHint(prevShowHint => !prevShowHint); // Show the hint directly
-    };
+        return () => {
+            saveTimerState(); // Save the current timer state when changing questions
+        };
+    }, [testId]);
 
     return (
         <div className="hint-system-container">
             {/* Button to display hint */}
             <div className="hint-button-container">
-                <FaCircleQuestion 
-                    className="hint-button" 
+                <FaCircleQuestion
+                    className="hint-button"
                     onClick={handleHintButtonClick} // Show the hint when clicked
                 />
             </div>
@@ -142,7 +148,7 @@ const HintSystem = ({ hint, testId }) => {
             {/* Show the hint only when the question mark is clicked */}
             {showHint && (
                 <div className="hint-panel">
-                    {hint || "No hint available."}
+                    {hint || "You don't need a hint for this, you got it!"}
                 </div>
             )}
         </div>
