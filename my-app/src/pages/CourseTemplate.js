@@ -80,7 +80,7 @@ const CourseTemplate = () => {
       <NavigationBarUser />
 
       <div className='course-content'>
-        <CourseHeadings name={course.title} description={course.information} backgroundColor={course.backgroundColor} />
+        <CourseHeadings name={course.title} description={course.description} backgroundColor={course.color} />
         <LearningPath courseId={course.id} userId={usersId} />
       </div>
     </div>
