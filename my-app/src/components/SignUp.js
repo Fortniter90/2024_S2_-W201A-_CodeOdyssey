@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../config/firebase';
-import { db } from '../config/firebase';
-import { doc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { auth } from '../config/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useAuth } from '../context/AuthContext';
 
 // Component that signs a user up
 const SignUpComponent = () => {
@@ -11,6 +11,8 @@ const SignUpComponent = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const navigate = useNavigate();
+  const { checkAuthStatus } = useAuth();
+
 
   const goToHomePage = () => {
     navigate('/');
@@ -20,17 +22,32 @@ const SignUpComponent = () => {
   const signUpHandler = async (e) => {
     e.preventDefault(); // Prevents the page from reloading
     try {
-      // Creates a new user using firebase auth
-      const userCred = await createUserWithEmailAndPassword(auth, email, password);
-
-      // Saves user's name to firestore database in the users collection using their UID
-      await setDoc(doc(db, 'users', userCred.user.uid), {
-        name: name,
-        courses: {},
+      const response = await axios.post('http://localhost:8080/signup', {
+        email,
+        password,
+        name,
+      }, {
+        headers: {
+          'Content-Type': 'application/json' // Ensure the correct content type is set
+        }
       });
+
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Retrieve the ID token
+      const idToken = await user.getIdToken();
+      localStorage.setItem('idToken', idToken);
+      console.log('Signup successful:', response.data);
+      alert('Signup successful:', response.data);
+      checkAuthStatus();
+      // Navigate to home page after successful signup
       goToHomePage();
     } catch (error) {
-      alert(error.message); // Shows an error message should an error occur
+      // Alert the user with the error message
+      const errorMessage = error.response ? error.response.data.error : error.message;
+      alert(`Error during signup: ${errorMessage}`);
+      console.error('Error during signup:', errorMessage);
     }
   };
 

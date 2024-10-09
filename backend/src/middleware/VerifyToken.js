@@ -1,7 +1,6 @@
-import admin from '../config/Firebase'; // Import Firebase config
 
 // Middleware to verify the Firebase ID token
-export const verifyToken = async (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   const token = req.headers.authorization?.split('Bearer ')[1];
 
   if (!token) {
@@ -16,3 +15,5 @@ export const verifyToken = async (req, res, next) => {
     return res.status(401).json({ error: 'Invalid token' });
   }
 };
+
+export default verifyToken; // Use default export

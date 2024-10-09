@@ -1,9 +1,8 @@
-// Import required modules using ES6 syntax
 import admin from 'firebase-admin';
 import { readFileSync } from 'fs';
 
 // Assuming you're using environment variables to store paths and secrets
-const serviceAccountKeyPath = process.env.FIREBASE_SERVICE_ACCOUNT_KEY_PATH;
+const serviceAccountKeyPath = "codeodysseydatabase-firebase-adminsdk-y8i39-63be9f9f0b.json";
 
 // Read and parse the service account JSON
 const serviceAccount = JSON.parse(readFileSync(serviceAccountKeyPath, 'utf-8'));
@@ -11,9 +10,9 @@ const serviceAccount = JSON.parse(readFileSync(serviceAccountKeyPath, 'utf-8'));
 // Initialize Firebase Admin SDK using the service account credentials
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: process.env.FIREBASE_DATABASE_URL
+  databaseURL: 'https://console.firebase.google.com/project/codeodysseydatabase/'
 });
 
-// Export the initialized Firebase admin instance for use in other modules
 export default admin;
+export const db = admin.firestore();  // Firestore initialization
 

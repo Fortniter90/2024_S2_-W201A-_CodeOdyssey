@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './PastTests.css';
-import { fetchUserAnswer, fetchTests, fetchLessons } from '../utils/dataFetching';
+import { fetchUserAnswer, fetchTests, fetchLessons } from '../utils/DataFetching';
 import NavigationBarUser from '../components/NavigationBarUser';
 import { useAuth } from '../context/AuthContext';
 import { collection, getDocs } from 'firebase/firestore';
@@ -14,42 +14,42 @@ function PastTest() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-      const getAnswerData = async () => {
-          try {
-              // Fetch all answers for the user
-              const answersCollection = collection(db, `users/${usersId}/answers`);
-              const answersSnapshot = await getDocs(answersCollection);
-  
-              // Map over the documents to create an array of answer data
-              const answers = answersSnapshot.docs.map(doc => ({
-                  id: doc.id, // Store the document ID
-                  ...doc.data(), // Spread the answer data
-              }));
-  
-              setAnswersData(answers);
-  
-              if (answers.length > 0) {
-                  const firstAnswer = answers[0];
-  
-                  // Fetch all tests for the course and lesson
-                  const allTests = await fetchTests(firstAnswer.courseId, firstAnswer.lessonId);
-                  setTestsData(allTests);
-  
-                  // Fetch lesson data
-                  const allLessons = await fetchLessons(firstAnswer.courseId);
-                  setLessonsData(allLessons);
-              }
-          } catch (error) {
-              console.error("Error fetching data:", error);
-              setError("Error fetching data.");
-          }
-      };
-  
-      if (usersId) { // Ensure usersId is available before fetching data
-          getAnswerData();
+    const getAnswerData = async () => {
+      try {
+        // Fetch all answers for the user
+        const answersCollection = collection(db, `users/${usersId}/answers`);
+        const answersSnapshot = await getDocs(answersCollection);
+
+        // Map over the documents to create an array of answer data
+        const answers = answersSnapshot.docs.map(doc => ({
+          id: doc.id, // Store the document ID
+          ...doc.data(), // Spread the answer data
+        }));
+
+        setAnswersData(answers);
+
+        if (answers.length > 0) {
+          const firstAnswer = answers[0];
+
+          // Fetch all tests for the course and lesson
+          const allTests = await fetchTests(firstAnswer.courseId, firstAnswer.lessonId);
+          setTestsData(allTests);
+
+          // Fetch lesson data
+          const allLessons = await fetchLessons(firstAnswer.courseId);
+          setLessonsData(allLessons);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError("Error fetching data.");
       }
+    };
+
+    if (usersId) { // Ensure usersId is available before fetching data
+      getAnswerData();
+    }
   }, [usersId]); // Include usersId in the dependency array
-  
+
 
   if (error) {
     return <div>{error}</div>;

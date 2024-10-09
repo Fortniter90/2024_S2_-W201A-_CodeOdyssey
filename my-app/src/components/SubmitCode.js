@@ -6,7 +6,6 @@ const socket = io("http://localhost:8080");
 
 function CompilerComponent({ code }) {
   // States to manage source code, output, and errors
-  const [sourceCode, setSourceCode] = useState(''); // Local state to hold the code, if needed for future
   const [output, setOutput] = useState(''); // State to store the output from the server
   const [error, setError] = useState(''); // State to store any errors returned from the server
 

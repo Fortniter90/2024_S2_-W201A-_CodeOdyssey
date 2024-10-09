@@ -16,22 +16,25 @@ import PastTests from '../pages/PastTests';
 import Profile from '../pages/Profile';
 
 const AppRoutes = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
+  if (loading) {
+    return <div>Loading...</div>; // Render a loading indicator while checking auth status
+  }
   return (
     <Routes>
-        <Route path="/" element={isAuthenticated ? <LoggedInHomePage /> : <LoggedOutHomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/developerdashboard" element={<DeveloperDashboard />} /> 
-        <Route path="/course" element={<AllCourses />} /> 
-        <Route path="/course/:courseId" element={<CourseTemplate />} /> 
-        <Route path="/course/:courseId/lesson/:lessonId" element={<LessonTemplate />} /> 
-        <Route path="/course/:courseId/lesson/:lessonId/test" element={<TestTemplate />} />
-        <Route path="/resources" element={<ResourcesPage />} />
-        <Route path="/about" element={<AboutUsPage />} />
-        <Route path="/pasttests" element={<PastTests />} />
-        <Route path="/profile" element={<Profile />} />
+      <Route path="/" element={isAuthenticated ? <LoggedInHomePage /> : <LoggedOutHomePage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignUpPage />} />
+      <Route path="/developerdashboard" element={<DeveloperDashboard />} />
+      <Route path="/course" element={<AllCourses />} />
+      <Route path="/course/:courseId" element={<CourseTemplate />} />
+      <Route path="/course/:courseId/lesson/:lessonId" element={<LessonTemplate />} />
+      <Route path="/course/:courseId/lesson/:lessonId/test" element={<TestTemplate />} />
+      <Route path="/resources" element={<ResourcesPage />} />
+      <Route path="/about" element={<AboutUsPage />} />
+      <Route path="/pasttests" element={<PastTests />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 };
