@@ -27,22 +27,22 @@ const ResourcesPage = () => {
       <ul className="resources-list">
         <li>
           <a href="https://cssbattle.dev/" target="_blank" rel="noopener noreferrer">
-            CSS Battle
+            <u>CSS Battle</u>
           </a> - A fun and interactive platform designed to improve your CSS skills through challenges. By competing against others, you can refine your coding style and learn new techniques while enjoying the process.
         </li>
         <li>
           <a href="https://www.freecodecamp.org/" target="_blank" rel="noopener noreferrer">
-            FreeCodeCamp
+            <u>FreeCodeCamp</u>
           </a> - A nonprofit organization that offers a comprehensive curriculum for learning web development and programming. With thousands of tutorials and projects, you can gain practical experience while earning certifications that can enhance your resume.
         </li>
         <li>
           <a href="https://codewithmosh.com/" target="_blank" rel="noopener noreferrer">
-            Code With Mosh
+            <u>Code With Mosh</u>
           </a> - Known for high-quality video courses, Mosh Hamedani provides engaging tutorials on various programming languages and frameworks. His teaching style is approachable and clear, making complex concepts easier to grasp.
         </li>
         <li>
           <a href="https://www.w3schools.com/" target="_blank" rel="noopener noreferrer">
-            W3Schools
+          <u>W3Schools</u>
           </a> - A popular reference site for web developers, W3Schools offers extensive documentation on HTML, CSS, JavaScript, and more. It's an excellent resource for quick lookups and hands-on tutorials.
         </li>
       </ul>
