@@ -170,7 +170,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: 400px;
   height: 60%;
-  overflow: hidden; /* Prevent scrollbar from modal content */
+  overflow-y: auto;
   z-index: 1000;
   padding: 20px;
   display: flex;
