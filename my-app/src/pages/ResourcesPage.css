@@ -1,0 +1,100 @@
+body {
+    font-family: "Roboto", sans-serif; 
+    line-height: 1.5;
+    background-color: #ffffff;
+    color: #333; 
+    margin: 0;
+    padding: 20px;
+}
+
+/* Title Styles */
+.resources-title {
+    font-size: 2.5rem;
+    font-family: "Fira Code", monospace;
+    color: #13315C; 
+    text-align: center;
+    margin: 40px 0 20px;
+    border-bottom: 2px solid #585D9D; 
+    padding-bottom: 10px; 
+}
+
+/* Description Styles */
+.resources-description {
+    font-size: 1.1rem;
+    margin: 10px auto; 
+    max-width: 1200px; 
+    padding: 0 15px; 
+    text-align: justify; 
+    line-height: 1.5; 
+}
+
+/* Section Heading Styles */
+.subtitle {
+    font-size: 2rem;
+    font-family: "Fira Code", monospace;
+    color: #585D9D; 
+    margin: 30px 0 10px; 
+    border-bottom: 2px solid #585D9D; 
+    padding-bottom: 10px; 
+}
+
+/* List Styles */
+.resources-list,
+.tips-list {
+    list-style-type: disc; 
+    margin: 20px auto; 
+    padding-left: 40px; 
+    max-width: 1000px; 
+}
+
+/* List Item Styles */
+.resources-list li,
+.tips-list li {
+    margin-bottom: 15px; 
+}
+
+/* Link Styles */
+.resources-list a,
+.tips-list strong {
+    color: #4A90E2; 
+    text-decoration: none; 
+    transition: color 0.3s ease; 
+}
+
+.resources-list a:hover {
+    text-decoration: underline; 
+    color: #E94E77; 
+}
+
+/* Tips Section Styles */
+.tips-section {
+    font-weight: bold; 
+    margin-top: 20px; 
+    font-family: "Fira Code", monospace;
+    text-align: center;
+}
+
+/* Final Thoughts Styles */
+.final-thoughts {
+    font-size: 25px;
+    font-family: "Fira Code", monospace;
+    margin: 40px 0; 
+    padding: 0 15px; 
+    text-align: center; 
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .resources-title {
+        font-size: 32px; 
+    }
+
+    .resources-description,
+    .final-thoughts {
+        font-size: 16px; 
+    }
+
+    h2 {
+        font-size: 24px; 
+    }
+}
