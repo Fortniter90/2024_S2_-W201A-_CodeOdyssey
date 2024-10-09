@@ -14,6 +14,7 @@
     position: relative;
     display: flex;
     align-items: center;
+    user-select: none;
   }
   
   /* Styles for the snake image, setting a fixed width */

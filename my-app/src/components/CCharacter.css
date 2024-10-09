@@ -19,6 +19,7 @@
   .bunny-image {
     width: 150px;
     height: auto;
+    user-select: none;
   }
   
   /* Style for the information icon */
