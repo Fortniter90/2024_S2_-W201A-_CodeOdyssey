@@ -23,7 +23,7 @@ const ResourcesPage = () => {
       </p>
       
 
-      <h2 className="subtitle">Recommended Resources</h2>
+      <h2 className="resources-subtitle">Recommended Resources</h2>
       <ul className="resources-list">
         <li>
           <a href="https://cssbattle.dev/" target="_blank" rel="noopener noreferrer">
@@ -47,12 +47,12 @@ const ResourcesPage = () => {
         </li>
       </ul>
 
-      <h2 className="subtitle">Tips for Effective Learning</h2>
-      <p><center>
-        To make the most of these resources, consider the following tips:
+      <h2 className="resources-subtitle">Tips for Effective Learning</h2>
+      <p className="resources-tips-list"><center>
+        <b>To make the most of these resources, consider the following tips:</b>
         </center>
       </p>
-      <ul className="tips-list">
+      <ul className="resources-tips-list">
         <li><strong>Set Goals:</strong> Establish clear, achievable goals for what you want to learn. This will help you stay focused and motivated.</li>
         <li><strong>Practice Regularly:</strong> Consistency is key in programming. Set aside time each day or week to practice coding and apply what you've learned.</li>
         <li><strong>Engage with the Community:</strong> Join forums, discussion groups, or social media communities related to programming. Engaging with others can provide support, feedback, and additional learning opportunities.</li>
@@ -60,7 +60,7 @@ const ResourcesPage = () => {
         <li><strong>Stay Curious:</strong> Don't hesitate to explore topics outside your current focus. Programming is a vast field, and being curious will lead you to discover new interests and skills.</li>
       </ul>
 
-      <h2 className="final-thoughts">Final Thoughts</h2>
+      <h2 className="resources-final-thoughts">Final Thoughts</h2>
       <p className="resources-description"><center>
         We hope this Resources Page serves as a valuable starting point in your programming journey. Remember, learning to code is a marathon, not a sprint. Embrace the challenges, celebrate your progress, and don't forget to enjoy the journey. Happy coding!
         </center>
