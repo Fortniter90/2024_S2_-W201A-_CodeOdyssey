@@ -16,38 +16,62 @@
 .banner-visuals {
     position: relative;
     width: 100%;
-    height: 200px;
+    height: clamp(130px, 11vw, 200px); 
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    border-radius: 25px;
+    align-items: flex-start; /* Align items at the start (top) */
+    justify-content: space-between; /* Distribute space between items */
+    border-radius: 35px; 
     color: var(--white);
     transition: background 0.5s ease-in-out;
     padding: 25px;
+    overflow: hidden; 
+    clip-path: inset(0 round 35px); 
 }
 
+/* SVG styling */
+.circle-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Fills the width of the container */
+    height: 100%; /* Fills the height of the container */
+    pointer-events: none; /* Prevent the circles from interfering with interaction */
+    overflow: hidden; /* Ensures the SVG stays inside the container */
+    z-index: 1; /* Place SVG behind the content */
+}
+
+/* Banner content styling */
 .banner-content {
-    max-width: 80%;
+    display: flex; /* Enable flexbox */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: space-between; /* Distribute space */
+    height: 100%; /* Full height of the container */
+    position: relative; /* Ensure the content is positioned above the SVG */
+    z-index: 2; /* Content above the SVG */
 }
 
+/* Modify styles for h1 and p */
 .banner-content h1 {
-    font-size: 50px;
+    font-size: clamp(25px, 3vw, 50px);
     margin: 0;
     line-height: 1.2;
 }
 
 .banner-content p {
-    font-size: 16px;
+    width: 80%;
+    color: var(--white);
+    font-size: clamp(14px, 1vw , 18px);
     margin: 0;
 }
 
+/* Navigation lines at the bottom */
 .banner-lines {
-    bottom: 10px;
     display: flex;
     gap: 5px;
+    justify-self: flex-end;
 }
 
-.line {
+.banner-lines span {
     width: 75px;
     height: 5px;
     background-color: var(--white-trans);
@@ -57,6 +81,6 @@
     z-index: 1001;
 }
 
-.line.active {
+.banner-lines span.active {
     background-color: var(--white); /* Active dot color */
 }

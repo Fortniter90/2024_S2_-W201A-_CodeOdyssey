@@ -1,8 +1,9 @@
 import "./NavigationBarHome.css";
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebase';
 import { Link, useNavigate } from 'react-router-dom';
+import { FaChevronDown } from "react-icons/fa6";
+import Button from "./Button";
+import { fetchCourses } from "../utils/DataFetching";
 
 const NavigationBarHome = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -27,42 +28,44 @@ const NavigationBarHome = () => {
       navigate(`/course/${courseId}`);
   };
 
+  // Load courses component on mount
   useEffect(() => {
-      const fetchCourses = async () => {
-          try {
-              const coursesCollection = collection(db, 'courses');
-              const courseSnapshot = await getDocs(coursesCollection);
-              const courseList = courseSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-              setCourses(courseList);
-          } catch (error) {
-              console.error('Error fetching courses:', error);
-          } finally {
-              setLoading(false);
-          }
-      };
-
-      fetchCourses();
+    loadCourses();
   }, []);
 
+  // Load all of the courses
+  const loadCourses = async () => {
+    try {
+      const courseList = await fetchCourses();  // Fetch list of courses
+      setCourses(Object.values(courseList));    // Update the state with the fetched courses
+
+    } catch (error) {
+      console.error('Error loading courses:', error); // Log any errors during data fetching
+    }
+  };
+
   return (
-    <div className="navbar">
+    <div className="navbar roboto-regular">
+      
       <div className="navbar-left">
         <ul className="nav-links">
-        <li className="nav-item">
+
+          <li className="nav-item">
             <Link to="/" className="nav-link">
               <span>HOME</span>
             </Link>
           </li>
+
           <li className="nav-item">
             <span onClick={toggleDropdown}>
-              COURSES <span className="dropdown-icon">&#x25BC;</span>
+              COURSES <span className="dropdown-icon"><FaChevronDown /></span>
             </span>
+
             {isDropdownOpen && (
               <ul className="dropdown-menu">
                 {courses.map(course => (
                     <li
                         key={course.id}
-                        className="dropdown-item"
                         onClick={() => handleCourseSelect(course.id)}
                     >
                         {course.title}
@@ -71,21 +74,26 @@ const NavigationBarHome = () => {
               </ul>
             )}
           </li>
+
           <li className="nav-item">
             <Link to="/resources" className="nav-link">
               <span>RESOURCES</span>
             </Link>
           </li>
+
           <li className="nav-item">
             <Link to="/about" className="nav-link">
               <span>ABOUT US</span>
             </Link>
           </li>
+
         </ul>
       </div>
+
+      {/* Navigation buttons to login and sign up */}
       <div className="navbar-right">
-        <button className="login-btn" onClick={goToLogin}>LOGIN</button>
-        <button className="signup-btn" onClick={goToSignUp}>SIGN UP</button>
+        <Button text={"LOGIN"} outline={true} action={goToLogin} color="var(--purple-accent)" backgroundColor="var(--background-dark)" />
+        <Button text={"SIGN UP"} action={goToSignUp} color="var(--purple-accent)" backgroundColor="var(--background-dark)"/>
       </div>
     </div>
   );

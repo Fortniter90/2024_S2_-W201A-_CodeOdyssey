@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './PastTests.css';
-import { fetchUserAnswer, fetchTests, fetchLessons } from '../utils/dataFetching';
+import { fetchUserAnswer, fetchTests, fetchLessons } from '../utils/DataFetching';
 import NavigationBarUser from '../components/NavigationBarUser';
 import { useAuth } from '../context/AuthContext';
 import { collection, getDocs } from 'firebase/firestore';

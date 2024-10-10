@@ -10,15 +10,15 @@ const HomeBanner = () => {
     const content = [
         {   title: 'Python', 
             description: 'Master Python, a versatile and powerful programming language, perfect for beginners and experts alike. Dive into hands-on projects and exercises that make learning Python easy and fun.',
-            background: 'linear-gradient(var(--python-light), var(--python-medium), var(--python-dark))',
+            background: 'linear-gradient(#7FBBA1, #5E9C84)',
         },
         {   title: 'Java', 
             description: 'Master Python, a versatile and powerful programming language, perfect for beginners and experts alike. Dive into hands-on projects and exercises that make learning Python easy and fun.',
-            background: 'linear-gradient(var(--java-light), var(--java-medium), var(--java-dark))',
+            background: 'linear-gradient(#F69864, #F4835F)',
         },
         {   title: 'C', 
             description: 'Master Python, a versatile and powerful programming language, perfect for beginners and experts alike. Dive into hands-on projects and exercises that make learning Python easy and fun.',
-            background: 'linear-gradient(var(--c-light), var(--c-medium), var(--c-dark))',
+            background: 'linear-gradient(#1CBCDC, #009FCC)',
         },
     ];
 
@@ -53,6 +53,36 @@ const HomeBanner = () => {
 
             {/* Banner visuals container */}
             <div className='banner-visuals' style={{ background: content[currentIndex].background }}>
+                {/* Circles decorations in banner */}
+                <svg className='circle-svg' width="100%" height="100%" viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        {/* Drop shadow filter */}
+                        <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur in="SourceAlpha" stdDeviation="20" />
+                            <feOffset dx="0" dy="0" result="offsetblur" />
+                            <feFlood floodColor={`var(--${content[currentIndex].title.toLowerCase()}-dark)`} />
+                            <feComposite in2="offsetblur" operator="in" />
+                            <feMerge>
+                                <feMergeNode />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+
+                        {/* Radial gradient */}
+                        <radialGradient id="circleGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                            <stop offset="0%" stopColor={`var(--${content[currentIndex].title.toLowerCase()}-light)`} />
+                            <stop offset="100%" stopColor={`var(--${content[currentIndex].title.toLowerCase()}-medium)`} />
+                        </radialGradient>=
+                    </defs>
+                    
+                    {/* Circle one */}
+                    <circle cx="-525%" cy="225" r="150" fill="url(#circleGradient)" filter="url(#dropShadow)" />
+
+                    {/* Circle two */}
+                    <circle cx="650%" cy="175" r="250" fill="url(#circleGradient)" filter="url(#dropShadow)" />
+                </svg>
+
+                {/* Banner content */}
                 <div className='banner-content'>
                     {/* Displaying the title and description of the current banner */}
                     <h1 className='fira-code'>Learn {content[currentIndex].title}</h1>
@@ -63,7 +93,7 @@ const HomeBanner = () => {
                         {content.map((_, index) => (
                             <span
                                 key={index}
-                                className={`line ${index === currentIndex ? 'active' : ''}`}
+                                className={`${index === currentIndex ? 'active' : ''}`}
                                 onClick={() => handleNavClick(index)}
                             ></span>
                         ))}

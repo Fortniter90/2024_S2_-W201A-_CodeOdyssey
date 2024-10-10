@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchLessons, fetchUserCourseProgress } from '../utils/dataFetching';
+import { fetchLessons, fetchUserCourseProgress } from '../utils/DataFetching';
 import './LearningPath.css';
 import { useNavigate } from 'react-router-dom';
 import { doc, updateDoc } from 'firebase/firestore';
