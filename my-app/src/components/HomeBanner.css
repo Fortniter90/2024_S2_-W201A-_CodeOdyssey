@@ -2,30 +2,45 @@
 .banner {
     display: flex;
     align-items: center;
-    margin: 0 75px;
+    margin: 0 auto;
+    padding: 0 5vw;
+    position: relative;
+    width: 90vw;
+    height: auto;
 }
 
-/* Styling for lef tand right arrow */
+/* Arrow styling */
 .arrow-left,
 .arrow-right {
     color: var(--dark-blue);
-    font-size: 50px;
+    font-size: clamp(35px, 3vw, 50px);
 }
 
-/* Container for each banner */
+/* Banner container styling */
 .banner-visuals {
     position: relative;
     width: 100%;
-    height: clamp(130px, 11vw, 200px); 
+    height: auto;
+    aspect-ratio: 8/1;
     display: flex;
-    align-items: flex-start; /* Align items at the start (top) */
-    justify-content: space-between; /* Distribute space between items */
+    align-items: center;
+    justify-content: space-between;
     border-radius: 35px; 
     color: var(--white);
     transition: background 0.5s ease-in-out;
-    padding: 25px;
+    padding: 2vw;
     overflow: hidden; 
-    clip-path: inset(0 round 35px); 
+}
+
+/* Image for each banner */
+.banner-image {
+    position: absolute;
+    top: 34%;
+    left: 80%;
+    width: 17vw; 
+    height: auto;
+    transform: translate(-50%, -50%); 
+    z-index: 1001;
 }
 
 /* SVG styling */
@@ -33,34 +48,42 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%; /* Fills the width of the container */
-    height: 100%; /* Fills the height of the container */
-    pointer-events: none; /* Prevent the circles from interfering with interaction */
-    overflow: hidden; /* Ensures the SVG stays inside the container */
-    z-index: 1; /* Place SVG behind the content */
+    width: 100%;
+    height: 100%;
+    z-index: 0;
 }
 
 /* Banner content styling */
 .banner-content {
-    display: flex; /* Enable flexbox */
-    flex-direction: column; /* Stack children vertically */
-    justify-content: space-between; /* Distribute space */
-    height: 100%; /* Full height of the container */
-    position: relative; /* Ensure the content is positioned above the SVG */
-    z-index: 2; /* Content above the SVG */
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-between; 
+    height: 100%;
+    position: relative; 
+    z-index: 2; 
+    padding-bottom: 10px;
 }
 
-/* Modify styles for h1 and p */
+/* Container for title and description */
+.banner-text {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Title styling */
 .banner-content h1 {
-    font-size: clamp(25px, 3vw, 50px);
-    margin: 0;
+    font-size: clamp(18px, 3vw, 50px);
+    margin-top: 0;
+    margin-bottom: 25px;
     line-height: 1.2;
 }
 
+/* Description styling */
 .banner-content p {
-    width: 80%;
+    width: 70%;
     color: var(--white);
-    font-size: clamp(14px, 1vw , 18px);
+    font-size: clamp(12px, 1vw, 18px); 
     margin: 0;
 }
 
@@ -69,18 +92,19 @@
     display: flex;
     gap: 5px;
     justify-self: flex-end;
+    margin-top: 10px;
 }
 
+/* Navigation lines styling */
 .banner-lines span {
-    width: 75px;
-    height: 5px;
+    width: clamp(25px, 4vw, 75px);
+    height: clamp(4px, 0.5vh, 5px);
     background-color: var(--white-trans);
     border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s;
-    z-index: 1001;
 }
 
 .banner-lines span.active {
-    background-color: var(--white); /* Active dot color */
+    background-color: var(--white);
 }

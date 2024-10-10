@@ -21,7 +21,7 @@
   }
   
 /*Styling for the container holding buttons */
-  button {
+  .buttons button {
     margin-right: 10px;
     padding: 10px 20px;
     background-color: #71B39A;
@@ -33,7 +33,7 @@
   }
 
 /*Hover effect for the buttons*/
-  button:hover {
+  .buttons button:hover {
     background-color: #396E59;
   }
   

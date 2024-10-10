@@ -1,17 +1,17 @@
 /* General Navigation Bar Styling */
 .navbar {
-  position: sticky; /*Positions the navigation bar so that is fixed at the top when scrolling*/
-  top:0;
+  position: sticky;
+  top: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 10px 20px; 
 }
 
 .navbar-left {
   background-color: var(--purple-accent); 
   border-bottom-right-radius: 25px;
-  margin: -10px -20px 0 -20px; /* Negative margin to offset the padding */
+  margin: -10px -20px 0 -20px;
 }
 
 /* Links for the left side */
@@ -22,39 +22,63 @@
 
 .nav-item {
   position: relative;
-  margin-left: 15px;
-  margin-right: 20px;
+  margin-left: clamp(5px, 0.5vw, 15px);
+  margin-right: clamp(15px, 2.5vw, 25px);
 }
 
-/* Style for navigation text */
-.nav-item span {
-  font-weight: bold;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
+/* Remove underlining from text */
+.nav-item span,
+.nav-link {
   text-decoration: none;
+  font-weight: bold;
+  color: var(--white);
+  font-size: clamp(14px, 1vw, 16px);
+  cursor: pointer;
 }
 
 .navbar-left .nav-item span:hover {
-  color: var(--background-medium); 
+  color: var(--background-medium);
+}
+
+.nav-link:hover {
+  text-decoration: none;
 }
 
 /* Dropdown menu styling */
+.nav-item:hover .dropdown-menu {
+  display: block; 
+}
+
+.dropdown-item {
+  height: fit-content;
+}
+
 .dropdown-menu {
+  display: none;
   position: absolute;
-  top: calc(100% + 10px); 
+  top: calc(100% + clamp(5px, 1vh, 10px)); 
   left: 0;
   background-color: var(--dark-blue);
   border-radius: 10px;
-  padding: 10px;
+  padding: clamp(5px, 1vh, 10px); 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 200px;
+  width: clamp(150px, 20vw, 200px); 
   list-style-type: none;
 }
 
+.dropdown-menu::after {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  pointer-events: auto;
+}
+
 .dropdown-menu li {
-  color: white;
-  padding: 10px;
+  color: var(--white);
+  padding: clamp(5px, 1vh, 10px); 
   font-weight: bold;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
@@ -67,4 +91,37 @@
 /* Right side buttons */
 .navbar-right {
   display: flex;
+}
+
+.navbar-right button {
+  margin-left: clamp(10px, 1.5vw, 15px); 
+}
+
+/* Chevron direction for dropdown */
+.dropdown-icon {
+  display: inline-block;
+  margin-left: clamp(5px, 1vw, 10px);
+}
+
+/* Change color of chevron on hover */
+.nav-item:hover .chevron-down {
+  display: none;
+}
+
+.nav-item:hover .chevron-up {
+  display: inline;
+}
+
+/* Change color of dropdown icon */
+.dropdown-icon {
+  transition: color 0.3s ease;
+}
+
+.nav-item:hover .dropdown-icon {
+  color: var(--background-medium); 
+}
+
+/* Initially hide the up arrow */
+.chevron-up {
+  display: none; 
 }
