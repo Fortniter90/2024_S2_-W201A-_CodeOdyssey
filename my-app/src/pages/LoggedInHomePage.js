@@ -7,6 +7,7 @@ import NavigationBarUser from "../components/NavigationBarUser.js";
 import CharacterInformation from "../components/CharacterInformation.js";
 import DeleteUser from "../components/DeleteUser.js";
 import "./LoggedInHomePage.css";
+import Footer from "../components/Footer.js";
 
 // Predefined gradients
 const gradients = {
@@ -156,6 +157,8 @@ const LoggedInHomePage = () => {
             
             <CharacterInformation />
             <DeleteUser />
+
+            <Footer />
         </div>
     );
 };
