@@ -1,9 +1,8 @@
 // Importing the CSS file for the styling component.
 import "./NavigationBarUser.css";
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebase';
 import { useNavigate } from 'react-router-dom';
+import { fetchCourses } from "../utils/DataFetching";
 
 //Import the profile icon from the react-icons library.
 import { CgProfile } from "react-icons/cg";
@@ -40,22 +39,21 @@ const NavigationBarUser = () => {
       navigate(`/course/${courseId}`);
   };
 
+  // Load courses component on mount
   useEffect(() => {
-      const fetchCourses = async () => {
-          try {
-              const coursesCollection = collection(db, 'courses');
-              const courseSnapshot = await getDocs(coursesCollection);
-              const courseList = courseSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-              setCourses(courseList);
-          } catch (error) {
-              console.error('Error fetching courses:', error);
-          } finally {
-              setLoading(false);
-          }
-      };
-
-      fetchCourses();
+    loadCourses();
   }, []);
+
+  // Load all of the courses
+  const loadCourses = async () => {
+    try {
+      const courseList = await fetchCourses();  // Fetch list of courses
+      setCourses(Object.values(courseList));    // Update the state with the fetched courses
+
+    } catch (error) {
+      console.error('Error loading courses:', error); // Log any errors during data fetching
+    }
+  };
 
   return (
     //Main navigation bar container.

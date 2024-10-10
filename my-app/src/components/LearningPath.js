@@ -1,50 +1,52 @@
 import { useState, useEffect } from 'react';
-import { fetchLessons, fetchUserCourseProgress } from '../utils/dataFetching';
+import { fetchLessons, fetchUserCourseProgress } from '../utils/DataFetching';
 import './LearningPath.css';
 import { useNavigate } from 'react-router-dom';
-import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { updateUserLessons } from '../utils/DataSaving';
 
 // Main LearningPath component
 const LearningPath = ({ courseId, userId }) => {
     const [levels, setLevels] = useState([]);                   // State to hold lesson levels
     const [selectedLesson, setSelectedLesson] = useState(null); // State for currently selected lesson
 
-    // Fetch lessons and user progress when component mounts or the courseId/userId changes
+    
+
+    // Fetch lessons and user progress when the component mounts
     useEffect(() => {
-        const fetchLessonsAndProgress = async () => {
-            try {
-                // Fetch lessons from Firestore
-                const lessonData = await fetchLessons(courseId);
-                const lessonList = Object.entries(lessonData).map(([id, data]) => ({ id, ...data }));
-
-                // Fetch user progress for the specific course
-                const userProgress = await fetchUserCourseProgress(userId, courseId);
-                const progressData = userProgress || { completedLessons: [], currentLesson: '' };
-
-                // Ensure completedLessons is an array
-                const completedLessons = progressData.completedLessons || [];
-
-                // Mark lessons as completed or current based on user progress
-                const updatedLessons = lessonList.map((lesson) => ({
-                    ...lesson,
-                    isCompleted: completedLessons.includes(lesson.id),
-                    isCurrent: progressData.currentLesson    === lesson.id
-                }));
-
-                setLevels(updatedLessons); // Update levels state with fetched lessons
-
-                // Set the latest lesson as selected by default
-                const currentLesson = updatedLessons.find(lesson => lesson.isCurrent) || updatedLessons[0];
-                setSelectedLesson(currentLesson);
-
-            } catch (error) {
-                console.error("Error fetching lessons and progress:", error);
-            }
-        };
-
-        fetchLessonsAndProgress();
+        loadLessonsAndProgress();
     }, [courseId, userId]);
+
+    // Fetch lessons and user progress when component mounts or the courseId/userId changes
+    const loadLessonsAndProgress = async () => {
+        try {
+            // Fetch lessons from Firestore
+            const lessonData = await fetchLessons(courseId);
+            const lessonList = Object.entries(lessonData).map(([id, data]) => ({ id, ...data }));
+
+            // Fetch user progress for the specific course
+            const userProgress = await fetchUserCourseProgress(userId, courseId);
+            const progressData = userProgress || { completedLessons: [], currentLesson: '' };
+
+            // Ensure completedLessons is an array
+            const completedLessons = progressData.completedLessons || [];
+
+            // Mark lessons as completed or current based on user progress
+            const updatedLessons = lessonList.map((lesson) => ({
+                ...lesson,
+                isCompleted: completedLessons.includes(lesson.id),
+                isCurrent: progressData.currentLesson    === lesson.id
+            }));
+
+            setLevels(updatedLessons); // Update levels state with fetched lessons
+
+            // Set the latest lesson as selected by default
+            const currentLesson = updatedLessons.find(lesson => lesson.isCurrent) || updatedLessons[0];
+            setSelectedLesson(currentLesson);
+
+        } catch (error) {
+            console.error("Error fetching lessons and progress:", error);
+        }
+    };
 
     // Show loading message if no levels are loaded yet
     if (!levels.length) return <div>Loading...</div>;
@@ -111,27 +113,11 @@ const LessonPreview = ({ levels, courseId, userId, lesson }) => {
     const beginLesson = async () => {
         try {
             // Update the user's current lesson and completed lessons in Firestore
-            const userRef = doc(db, 'users', userId);
-    
-            // Create a list of completed lessons
-            const completedLessons = levels
-                .filter(level => level.number <= lesson.number) // Include current and previous levels
-                .map(level => level.id);
-    
-            // Find the index of the current lesson
-            const currentLessonIndex = levels.findIndex(level => level.id === lesson.id);
+            await updateUserLessons(userId, levels, lesson, courseId);
             
-            // Determine the next lesson
-            const nextLesson = levels[currentLessonIndex + 1];
-    
-            // Update the user's course data
-            await updateDoc(userRef, {
-                [`courses.${courseId}.completedLessons`]: completedLessons,
-                [`courses.${courseId}.currentLesson`]: nextLesson ? nextLesson.id : null // Set to next lesson ID or null if it doesn't exist
-            });
-    
             // Navigate to the lesson page
             navigate(`/course/${courseId}/lesson/${lesson.id}`);
+
         } catch (error) {
             console.error("Error updating current lesson:", error);
         }

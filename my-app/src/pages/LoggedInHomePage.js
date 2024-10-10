@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { fetchCourses, fetchLessons } from "../utils/dataFetching.js";
+import { fetchCourses, fetchLessons } from "../utils/DataFetching.js";
 import SignOutComponent from "../components/SignOut";
 import { Link, useNavigate } from 'react-router-dom';
 import NavigationBarUser from "../components/NavigationBarUser.js";

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { collection, getDocs, orderBy, query, setDoc, doc, addDoc } from 'firebase/firestore';
-import { db } from '../config/firebase';
 import './TestSystem.css';
 import HintSystem from '../components/HintSystem';
 import { useAuth } from '../context/AuthContext';
 import CompilerComponent from '../components/SubmitCode';
 import CodeEditor from '../components/CodeEditor';
+import { saveUserAnswers } from '../utils/DataSaving';
+import { fetchTests } from '../utils/DataFetching';
 
 const TestSystem = ({ courseId, lessonId }) => {
   const { usersId } = useAuth();  // Get the user ID from the Auth context
@@ -18,30 +18,22 @@ const TestSystem = ({ courseId, lessonId }) => {
   const [code, setCode] = useState(''); // State to hold the code
   const navigate = useNavigate();
 
+  
+  // Load tests component on mount
   useEffect(() => {
-    // Fetch tests from Firestore based on courseId and lessonId
-    const fetchTest = async () => {
-      try {
-        const testsCollection = collection(db, `courses/${courseId}/lessons/${lessonId}/tests`);
-        const testsQuery = query(testsCollection, orderBy('number'));
-        const testSnapshot = await getDocs(testsQuery);
-
-        // Map over the docs to include the ID along with the data
-        const testList = testSnapshot.docs.map((doc) => ({
-          id: doc.id, // Store the document ID
-          ...doc.data() // Spread the rest of the test data
-        }));
-
-        setTests(testList);
-        setUserAnswers(Array(testList.length).fill('')); // Initialize empty answers for each test
-      } catch (error) {
-        console.error('Error fetching tests:', error);
-        setTests([]);
-      }
-    };
-
-    fetchTest();
+    loadTests();
   }, [courseId, lessonId]);
+
+  // Fetch all of the tests for the lesson
+  const loadTests = async () => {
+    try {
+      const testList = await fetchTests(courseId, lessonId);
+      setTests(Object.values(testList));
+
+    } catch (error) {
+      console.error('Error loading courses:', error);
+    }
+  };
 
   const currentTest = tests ? tests[currentTestIndex] : null;
 
@@ -86,35 +78,14 @@ const TestSystem = ({ courseId, lessonId }) => {
   // Function to save answers to Firestore
   const saveAnswers = async () => {
     try {
-      if (!usersId) {
-        alert('User ID is not available. Please log in.');
-        return;
+      const success = await saveUserAnswers(usersId, courseId, lessonId, tests, userAnswers);
+      if (success) {
+          alert('Answers saved successfully!');
+          navigate(`/course/${courseId}`); // Navigate after saving
       }
-
-      console.log('Saving answers for user:', usersId);
-
-      for (let i = 0; i < tests.length; i++) {
-        const answerData = {
-          courseId,
-          lessonId,
-          testId: tests[i].id,
-          userAnswer: userAnswers[i]
-        };
-
-        console.log('Saving answer data:', answerData);
-
-        // Automatically generate a unique ID when adding a new answer document
-        const docRef = await addDoc(collection(db, `users/${usersId}/answers`), answerData);
-        console.log('Document written with ID: ', docRef.id);
-      }
-
-      alert('Answers saved successfully!');
     } catch (error) {
-      console.error('Error saving answers:', error);
-      alert('Failed to save answers. Please try again.');
+        alert(error.message); // Show error message
     }
-
-    navigate(`/course/${courseId}`);
   };
 
   if (!tests) return <div>Loading...</div>;

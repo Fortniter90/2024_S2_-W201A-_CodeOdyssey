@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { FaX } from 'react-icons/fa6';
-import { fetchTests } from '../utils/dataFetching';
-import { saveTest, updateTest } from '../utils/dataSaving';
-import { deleteTest } from '../utils/dataDeleting';
+import { fetchTests } from '../utils/DataFetching';
+import { saveTest, updateTest } from '../utils/DataSaving';
+import { deleteTest } from '../utils/DataDeleting';
 import ManagementTable from './ManagementTable';
 import Button from './Button';
 import './DatabaseManagement.css';

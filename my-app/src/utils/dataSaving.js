@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, increment, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, increment, updateDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
 
 
@@ -88,5 +88,85 @@ export const updateTest = async (courseId, lessonId, testId, testData) => {
   } catch (error) {
     console.error('Error updating lesson:', error);
     throw error;
+  }
+};
+
+// Function to update the users lesson list
+export const updateUserLessons = async (userId, levels, lesson, courseId) => {
+  try {
+    const completedLessons = levels
+      .filter(level => level.number <= lesson.number)
+      .map(level => level.id);
+
+    const currentLessonIndex = levels.findIndex(level => level.id === lesson.id);
+
+    const nextLesson = levels[currentLessonIndex + 1];
+
+    const userRef = doc(db, 'users', userId);
+    
+    await updateDoc(userRef, {
+      [`courses.${courseId}.completedLessons`]: completedLessons,
+      [`courses.${courseId}.currentLesson`]: nextLesson ? nextLesson.id : null 
+    });
+    
+  } catch (error) {
+    console.error("Error updating current lesson:", error);
+  }
+};
+
+export const updateUserCourseData = async (userId, courseId) => {
+  try {
+      const userRef = doc(db, 'users', userId);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+          const userData = userSnap.data();
+          const userCourses = userData.courses || {};
+
+          if (!userCourses[courseId]) {
+              // Add a new entry to the user's courses map if it doesn't exist
+              await updateDoc(userRef, {
+                  [`courses.${courseId}`]: {
+                      currentLesson: '', // Empty string for currentLesson
+                      completedLessons: [] // Empty array for completedLessons
+                  }
+              });
+          }
+      } else {
+          console.error('User not found');
+      }
+  } catch (error) {
+      console.error('Error updating user course data:', error);
+  }
+};
+
+// Function to save answers to Firestore
+export const saveUserAnswers = async (usersId, courseId, lessonId, tests, userAnswers) => {
+  if (!usersId) {
+      throw new Error('User ID is not available. Please log in.');
+  }
+
+  console.log('Saving answers for user:', usersId);
+
+  try {
+      for (let i = 0; i < tests.length; i++) {
+          const answerData = {
+              courseId,
+              lessonId,
+              testId: tests[i].id,
+              userAnswer: userAnswers[i],
+          };
+
+          console.log('Saving answer data:', answerData);
+
+          // Automatically generate a unique ID when adding a new answer document
+          const docRef = await addDoc(collection(db, `users/${usersId}/answers`), answerData);
+          console.log('Document written with ID: ', docRef.id);
+      }
+
+      return true; // Indicate success
+  } catch (error) {
+      console.error('Error saving answers:', error);
+      throw new Error('Failed to save answers. Please try again.'); // Propagate error
   }
 };

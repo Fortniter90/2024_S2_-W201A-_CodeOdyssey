@@ -1,10 +1,9 @@
 import "./NavigationBarHome.css";
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebase';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaChevronDown } from "react-icons/fa6";
 import Button from "./Button";
+import { fetchCourses } from "../utils/DataFetching";
 
 const NavigationBarHome = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -29,22 +28,21 @@ const NavigationBarHome = () => {
       navigate(`/course/${courseId}`);
   };
 
+  // Load courses component on mount
   useEffect(() => {
-      const fetchCourses = async () => {
-          try {
-              const coursesCollection = collection(db, 'courses');
-              const courseSnapshot = await getDocs(coursesCollection);
-              const courseList = courseSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-              setCourses(courseList);
-          } catch (error) {
-              console.error('Error fetching courses:', error);
-          } finally {
-              setLoading(false);
-          }
-      };
-
-      fetchCourses();
+    loadCourses();
   }, []);
+
+  // Load all of the courses
+  const loadCourses = async () => {
+    try {
+      const courseList = await fetchCourses();  // Fetch list of courses
+      setCourses(Object.values(courseList));    // Update the state with the fetched courses
+
+    } catch (error) {
+      console.error('Error loading courses:', error); // Log any errors during data fetching
+    }
+  };
 
   return (
     <div className="navbar roboto-regular">

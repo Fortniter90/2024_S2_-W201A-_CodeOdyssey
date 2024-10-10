@@ -155,3 +155,32 @@ export const setAdminStatus = async (userId, isAdmin) => {
     const userRef = doc(db, 'users', userId);
     await updateDoc(userRef, { admin: isAdmin });
 };
+
+export const fetchUserAnswerData = async (usersId) => {
+    try {
+        // Fetch all answers for the user
+        const answersCollection = collection(db, `users/${usersId}/answers`);
+        const answersSnapshot = await getDocs(answersCollection);
+
+        // Map over the documents to create an array of answer data
+        const answers = answersSnapshot.docs.map(doc => ({
+            id: doc.id, // Store the document ID
+            ...doc.data(), // Spread the answer data
+        }));
+
+        if (answers.length > 0) {
+            const firstAnswer = answers[0];
+
+            // Fetch all tests for the course and lesson
+            const allTests = await fetchTests(firstAnswer.courseId, firstAnswer.lessonId);
+            const allLessons = await fetchLessons(firstAnswer.courseId);
+
+            return { answers, allTests, allLessons }; // Return fetched data
+        }
+
+        return { answers, allTests: [], allLessons: [] }; // Return empty if no answers found
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        throw new Error("Error fetching data."); // Throw error to be handled in the component
+    }
+};

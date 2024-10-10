@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { FaArrowLeftLong } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
-import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebase';
 import './LessonTemplate.css';
 import Button from '../components/Button';
 import NavigationBarUser from '../components/NavigationBarUser';
+import { fetchLessons, fetchTests } from '../utils/DataFetching';
 
 const LessonTemplate = () => {
   const { courseId, lessonId } = useParams();
@@ -14,25 +13,33 @@ const LessonTemplate = () => {
   const [tests, setTests] = useState([]);
   const navigate = useNavigate();
 
+  // Fetch lessons and tests when the component mounts
   useEffect(() => {
-    const fetchLesson = async () => {
-      const lessonDoc = doc(db, `courses/${courseId}/lessons`, lessonId);
-      const lessonSnapshot = await getDoc(lessonDoc);
-      setLesson(lessonSnapshot.data());
-    };
-    
-    fetchLesson();
+    loadLessons();
+    loadTests();
   }, [courseId, lessonId]);
+
+  // Fetch all lessons for the course
+  const loadLessons = async () => {
+    try {
+      const lessonList = await fetchLessons(courseId);   // Fetch list of lessons
+      setLesson(Object.values(lessonList));                      // Update the state with the fetched lessons
+
+    } catch (error) {
+      console.error('Error loading lessons:', error); // Log any errors during data fetching
+    }
+  };
   
-  useEffect(() => {
-    const fetchTests = async () => {
-        const lessonsCollection = collection(db, `courses/${courseId}/lessons/${lessonId}/tests`);
-        const lessonSnapshot = await getDocs(lessonsCollection);
-        const lessonList = lessonSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setTests(lessonList);
-    };
-    fetchTests();
-  }, [courseId, lessonId]);
+  // Fetch all of the tests for the lesson
+  const loadTests = async () => {
+    try {
+      const testList = await fetchTests(courseId, lessonId);
+      setTests(Object.values(testList));
+
+    } catch (error) {
+      console.error('Error loading courses:', error);
+    }
+  };
 
   const goToTests = () => {
     navigate(`/course/${courseId}/lesson/${lessonId}/test`);
