@@ -45,13 +45,6 @@ const TestSystem = ({ courseId, lessonId }) => {
 
   const currentTest = tests ? tests[currentTestIndex] : null;
 
-  const handleCheckAnswer = () => {
-    if (userAnswers[currentTestIndex].trim() === currentTest.answer.trim()) {
-      setIsCorrect(true); // Correct answer
-    } else {
-      setIsCorrect(false); // Incorrect answer
-    }
-  };
   // Toggle showing the correct answer
   const handleShowAnswer = () => setShowAnswer(true);
 
@@ -133,7 +126,7 @@ const TestSystem = ({ courseId, lessonId }) => {
       <h2>{currentTest.number}. {currentTest.question}</h2>
 
       <CodeEditor onCodeChange={setCode} /> {/* Update code in state */}
-      <CompilerComponent code={code} /> {/* Submit the current code */}
+      <CompilerComponent code={code} answer={currentTest.requiredOutput} /> {/* Submit the current code */}
 
       <div className="buttons">
         <button onClick={handleShowAnswer}>Show Answer</button>
@@ -144,11 +137,7 @@ const TestSystem = ({ courseId, lessonId }) => {
         }
       </div>
 
-      {isCorrect !== null && (
-        <div className="result">
-          {isCorrect ? <p>Correct!</p> : <p>Incorrect. Please Try Again!</p>}
-        </div>
-      )}
+
 
       {showAnswer && (
         <div className="answer">
