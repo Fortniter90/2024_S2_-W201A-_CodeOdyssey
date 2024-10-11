@@ -1,29 +1,36 @@
 import NavigationBarHome from "../components/NavigationBarHome";
 import NavigationBarUser from "../components/NavigationBarUser";
-import './ResourcesPage.css';
-
-import { useAuth } from "../context/AuthContext";
+import './ResourcesPage.css'; // Importing the CSS file for styling the Resources Page
+import { useAuth } from "../context/AuthContext"; // Importing the authentication context to determine if the user is authenticated
 
 const ResourcesPage = () => {
+  // Destructuring to get the isAuthenticated value from the useAuth context
   const { isAuthenticated } = useAuth();
 
   return (
     <div className="resources-container">
+      {/* Conditionally rendering the navigation bar based on the user's authentication status */}
       {isAuthenticated ? <NavigationBarUser /> : <NavigationBarHome />}
 
+      {/* Main title of the Resources Page */}
       <h1 className="resources-title">Resources Page</h1>
+
+      {/* Description paragraph introducing the purpose of the Resources Page */}
       <p className="resources-description">
         Welcome to the Resources Page! This section is dedicated to providing you with a curated selection of external links that offer invaluable support for your programming journey. Learning to code can be both exciting and challenging, and we believe that having access to diverse resources can make a significant difference in your experience.
       </p>
+      {/* Additional information on the resources available for different learning styles */}
       <p className="resources-description">
         Here, you will find a variety of platforms that cater to different learning styles—whether you prefer interactive coding challenges, in-depth tutorials, video lectures, or concise reference guides. Our goal is to empower you with the tools you need to thrive in the ever-evolving world of technology.
       </p>
+      {/* Encouragement for users to engage with the resources and advice on effective learning */}
       <p className="resources-description">
         We encourage you to explore these resources and engage with the content in a way that resonates with you. Remember, the key to mastering programming is consistent practice, patience, and a willingness to learn from both successes and mistakes.
       </p>
       
-
+      {/* Subtitle for the recommended resources section */}
       <h2 className="resources-subtitle">Recommended Resources</h2>
+      {/* List of external resource links with descriptions */}
       <ul className="resources-list">
         <li>
           <a href="https://cssbattle.dev/" target="_blank" rel="noopener noreferrer">
@@ -47,11 +54,15 @@ const ResourcesPage = () => {
         </li>
       </ul>
 
+      {/* Subtitle for the effective learning tips section */}
       <h2 className="resources-subtitle">Tips for Effective Learning</h2>
+
+      {/* Introduction to the learning tips section */}
       <p className="resources-tips-list"><center>
         <b>To make the most of these resources, consider the following tips:</b>
         </center>
       </p>
+      {/* List of tips for effective learning */}
       <ul className="resources-tips-list">
         <li><strong>Set Goals:</strong> Establish clear, achievable goals for what you want to learn. This will help you stay focused and motivated.</li>
         <li><strong>Practice Regularly:</strong> Consistency is key in programming. Set aside time each day or week to practice coding and apply what you've learned.</li>
@@ -60,6 +71,7 @@ const ResourcesPage = () => {
         <li><strong>Stay Curious:</strong> Don't hesitate to explore topics outside your current focus. Programming is a vast field, and being curious will lead you to discover new interests and skills.</li>
       </ul>
 
+      {/* Final thoughts and encouragement for users on their programming journey */}
       <h2 className="resources-final-thoughts">Final Thoughts</h2>
       <p className="resources-description"><center>
         We hope this Resources Page serves as a valuable starting point in your programming journey. Remember, learning to code is a marathon, not a sprint. Embrace the challenges, celebrate your progress, and don't forget to enjoy the journey. Happy coding!
@@ -69,4 +81,5 @@ const ResourcesPage = () => {
   );
 };
 
+// Exporting the ResourcesPage component for use in the project
 export default ResourcesPage;
