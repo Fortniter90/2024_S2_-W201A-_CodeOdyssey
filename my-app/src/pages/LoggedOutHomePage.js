@@ -1,3 +1,4 @@
+import Footer from '../components/Footer';
 import HomeBanner from '../components/HomeBanner';
 import NavigationBarHome from '../components/NavigationBarHome';
 import './LoggedOutHomePage.css';
@@ -27,6 +28,8 @@ const LoggedOutHomePage = () => {
 
             {/* Banner about courses */}
             <HomeBanner />
+
+            <Footer />
         </div>
     );
 };
