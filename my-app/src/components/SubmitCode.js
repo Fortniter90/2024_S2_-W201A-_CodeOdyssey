@@ -5,59 +5,53 @@ import io from 'socket.io-client';
 const socket = io("http://localhost:8080");
 
 function CompilerComponent({ code, answer }) {
-  // States to manage source code, output, and errors
-  const [isCorrect, setIsCorrect] = useState(null); // To track if the answer is correct or not
-  const [output, setOutput] = useState(''); // State to store the output from the server
-  const [error, setError] = useState(''); // State to store any errors returned from the server
-  const [showResults, setShowResults] = useState(false); // To control when to show the results
+  const [isCorrect, setIsCorrect] = useState(null);
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
+  const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
-    // Listen for the "codeResult" event from the backend
     socket.on("codeResult", (data) => {
-      setShowResults(true); // Show the results once we have them
+      setShowResults(true);
       if (data.error) {
-        setError(data.error); // If there's an error, set the error state
-        setOutput(''); // Clear the output state
-        setIsCorrect(false); // Mark the answer as incorrect in case of an error
+        setError(data.error);
+        setOutput('');
+        setIsCorrect(false);
       } else {
-        setOutput(data.output); // If successful, set the output state
-        setError(''); // Clear the error state
-        if (data.output.trim() === answer.trim()) {
-          setIsCorrect(true);
-        } else {
-          setIsCorrect(false);
-        }
+        setOutput(data.output);
+        setError('');
+        setIsCorrect(data.output.trim() === answer.trim());
       }
     });
 
-    // Cleanup function to remove the event listener when the component unmounts
     return () => {
-      socket.off("codeResult"); // Unsubscribe from the event to avoid memory leaks
+      socket.off("codeResult");
     };
-  }, [output]);
+  }, [answer]);
 
-  // Function to handle code submission to the backend
+  // New useEffect to reset showResults when answer changes
+  useEffect(() => {
+    setShowResults(false);
+  }, [answer]);
+
   const handleSubmit = () => {
-    setShowResults(false); // Hide results when resubmitting code
-    // Emit the "submitCode" event with source code and language ID (62 = JavaScript in Judge0)
+    setShowResults(false);
     socket.emit("submitCode", { source_code: code, language_id: 62 });
   };
 
   return (
     <div>
-      {/* Button to trigger the handleSubmit function */}
       <button onClick={handleSubmit}>Run Code/Check Answer</button>
 
-      {/* Only show output and answer comparison after submission */}
       {showResults && (
         <>
           <h3>Output:</h3>
           {error ? (
-            <pre style={{ border: '2px solid red', padding: '10px' }}>Error: {error}</pre> // If there's an error, show it with a red border
+            <pre style={{ border: '2px solid red', padding: '10px' }}>Error: {error}</pre>
           ) : (
             <pre
               style={{
-                border: `2px solid ${isCorrect ? 'green' : 'red'}`, // Green border if correct, red if incorrect
+                border: `2px solid ${isCorrect ? 'green' : 'red'}`,
                 padding: '10px',
               }}
             >
@@ -68,7 +62,7 @@ function CompilerComponent({ code, answer }) {
           <h3>Expected Output:</h3>
           <pre
             style={{
-              border: `2px solid ${isCorrect ? 'green' : 'red'}`, // Green border if correct, red if incorrect
+              border: `2px solid ${isCorrect ? 'green' : 'red'}`,
               padding: '10px',
             }}
           >
@@ -79,7 +73,6 @@ function CompilerComponent({ code, answer }) {
     </div>
   );
 }
-
 
 export default CompilerComponent;
 

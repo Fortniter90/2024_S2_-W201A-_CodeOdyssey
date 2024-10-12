@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { collection, getDocs, orderBy, query, setDoc, doc, addDoc } from 'firebase/firestore';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { collection, getDocs, orderBy, query, addDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import './TestSystem.css';
 import HintSystem from '../components/HintSystem';
@@ -9,31 +9,27 @@ import CompilerComponent from '../components/SubmitCode';
 import CodeEditor from '../components/CodeEditor';
 
 const TestSystem = ({ courseId, lessonId }) => {
-  const { usersId } = useAuth();  // Get the user ID from the Auth context
+  const { usersId } = useAuth();
   const [tests, setTests] = useState(null);
-  const [currentTestIndex, setCurrentTestIndex] = useState(0); // Track current test index
-  const [userAnswers, setUserAnswers] = useState([]); // Track user input for all tests
-  const [showAnswer, setShowAnswer] = useState(false); // Show correct answer toggle
-  const [isCorrect, setIsCorrect] = useState(null); // Track if user's answer is correct
-  const [code, setCode] = useState(''); // State to hold the code
+  const [currentTestIndex, setCurrentTestIndex] = useState(0);
+  const [userAnswers, setUserAnswers] = useState([]);
+  const [showAnswer, setShowAnswer] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch tests from Firestore based on courseId and lessonId
     const fetchTest = async () => {
       try {
         const testsCollection = collection(db, `courses/${courseId}/lessons/${lessonId}/tests`);
         const testsQuery = query(testsCollection, orderBy('number'));
         const testSnapshot = await getDocs(testsQuery);
 
-        // Map over the docs to include the ID along with the data
         const testList = testSnapshot.docs.map((doc) => ({
-          id: doc.id, // Store the document ID
-          ...doc.data() // Spread the rest of the test data
+          id: doc.id,
+          ...doc.data()
         }));
 
         setTests(testList);
-        setUserAnswers(Array(testList.length).fill('')); // Initialize empty answers for each test
+        setUserAnswers(Array(testList.length).fill(''));
       } catch (error) {
         console.error('Error fetching tests:', error);
         setTests([]);
@@ -45,46 +41,38 @@ const TestSystem = ({ courseId, lessonId }) => {
 
   const currentTest = tests ? tests[currentTestIndex] : null;
 
-  // Toggle showing the correct answer
   const handleShowAnswer = () => setShowAnswer(true);
 
-  // Moves to the next test, cycling through the list
   const handleNextTest = () => {
-    setCurrentTestIndex((prev) => (prev + 1) % tests.length);
-    setIsCorrect(null);
+    setCurrentTestIndex((prevIndex) => Math.min(prevIndex + 1, tests.length - 1));
     setShowAnswer(false);
   };
 
-  // Moves to the previous test
   const handlePreviousTest = () => {
-    setCurrentTestIndex((prev) => (prev - 1 + tests.length) % tests.length);
-    setIsCorrect(null);
+    setCurrentTestIndex((prevIndex) => Math.max(prevIndex - 1, 0));
     setShowAnswer(false);
   };
 
-  // Updates the users anser for the test
-  const handleUserInputChange = (e) => {
-    const updatedAnswers = [...userAnswers];
-    updatedAnswers[currentTestIndex] = e.target.value;
-    setUserAnswers(updatedAnswers);
-  };
+  const handleUserInputChange = useCallback((newCode) => {
+    setUserAnswers((prevAnswers) => {
+      const updatedAnswers = [...prevAnswers];
+      updatedAnswers[currentTestIndex] = newCode;
+      return updatedAnswers;
+    });
+  }, [currentTestIndex]);
 
-  // Quits the test and navigates back to course page
   const handleQuit = () => {
     if (window.confirm("Are you sure you want to quit the test? All progress will be lost!")) {
       navigate(`/course/${courseId}`);
     }
   };
 
-  // Function to save answers to Firestore
   const saveAnswers = async () => {
     try {
       if (!usersId) {
         alert('User ID is not available. Please log in.');
         return;
       }
-
-      console.log('Saving answers for user:', usersId);
 
       for (let i = 0; i < tests.length; i++) {
         const answerData = {
@@ -94,25 +82,19 @@ const TestSystem = ({ courseId, lessonId }) => {
           userAnswer: userAnswers[i]
         };
 
-        console.log('Saving answer data:', answerData);
-
-        // Automatically generate a unique ID when adding a new answer document
-        const docRef = await addDoc(collection(db, `users/${usersId}/answers`), answerData);
-        console.log('Document written with ID: ', docRef.id);
+        await addDoc(collection(db, `users/${usersId}/answers`), answerData);
       }
 
       alert('Answers saved successfully!');
+      navigate(`/course/${courseId}`);
     } catch (error) {
       console.error('Error saving answers:', error);
       alert('Failed to save answers. Please try again.');
     }
-
-    navigate(`/course/${courseId}`);
   };
 
   if (!tests) return <div>Loading...</div>;
-
-  if (tests.length === 0) return <div>No tests avaliable.</div>;
+  if (tests.length === 0) return <div>No tests available.</div>;
 
   return (
     <div className="test-system">
@@ -120,13 +102,12 @@ const TestSystem = ({ courseId, lessonId }) => {
         <button className="quit-button" onClick={handleQuit}>&#x2190; Go Back</button>
       </div>
 
-
       <HintSystem hint={currentTest.hint} testId={currentTest.number} />
 
       <h2>{currentTest.number}. {currentTest.question}</h2>
 
-      <CodeEditor onCodeChange={setCode} /> {/* Update code in state */}
-      <CompilerComponent code={code} answer={currentTest.requiredOutput} /> {/* Submit the current code */}
+      <CodeEditor onCodeChange={handleUserInputChange} code={userAnswers[currentTestIndex] || ''} />
+      <CompilerComponent code={userAnswers[currentTestIndex] || ''} answer={currentTest.requiredOutput} />
 
       <div className="buttons">
         <button onClick={handleShowAnswer}>Show Answer</button>
@@ -136,8 +117,6 @@ const TestSystem = ({ courseId, lessonId }) => {
           <button onClick={handleNextTest}>Next Test</button>
         }
       </div>
-
-
 
       {showAnswer && (
         <div className="answer">
@@ -150,3 +129,4 @@ const TestSystem = ({ courseId, lessonId }) => {
 };
 
 export default TestSystem;
+
