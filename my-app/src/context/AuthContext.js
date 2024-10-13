@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
   const [usersId, setUsersId] = useState(null);
   const [usersName, setUsersName] = useState(null);
   const [usersCourses, setUserCourses] = useState({});
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Effect that mounts and sets up an authentication listener 
   useEffect(() => {
@@ -70,6 +71,10 @@ export const AuthProvider = ({ children }) => {
           } else {
             console.warn("Courses not found in document.");
           }
+
+          if (userData.admin) {
+            setIsAdmin(userData.admin);
+          }
         } else {
           console.warn("No user document found for userId:", userId);
         }
@@ -85,7 +90,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     // Provides states to the rest of the program
-    <AuthContext.Provider value={{ currentUser, isAuthenticated, usersId, usersName, usersCourses, setCurrentUser, setIsAuthenticated, setUsersName }}>
+    <AuthContext.Provider value={{ currentUser, isAuthenticated, usersId, usersName, usersCourses, isAdmin, setCurrentUser, setIsAuthenticated, setUsersName, setIsAdmin }}>
       {children}
     </AuthContext.Provider>
   );

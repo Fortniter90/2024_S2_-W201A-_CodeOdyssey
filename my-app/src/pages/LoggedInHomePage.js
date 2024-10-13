@@ -1,163 +1,158 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { fetchCourses, fetchLessons } from "../utils/DataFetching.js";
-import SignOutComponent from "../components/SignOut";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { FaPlus } from "react-icons/fa6";
 import NavigationBarUser from "../components/NavigationBarUser.js";
-import CharacterInformation from "../components/CharacterInformation.js";
-import DeleteUser from "../components/DeleteUser.js";
+import Button from "../components/Button.js";
 import "./LoggedInHomePage.css";
 
-// Predefined gradients
 const gradients = {
     green: 'linear-gradient(var(--python-light), var(--python-medium), var(--python-dark))',
     orange: 'linear-gradient(var(--java-light), var(--java-medium), var(--java-dark))',
     blue: 'linear-gradient(var(--c-light), var(--c-medium), var(--c-dark))'
 };
 
-// HomePage for when the user is logged in
-const LoggedInHomePage = () => {
-    const { currentuser, isAuthenticated, usersId, usersName, usersCourses } = useAuth();    // Extracting user info
-    const [courseDetails, setCourseDetails] = useState({});                         // State to hold course details
-    const [lessonDetails, setLessonDetails] = useState({});                         // State to hold
-    const [loading, setLoading] = useState(true);                                   // State to manage loading status
-    const [error, setError] = useState(null);                                       // State to manage error messages
-    const navigate = useNavigate(); // Hook for navigation
 
-    // Fetch courses and lessons on mount
+
+// Main component for the logged in home page
+const LoggedInHomePage = () => {
+    // Destructure values from the authentiction context
+    const { currentuser, isAuthenticated, usersName, usersCourses, isAdmin } = useAuth();
+
+    // State variables storing data
+    const [courseDetails, setCourseDetails] = useState({});
+    const [lessonDetails, setLessonDetails] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    
+    const navigate = useNavigate(); // Hook to navigate between different pages
+
+    // Fetch course and lesson data whenever authentication status or user course changes
     useEffect(() => {
         const fetchData = async () => {
+            // If not authenticated, do not attempt to fetch data
+            if (!isAuthenticated) return;
+
             try {
-                if (isAuthenticated) {
-                    console.log("Fetching courses...");
-    
-                    // Fetch all courses
-                    const fetchedCourses = await fetchCourses();
-                    console.log("Fetched courses:", fetchedCourses);
-                    setCourseDetails(fetchedCourses);
-    
-                    // Fetch lessons for each course
-                    const lessonPromises = Object.keys(usersCourses).map(async (courseId) => {
-                        console.log(`Fetching lessons for courseId: ${courseId}`);
-                        if (fetchedCourses[courseId]) {
-                            const fetchedLessons = await fetchLessons(courseId);
-                            console.log(`Fetched lessons for courseId ${courseId}:`, fetchedLessons);
-                            return { [courseId]: fetchedLessons };
-                        }
-                        console.warn(`CourseId ${courseId} not found in fetchedCourses.`);
-                        return null;
-                    });
-    
-                    // Fetch lesson details
-                    const lessonResults = await Promise.all(lessonPromises);
-                    const allLessons = lessonResults.reduce((acc, lessons) => {
-                        if (lessons) {
-                            return { ...acc, ...lessons };
-                        }
-                        return acc;
-                    }, {});
-    
-                    console.log("All fetched lessons:", allLessons);
-                    setLessonDetails(allLessons);
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setError(error);
+                // Fetch course data
+                const fetchedCourses = await fetchCourses();
+                setCourseDetails(fetchedCourses);
+
+                // Fetch lesson for each course that the user has done
+                const lessonPromises = Object.keys(usersCourses).map(async (courseId) => {
+                    if (fetchedCourses[courseId]) {
+                        const lessons = await fetchLessons(courseId);
+                        return { [courseId]: lessons };
+                    }
+                    return null;
+                });
+
+                // Combine the lessons data into a single object
+                const lessonsData = (await Promise.all(lessonPromises)).reduce((acc, lessons) => {
+                    return lessons ? { ...acc, ...lessons } : acc;
+                }, {});
+
+                setLessonDetails(lessonsData);
+            } catch (err) {
+                // If an error occurs, set error state
+                setError(err);
             } finally {
+                // Mark data loading as finished
                 setLoading(false);
             }
         };
-    
+
+        // Call the fetchData function
         fetchData();
-    }, [usersCourses, isAuthenticated]);
-    
+    }, [isAuthenticated, usersCourses]);
 
-    // Redirecting if the user is not authenticated
-    if (!isAuthenticated) {
-        return <p>Redirecting to homepage...</p>;
-    }
+    // Redirect to the homepage if not authenticated
+    if (!isAuthenticated) return <p>Redirecting to homepage...</p>;
 
-    // Show loading message while fetching data
-    if (loading) {
-        return <p>Loading...</p>;
-    }
+    // Show loading state while data is being fetched
+    if (loading) return <p>Loading...</p>;
 
-    // Display error message if data loading fails
-    if (error) {
-        return <p>Error loading data: {error.message}</p>;
-    }
+    // Show an error message if data fetching fails
+    if (error) return <p>Error loading data: {error.message}</p>;
 
-    // Function to navigate to the selected course
-    const goToCourse = (courseId) => {
-        navigate(`/course/${courseId}`);
-    }
+    // Navigation helper functions
+    const navigateTo = (path) => () => navigate(path);
+    const goToCourse = (courseId) => () => navigate(`/course/${courseId}`);
+    const goToLesson = (courseId, lessonId) => () => navigate(`/course/${courseId}/lesson/${lessonId}`);
 
-    // Function to navigate to the selected lesson
-    const goToLesson = (courseId, lessonId) => {
-        navigate(`/course/${courseId}/lesson/${lessonId}`);
-    }
-
-    const goToPastTests = () => {
-        navigate(`/pasttests`);
-    }
-
-    const goToDeveloperDashboard = () => {
-        navigate(`/developerdashboard`);
-    }
+    // Render a course box with its latest lesson
+    const renderCourseBox = (courseId, courseData, latestLesson) => (
+        <div
+            className='recent-levels'
+            key={courseId}
+            style={{ backgroundImage: gradients[courseData.backgroundColor] || gradients.blue }}
+            onClick={goToLesson(courseId, latestLesson?.id)}>
+            <p className='roboto-medium'>{courseData.title || 'Unknown Course'}</p>
+            <h3 className='fira-code'>{latestLesson?.title || 'Unknown Lesson'}</h3>
+        </div>
+    );
 
     return (
-        <div className='home-page'>
+        <div>
+            {/* User navigation bar */}
             <NavigationBarUser />
-            <SignOutComponent/>
-            
-            <button onClick={() => goToPastTests()}>Review Past Tests</button>
-            <button onClick={() => goToDeveloperDashboard()}>See Developer Dashboard</button>
 
-            <div className='home-page-content'>
-                <h1 className='fira-code'>Welcome, {usersName || 'User'}</h1>
+            {/* Content on the home page */}
+            <div className='homepage-content'>
 
-                {/* Recent levels section */}
-                <div className='recent-levels-container'>
-                    <h2 className='recent-levels-title roboto-bold'>RECENT LEVELS</h2>
+                {/* Home page header */}
+                <div className='homepage-header'>
+                    <h1 className='fira-code'>Welcome, {usersName || 'User'}</h1>
 
-                    {Object.keys(usersCourses || {}).map((courseId) => {
-                        const course = usersCourses[courseId];
-                        const courseData = courseDetails[courseId] || {};
-                        const latestLessonId = course.currentLesson;
-                        const latestLesson = lessonDetails[courseId]?.[latestLessonId] || {};
-                        const completedLessonNames = course.completedLessons
-                            .map(lessonId => lessonDetails[courseId]?.[lessonId]?.title || 'Unknown Lesson')
-                            .join(', ');
-
-                        return (
-                            <div className='recent-levels' style={{backgroundImage: gradients[courseData.backgroundColor] || gradients.blue}} key={courseId} onClick={(e) => goToLesson(courseId, latestLessonId)}>
-                                <p className='roboto-medium'>{courseData.title || 'Unknown Course'}</p>
-                                <h3 className='fira-code'>{latestLesson.title || 'Unknown Lesson'}</h3>
-                            </div>
-                        );
-                    })}
+                    {/* If the user is an admin, show button to navigate to the developer dashboard */}
+                    {isAdmin && <Button text="DEVELOPER DASHBOARD" action={navigateTo('/developerdashboard')} />}
                 </div>
 
-                {/* Your courses section */}
-                <div className='recent-levels-container'>
-                    <h2 className='recent-levels-title roboto-bold'>YOUR COURSES</h2>
-
-                    {Object.keys(usersCourses || {}).map((courseId) => {
+                {/* Render the "Recent Levels" section */}
+                <Section title="RECENT LEVELS" emptyMessage="You Have No Recent Levels" onEmptyClick={navigateTo('/course')}>
+                    {Object.keys(usersCourses).map(courseId => {
+                        const course = usersCourses[courseId];
                         const courseData = courseDetails[courseId] || {};
+                        const latestLesson = lessonDetails[courseId]?.[course.currentLesson] || {};
+                        return renderCourseBox(courseId, courseData, latestLesson);
+                    })}
+                </Section>
 
+                {/* Render the "Your Courses" section */}
+                <Section title="YOUR COURSES" emptyMessage="You Have No Courses" onEmptyClick={navigateTo('/course')}>
+                    {Object.keys(usersCourses).map(courseId => {
+                        const courseData = courseDetails[courseId] || {};
                         return (
-                            <div className='recent-levels' style={{backgroundImage: gradients[courseData.backgroundColor] || gradients.blue}} key={courseId} onClick={(e) => goToCourse(courseId)}>
+                            <div
+                                className='recent-levels'
+                                key={courseId}
+                                style={{ backgroundImage: gradients[courseData.backgroundColor] || gradients.blue }}
+                                onClick={goToCourse(courseId)}>
                                 <h3 className='fira-code'>{courseData.title || 'Unknown Course'}</h3>
                             </div>
                         );
                     })}
-                </div>
+                </Section>
             </div>
-            
-            <CharacterInformation />
-            <DeleteUser />
         </div>
     );
 };
+
+// Section component to render a titled section with content or an empty state
+const Section = ({ title, children, emptyMessage, onEmptyClick }) => (
+    <div className='recent-levels-container'>
+        <h2 className='recent-levels-title roboto-bold'>{title}</h2>
+        {children.length > 0 ? children : (
+            <div className='recent-levels selected-courses-empty' onClick={onEmptyClick}>
+                <h3 className='fira-code'>{emptyMessage}</h3>
+                <div className='empty-align'>
+                    <p className='roboto-medium'>Start a new journey today!</p>
+                    <FaPlus className='faplus' />
+                </div>
+            </div>
+        )}
+    </div>
+);
 
 export default LoggedInHomePage;

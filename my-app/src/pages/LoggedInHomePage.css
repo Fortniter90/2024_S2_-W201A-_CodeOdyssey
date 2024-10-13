@@ -1,62 +1,95 @@
 /* Main content container for the home page */
-.home-page-content {
+.homepage-content {
     display: flex;
     flex-direction: column;
-    margin: 50px;
+    margin: 1em 5%;
 }
 
-.home-page-content h1 {
-    font-size: 50px;
+/* Header section */
+.homepage-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.homepage-header h1 {
+    font-size: 3rem;
     color: var(--logo-purple);
 }
 
 /* Container for recent levels section */
 .recent-levels-container {
     width: calc(100% - 100px);
-    margin: 25px 0;
+    margin: 1.5em 0;
     display: flex;
     background-color: var(--white);
     width: fit-content;
-    padding: 10px;
+    padding: 0.5em;
     border-radius: 20px;
     border-top-left-radius: 0;
     position: relative;
 }
 
+/* Title for recent levels */
 .recent-levels-title {
     background-color: var(--white);
-    padding: 10px 20px;
+    padding: 0.5em 1em;
     border-radius: 20px 20px 0 0; 
-    margin-bottom: 10px; 
-    font-size: 18px;
+    font-size: 1.2rem;
     font-weight: bold;
+    position: absolute;
     top: -50px;
     left: 0px;
-    position: absolute;
 }
 
 /* Individual level item styling */
 .recent-levels {
+    background-size: cover;
     border-radius: 20px;
-    padding: 10px;
-    margin-bottom: 10px;
-    width: 400px;
+    padding: 1em;
+    width: 90%;
+    max-width: 400px;
+    color: var(--white);
+    margin: 0.5em;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    color: var(--white);
-    padding: 20px;
-    margin: 10px;
 }
 
+/* Text styles for the recent levels */
 .recent-levels p {
-    margin: 0;
-    margin-bottom: 10px;
-    align-self: last baseline;
+    margin: 0 0 0.5em 0;
+    font-size: 1em;
+    align-self: flex-end;
 }
 
 .recent-levels h3 {
-    font-size: 42px;
-    line-height: 34px;
+    font-size: 2.5rem;
+    line-height: 1.2;
     margin: 0;
+}
+
+
+/* Empty message styling for selected courses */
+.selected-courses-empty {
+    background-color: gainsboro;
+    color: #5F5F5F;
+    width: 90%;
+    max-width: 400px;
+    margin: 0.5em;
+}
+
+/* Alignment for the empty message */
+.empty-align {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5em;
+}
+
+.empty-align p {
+    color: #5F5F5F;
+}
+
+/* Styling for the plus icon */
+.empty-align .faplus {
+    font-size: 2.5rem;
 }
