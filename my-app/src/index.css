@@ -18,13 +18,25 @@
 	--python-medium: #71B39A;
 	--python-dark: #396E59;
 	
+	--green-light: #B4D9BC;
+	--green-medium: #71B39A;
+	--green-dark: #396E59;
+	
 	--java-light: #F7B267;
 	--java-medium: #F4845F;
 	--java-dark: #F25C54;
+    
+	--orange-light: #F7B267;
+	--orange-medium: #F4845F;
+	--orange-dark: #F25C54;
 	
 	--c-light: #90E0EF;
 	--c-medium: #00B4D8;
 	--c-dark: #0077B6;
+	
+	--blue-light: #90E0EF;
+	--blue-medium: #00B4D8;
+	--blue-dark: #0077B6;
 }
 
 .fira-code {

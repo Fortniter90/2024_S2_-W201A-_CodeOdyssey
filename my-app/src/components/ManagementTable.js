@@ -6,7 +6,7 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 const ManagementTable = ({  
     items,
     onRowClick,
-    renderNoItems
+    renderNoItems,
 }) => {
 
     // States controlling filtering and searching
@@ -35,7 +35,6 @@ const ManagementTable = ({
     
     // Replace currentItems with filteredItems
     const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
-  
 
 
     return (

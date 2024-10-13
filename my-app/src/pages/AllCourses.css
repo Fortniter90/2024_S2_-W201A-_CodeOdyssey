@@ -34,3 +34,21 @@
     padding: 20px;
     margin: 10px;
 }
+
+
+
+.recent-levels .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.recent-levels .header h2 {
+    font-size: clamp(20px, 2vw, 40px);
+    margin: 0;
+}
+
+.recent-levels .header p {
+    align-self: flex-start;
+    color: var(--white);
+}

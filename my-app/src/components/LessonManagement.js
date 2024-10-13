@@ -22,12 +22,13 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
   });
 
   // States controling modal visibility
-  const [addModalActive, setAddModalActive] = useState(false);                                // Add course
-  const [lessonModalActive, setLessonModalActive] = useState(false);                          // Lesson details
-  const [confirmationModalActive, setConfirmationModalActive] = useState(false);              // Success confirmation
-  const [deleteConfirmationModalActive, setDeleteConfirmationModalActive] = useState(false);  // Delete confirmation
-
-  // States controling course status
+  const [modals, setModals] = useState({
+    add: false,
+    lessonDetails: false,
+    confirmation: false,
+    deleteConfirmation: false,
+  })
+  
   const [selectedLesson, setSelectedLesson] = useState(null);   // Stores selected lesson
   const [isEditing, setIsEditing] = useState(false);            // Indicates if lesson is in edit mode
 
@@ -48,6 +49,16 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
       console.error('Error loading lessons:', error); // Log any errors during data fetching
     }
   };
+  
+  // Handle modal visibility
+  const toggleModal = (modalName, state) => {
+    setModals((prev) => ({ ...prev, [modalName]: state })); // Change state of given modal
+
+    if (state == false) {
+      setFormData({ title: '', number: '', description: '', content: [] }); // Reset form data
+      setIsEditing(false); // Set editing mode
+    }
+  }
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -55,102 +66,71 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
     setFormData(prev => ({ ...prev, [name]: value })); // Update formData state
   };
 
-  // Handle lesson addition
+  // Handle lesson addition and updating
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-    const newLesson = {
-      ...formData,
-      available: false,
-      testCount: 0
-    };
+    e.preventDefault();
+
+    // Set the lesson number for new lesson
+    const lessonNumber = isEditing ? formData.number : getNextLessonNumber();
+    const newLesson = { ...formData, number: lessonNumber, available: false, testCount: 0 };
 
     try {
-      await saveLesson(selectedCourse.id, newLesson);  // Save the new lesson
-      setAddModalActive(false);     // Close the add lesson modal
+      if (isEditing) {
+        await updateLesson(selectedCourse.id, selectedLesson.id, newLesson);
+      } else {
+        await saveLesson(selectedCourse.id, newLesson);
+      }
 
-      setFormData({ title: '', number: '', description: '', content: [] }); // Reset form data
-      loadLessons() // Refresh lessons list
-      
+      loadLessons(); // Refresh lesson list
+      toggleModal(isEditing ? 'lessonDetails' : 'add', false); // Close modal
     } catch (error) {
-      console.error('Error adding lesson:', error); // Log any errors during course addition
+      console.error(`Error ${isEditing ? 'updating' : 'adding'} lesson:`, error);
     }
+  };
+
+  const getNextLessonNumber = () => {
+    return lessons.length > 0 ? Math.max(...lessons.map(lesson => lesson.number)) + 1 : 1;
   };
 
   // Handle lesson selection for editing and viewing details
   const handleLessonClick = (lesson) => {
     setSelectedLesson(lesson);
-    setLessonModalActive(true);
+    setFormData({ title: lesson.title, number: lesson.number, description: lesson.description, content: lesson.content });
+    setIsEditing(true);
+    toggleModal('lessonDetails', true);
   };
 
-  // Handle course deletion
+  // Handle lesson deletion
   const handleDelete = async () => {
     try {
-      await deleteLesson(selectedCourse.id, selectedLesson.id);    // Delete the selected lesson
-      setDeleteConfirmationModalActive(false);  // Close delete confirmation modal
-      setLessonModalActive(false);              // Close lesson details
-      setConfirmationModalActive(true);         // Show success confirmation
-      loadLessons();                            // Refresh lesson list after deletion
-
+      await deleteLesson(selectedCourse.id, selectedLesson.id);
+      loadLessons();
+      toggleModal('deleteConfirmation', false);
+      toggleModal('confirmation', true);
     } catch (error) {
-      console.error('Error deleting lesson:', error); // Log any errors during deletion
+      console.error('Error deleting lesson:', error);
     }
   };
-
-  // Prepare form for editing
-  const handleEdit = () => {
-    // Set form data for selected lesson
-    setFormData({ 
-      title: selectedLesson.title,
-      number: selectedLesson.number,
-      description: selectedLesson.description,
-      content: selectedLesson.content,
-      available: selectedLesson.available
-    });
-    setIsEditing(true); // Set editing mode
-  };
-  
-  // Handle lesson update
-  const handleUpdateSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-    
-    const updatedCourse = {
-      ...formData,
-      testCount: selectedLesson.testCount       // Keep original test count
-    };
-  
-    try {
-      await updateLesson(selectedCourse.id, selectedLesson.id, updateLesson); // Update lesson with new data
-      setLessonModalActive(false);      // Close lesson details modal
-      setIsEditing(false);              // Exit editing mode
-      setSelectedLesson(null);          // Clear selected lesson
-      loadLessons();                    // Refresh lesson list                    
-      setConfirmationModalActive(true); // Show success confirmation modal
-
-    } catch (error) {
-      console.error('Error updating lesson:', error); // Log any errors during update
-    }
-  };
-  
 
   const addContent = () => {
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      content: [...prevFormData.content, { type: 'text', content: '' }]
+    setFormData(prev => ({
+      ...prev,
+      content: [...prev.content, { type: 'text', content: '' }]
     }));
   };
-  
+
   const removeContent = (index) => {
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      content: prevFormData.content.filter((_, i) => i !== index)
+    setFormData(prev => ({
+      ...prev,
+      content: prev.content.filter((_, i) => i !== index)
     }));
   };
-  
+
   const handleContentChange = (index, field, value) => {
     const newContent = [...formData.content];
     newContent[index] = { ...newContent[index], [field]: value };
-    setFormData(prevFormData => ({
-      ...prevFormData,
+    setFormData(prev => ({
+      ...prev,
       content: newContent
     }));
   };
@@ -165,34 +145,37 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
       {/* Header section */}
       <div className='management-header'>
         <h1 className='fira-code'>{selectedCourse.title}</h1>
-        <Button text="Add Lesson" action={() => setAddModalActive(true)} />
+        <Button text="Add Lesson" action={() => toggleModal('add', true)} />
       </div>
   
       {/* Modal for adding new lesson */}
-      {addModalActive && (
+      {modals.add && (
         <div className='modal-overlay'>
           <div className='modal'>
             <input
               type="number"
+              name="number" // Add name attribute
               placeholder="Lesson Number"
               value={formData.number}
-              onChange={(e) => setFormData({ ...formData, number: e.target.value })}
+              onChange={handleInputChange} // Use the simplified input handler
               required
             />
             <input
               type="text"
+              name="title" // Add name attribute
               placeholder="Title"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={handleInputChange} // Use the simplified input handler
               required
             />
             <textarea
+              name="description" // Add name attribute
               placeholder="Lesson Description"
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={handleInputChange} // Use the simplified input handler
               required
             />
-  
+
             {/* Dynamic Content Management */}
             {formData.content.map((item, index) => (
               <div key={index} className='content-item'>
@@ -203,7 +186,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
                   <option value="text">Text</option>
                   <option value="code">Code</option>
                 </select>
-  
+
                 {item.type === 'text' && (
                   <textarea
                     placeholder="Content"
@@ -211,7 +194,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
                     onChange={(e) => handleContentChange(index, 'content', e.target.value)}
                   />
                 )}
-  
+
                 {item.type === 'code' && (
                   <div>
                     <textarea
@@ -228,16 +211,16 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
                     />
                   </div>
                 )}
-  
+
                 <button onClick={() => removeContent(index)}>Remove</button>
               </div>
             ))}
-  
+
             <button onClick={addContent}>Add Content</button>
-  
+
             <div className='modal-buttons'>
               <Button text="Add Lesson" action={handleSubmit} />
-              <Button text="Cancel" type="outline" action={() => setAddModalActive(false)} />
+              <Button text="Cancel" type="outline" action={() => toggleModal('add', false)} />
             </div>
           </div>
         </div>
@@ -250,16 +233,16 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
       />
   
       {/* Lesson information modal */}
-{lessonModalActive && selectedLesson && (
+{modals.lessonDetails && selectedLesson && (
   <>
-    <div className='overlay' onClick={() => setLessonModalActive(false)} />
+    <div className='overlay' onClick={() => toggleModal('lessonDetails', true)} />
     <div className='information-modal'>
-      <button className='authpage-close' onClick={() => setLessonModalActive(false)}>
+      <button className='authpage-close' onClick={() => toggleModal('lessonDetails', false)}>
         <FaX />
       </button>
       
       {isEditing ? (
-        <form onSubmit={handleUpdateSubmit}>
+        <form onSubmit={handleSubmit}>
           <h2>Edit Lesson</h2>
           <label>
             Title:
@@ -315,7 +298,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
             <span className={`availability-tag ${selectedLesson.available ? "available" : "unavailable"}`}>
               {selectedLesson.available ? "Available" : "Unavailable"}
             </span>
-            <Button text="Edit" action={handleEdit} />
+            <Button text="Edit" action={handleSubmit} />
           </div>
           <div className='row-lesson-test'>
             <p><strong>Number:</strong> {selectedLesson.number}</p>
@@ -325,7 +308,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
           <hr className='modal-divider' />
           <div className='modal-buttons'>
             <Button text="Manage Lesson Content" action={() => onSelectLesson(selectedLesson)} />
-            <Button text="Delete" outline={true} action={() => setDeleteConfirmationModalActive(true)} />
+            <Button text="Delete" outline={true} action={() => toggleModal('deleteConfirmation', true)} />
           </div>
         </>
       )}
@@ -334,29 +317,30 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
 )}
 
   
-      {/* Confirmation modal after course add or delete */}
-      {confirmationModalActive && (
+      {/* Success Confirmation Modal */}
+      {modals.confirmation && (
         <>
-          <div className='overlay' onClick={() => setConfirmationModalActive(false)} />
+          <div className='overlay' onClick={() => toggleModal('confirmation', false)} />
           <div className='modal'>
-            <button className='authpage-close' onClick={() => setConfirmationModalActive(false)}><FaX /></button>
+            <button className='authpage-close' onClick={() => toggleModal('confirmation', false)}><FaX /></button>
             <h2>Success!</h2>
             <p>Action completed successfully.</p>
-            <Button text="Close" action={() => setConfirmationModalActive(false)} />
+            <Button text="Close" action={() => toggleModal('confirmation', false)} />
           </div>
         </>
       )}
-  
-      {/* Delete confirmation modal */}
-      {deleteConfirmationModalActive && (
+
+      {/* Delete Confirmation Modal */}
+      {modals.deleteConfirmation && (
         <>
-          <div className='overlay' onClick={() => setDeleteConfirmationModalActive(false)} />
+          <div className='overlay' onClick={() => toggleModal('deleteConfirmation', false)} />
           <div className='modal'>
-            <h2>Confirm Deletion</h2>
+            <button className='authpage-close' onClick={() => toggleModal('deleteConfirmation', false)}><FaX /></button>
+            <h2>Delete Course</h2>
             <p>Are you sure you want to delete this lesson?</p>
             <div className='modal-buttons'>
               <Button text="Delete" action={handleDelete} />
-              <Button text="Cancel" outline={true} action={() => setDeleteConfirmationModalActive(false)} />
+              <Button text="Cancel" outline={true} action={() => toggleModal('deleteConfirmation', false)} />
             </div>
           </div>
         </>
