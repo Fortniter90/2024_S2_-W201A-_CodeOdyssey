@@ -43,7 +43,7 @@ io.on("connection", (socket) => {
 });
 
 // Set up the authentication routes
-app.use("/", router);
+app.use("/auth", router);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

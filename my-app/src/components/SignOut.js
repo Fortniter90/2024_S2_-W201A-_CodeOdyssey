@@ -8,7 +8,7 @@ const SignOutComponent = () => {
   const handleSignOut = async () => {
     try {
       const user = currentUser;
-      const response = await axios.post('http://localhost:8080/signout', {
+      const response = await axios.post('http://localhost:8080/auth/signout', {
         user,
       }, {
         headers: {

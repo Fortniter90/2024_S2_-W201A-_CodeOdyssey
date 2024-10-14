@@ -22,7 +22,7 @@ const SignUpComponent = () => {
   const signUpHandler = async (e) => {
     e.preventDefault(); // Prevents the page from reloading
     try {
-      const response = await axios.post('http://localhost:8080/signup', {
+      const response = await axios.post('http://localhost:8080/auth/signup', {
         email,
         password,
         name,
