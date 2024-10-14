@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { updateUserData } from '../utils/dataSaving';
+import { updateUserData } from '../utils/DataSaving';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Cropper from 'cropperjs';
