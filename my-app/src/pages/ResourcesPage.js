@@ -3,6 +3,10 @@ import NavigationBarHome from "../components/NavigationBarHome";
 import NavigationBarUser from "../components/NavigationBarUser";
 import './ResourcesPage.css'; // Importing the CSS file for styling the Resources Page
 import { useAuth } from "../context/AuthContext"; // Importing the authentication context to determine if the user is authenticated
+import JavaCharacter from "../components/JavaCharacter";
+import PythonCharacter from "../components/PythonCharacter";
+import CCharacter from "../components/CCharacter";
+
 
 const ResourcesPage = () => {
   // Destructuring to get the isAuthenticated value from the useAuth context
@@ -11,7 +15,16 @@ const ResourcesPage = () => {
   return (
     <div className="resources-container">
       {/* Conditionally rendering the navigation bar based on the user's authentication status */}
-      <NavigationBarUser />
+      {isAuthenticated ? <NavigationBarUser /> : <NavigationBarHome />}
+        <h1>Resources Page</h1>
+        <p>Here are some helpful resources that we recommend for you! </p>
+        <div style={{ marginTop: '250px' }}></div>
+        <JavaCharacter />
+        <div style={{ marginTop: '250px' }}></div>
+        <PythonCharacter />
+        <div style={{ marginTop: '250px' }}></div>
+        <CCharacter />
+        <div style={{ marginTop: '250px' }}></div>
 
       {/* Main title of the Resources Page */}
       <h1 className="resources-title">Resources Page</h1>
@@ -83,6 +96,6 @@ const ResourcesPage = () => {
     </div>
   );
 };
-
-// Exporting the ResourcesPage component for use in the project
+  
 export default ResourcesPage;
+  
