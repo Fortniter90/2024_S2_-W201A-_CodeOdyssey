@@ -34,31 +34,31 @@
 /* Styling for the profile picture */
 .usersettings-picture {
     display: flex;
-    flex-direction: column; /* Stack upload button and image */
-    align-items: center; /* Center align items */
+    flex-direction: column; 
+    align-items: center; 
 }
 
 .usersettings-picture img {
-    width: 200px; /* Original size for cropping */
-    height: 200px; /* Original size for cropping */
+    width: 200px; 
+    height: 200px;
     object-fit: cover;
     object-position: center;
 }
 
 .cropped-image {
-    width: 200px; /* Final displayed size */
-    height: 200px; /* Final displayed size */
+    width: 200px; 
+    height: 200px; 
     object-fit: cover;
     object-position: center;
-    border-radius: 50%; /* Circular shape */
+    border-radius: 50%;
     border: 3px solid var(--background-dark);
-    margin-top: 10px; /* Add some space between button and image */
+    margin-top: 10px;
 }
 
 /* Adjust this if you want to show the cropper interface */
 .cropper-container {
-    width: 100%; /* Make the cropper take full width */
-    margin-top: 10px; /* Add some margin */
+    width: 100%; 
+    margin-top: 10px; 
 }
 
 

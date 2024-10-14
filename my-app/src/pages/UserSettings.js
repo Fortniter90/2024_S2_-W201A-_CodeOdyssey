@@ -1,66 +1,39 @@
 import { useEffect, useRef, useState } from 'react';
-import Button from '../components/Button';
-import DeleteUserComponent from '../components/DeleteUser';
-import NavigationBarUser from '../components/NavigationBarUser';
-import { useAuth } from '../context/AuthContext';
-import './UserSettings.css';
 import { updateUserData } from '../utils/dataSaving';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import Cropper from 'cropperjs';
+import NavigationBarUser from '../components/NavigationBarUser';
+import DeleteUserComponent from '../components/DeleteUser';
+import Button from '../components/Button';
 import 'cropperjs/dist/cropper.css';
+import './UserSettings.css';
 
 const UserSettings = () => {
     const { currentUser, isAuthenticated, usersId, usersName, usersCourses, usersProfilePicture, setUsersName, setUsersProfilePicture } = useAuth();
 
-    const navigate = useNavigate();
+    // States to store images
+    const [imageFile, setImageFile] = useState(null);                       // Image file
+    const [croppedImage, setCroppedImage] = useState(usersProfilePicture);  // Cropped image
 
-    const [imageFile, setImageFile] = useState(null);
-    const [croppedImage, setCroppedImage] = useState(usersProfilePicture); // State to store the cropped image
-    const [cropper, setCropper] = useState(null);
-    const [isCropping, setIsCropping] = useState(false); // State to control cropping mode
+    // States to control cropping
+    const [cropper, setCropper] = useState(null);           // Cropper instance
+    const [isCropping, setIsCropping] = useState(false);    // Cropping mode active status
+
+    // States for file and image references
     const fileInputRef = useRef(null);
-    const imagePreviewRef = useRef(null); // Ref for the image preview
+    const imagePreviewRef = useRef(null);
 
-    // Effect to update state when usersProfilePicture changes
+    const navigate = useNavigate(); // Router hook for navigation
+
+
+
+    // Effect to update state when the profile picture changes
     useEffect(() => {
         setCroppedImage(usersProfilePicture);
     }, [usersProfilePicture]);
 
-    const handleFileChange = (e) => {
-        const file = e.target.files && e.target.files[0];
-        if (file) {
-            setImageFile(file);
-            const imgUrl = URL.createObjectURL(file);
-            
-            // Initialize cropper
-            if (cropper) {
-                cropper.destroy(); // Destroy existing cropper if present
-            }
-    
-            const imageElement = imagePreviewRef.current;
-            if (imageElement) { // Check if the ref is valid
-                imageElement.src = imgUrl; // Set the uploaded image as the source
-                
-                imageElement.onload = () => {
-                    const newCropper = new Cropper(imageElement, {
-                        aspectRatio: 1, // Square crop
-                        viewMode: 1,
-                        responsive: true,
-                        autoCropArea: 1,
-                        ready() {
-                            setIsCropping(true); // Show cropping interface
-                        },
-                    });
-                    setCropper(newCropper);
-                };
-            } else {
-                console.error("Image element is not available");
-            }
-        } else {
-            console.error("No file selected");
-        }
-    };
-
+    // Trigger the file input dialog when the upload button is clicked
     const triggerFileInput = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
@@ -68,16 +41,55 @@ const UserSettings = () => {
         }
     };
 
+    // Handle file input changes when the user selects a file
+    const handleFileChange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return; // If no file is selected, do nothing
+
+        // Reset the file input to prevent future triggers
+        if (fileInputRef.current) {
+            fileInputRef.current.value = ''; // Clear the file input value
+        }
+
+        setImageFile(file);
+        const imgUrl = URL.createObjectURL(file);
+        
+        // If there's an existing cropper instance, destroy it
+        if (cropper) {
+            cropper.destroy();
+        }
+
+        // Get the image element and set up the cropper
+        const imageElement = imagePreviewRef.current;
+        if (imageElement) { // Check if the ref is valid
+            imageElement.src = imgUrl; // Set the uploaded image as the source
+            
+            imageElement.onload = () => {
+                // Initialize Cropper.js with options
+                const newCropper = new Cropper(imageElement, {
+                    aspectRatio: 1, // Square crop
+                    viewMode: 1,
+                    responsive: true,
+                    autoCropArea: 1,
+                    ready() {
+                        setIsCropping(true); // Enter cropping mode
+                    },
+                });
+                setCropper(newCropper); // Save the cropper instance
+            };
+        } else {
+            console.error("Image element is not available");
+        }
+    };
+
+    // Save the cropped image and exit cropping mode
     const saveCroppedImage = () => {
         if (cropper) {
-            // Get the cropped image data
+            // Get the cropped canvas dimensions
             const canvas = cropper.getCroppedCanvas({
                 width: 200,
                 height: 200,
             });
-    
-            // Log the canvas to check if it's valid
-            console.log('Cropped canvas:', canvas);
     
             if (canvas) {
                 // Convert the canvas to a blob
@@ -86,7 +98,18 @@ const UserSettings = () => {
                         const newProfilePicture = URL.createObjectURL(blob); // New cropped image URL
     
                         // Update the context state to reflect changes immediately
-                        setUsersProfilePicture(newProfilePicture); // Set the new profile picture
+                        setCroppedImage(newProfilePicture); 
+
+                        setIsCropping(false); // Explicitly exit cropping mode
+                        setImageFile(null); // Clear the selected file
+
+
+
+                        // Reset the file input to avoid re-triggering
+                        if (fileInputRef.current) {
+                            fileInputRef.current.value = '';
+                        }
+
                     } else {
                         console.error("Blob creation failed");
                     }
@@ -97,14 +120,6 @@ const UserSettings = () => {
         } else {
             console.error("Cropper is not initialized");
         }
-    
-        // Clean up and reset state after saving
-        if (cropper) {
-            cropper.destroy();
-        }
-        
-        setIsCropping(false);
-        setImageFile(null); // Clear the file input
     }
     
 
@@ -174,11 +189,13 @@ const UserSettings = () => {
                                     className='cropped-image'
                                 />
                             ) : (
-                                <img 
-                                    src={usersProfilePicture}
-                                    alt='Profile Picture'
-                                    className='cropped-image'
-                                />
+                                <div>
+                                    <img 
+                                        src={croppedImage}
+                                        alt='Profile Picture'
+                                        className='cropped-image'
+                                    />
+                                </div>
                             )}
                             
                             <input
