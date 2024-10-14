@@ -18,7 +18,8 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [usersId, setUsersId] = useState(null);
   const [usersName, setUsersName] = useState(null);
-  const [usersCourses, setUserCourses] = useState({});
+  const [usersCourses, setUsersCourses] = useState({});
+  const [usersProfilePicture, setUsersProfilePicture] = useState(null);
 
   // Effect that mounts and sets up an authentication listener 
   useEffect(() => {
@@ -44,7 +45,8 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false);
         setUsersId(null);
         setUsersName(null);
-        setUserCourses({});
+        setUsersCourses({});
+        setUsersProfilePicture(null);
         console.log("User logged out.");
       }
     };
@@ -66,10 +68,17 @@ export const AuthProvider = ({ children }) => {
           }
 
           if (userData.courses) {
-            setUserCourses(userData.courses);
+            setUsersCourses(userData.courses);
           } else {
             console.warn("Courses not found in document.");
           }
+
+          if (userData.profilePicture) {
+            setUsersProfilePicture(userData.profilePicture);
+          } else {
+            console.warn("Profile Picture not found in document.");
+          }
+
         } else {
           console.warn("No user document found for userId:", userId);
         }
@@ -85,7 +94,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     // Provides states to the rest of the program
-    <AuthContext.Provider value={{ currentUser, isAuthenticated, usersId, usersName, usersCourses, setCurrentUser, setIsAuthenticated, setUsersName }}>
+    <AuthContext.Provider value={{ currentUser, isAuthenticated, usersId, usersName, usersCourses, usersProfilePicture, setCurrentUser, setIsAuthenticated, setUsersName, setUsersProfilePicture }}>
       {children}
     </AuthContext.Provider>
   );

@@ -4,7 +4,7 @@ import { db } from '../config/firebase';
 import Button from './Button';
 import DatabaseTable from './DatabaseTable';
 import './DatabaseManagement.css';
-import { fetchCourses } from '../utils/dataFetching';
+import { fetchCourses } from '../utils/DataFetching';
 
 const CourseManagement = () => {
   // State for courses

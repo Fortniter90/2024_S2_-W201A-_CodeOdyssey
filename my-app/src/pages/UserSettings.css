@@ -1,8 +1,4 @@
 .usersettings {
-    width: 100%;
-}
-
-.usersettings-container {
     width: 60%;
     margin: 25px auto;
     display: flex;
@@ -23,10 +19,14 @@
     color: var(--logo-purple);
 }
 
-.usersettings-content {
+.usersettings-container {
     align-items: center;
+    margin: 10px auto;
+    width: 60%;
+}
+
+.usersettings-content {
     background-color: var(--white);
-    margin: 10px 0;
     padding: 20px;
     border-radius: 25px;
 }
@@ -42,14 +42,22 @@
     object-fit: cover;
     object-position: center;
     border-radius: 50%;
+    border: 3px solid var(--background-dark);
 }
 
-.usersettings-content p
+.picture-upload {
+    display: flex;
+    flex-direction: column;
+}
 
-.usersettings-container button {
-    margin-right: auto;
+.usersettings-username {
+    margin-top: 20px;
+}
+
+.usersettings-username input {
+    width: 100%;
 }
 
 .usersettings-buttons {
-    justify-self: flex-end;
+    margin-top: 20px;
 }
