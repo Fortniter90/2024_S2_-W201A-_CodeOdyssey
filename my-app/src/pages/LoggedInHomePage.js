@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { fetchCourses, fetchLessons } from "../utils/DataFetching.js";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
+import SignOutComponent from "../components/SignOut";
 import NavigationBarUser from "../components/NavigationBarUser.js";
 import Button from "../components/Button.js";
 import "./LoggedInHomePage.css";
+import Footer from "../components/Footer.js";
 
 const gradients = {
     green: 'linear-gradient(var(--python-light), var(--python-medium), var(--python-dark))',
@@ -135,6 +137,8 @@ const LoggedInHomePage = () => {
                     })}
                 </Section>
             </div>
+
+            <Footer />
         </div>
     );
 };

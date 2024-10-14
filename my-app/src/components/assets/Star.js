@@ -8,7 +8,7 @@ const Star = ({ x, y, size = 1, darkBackground = false }) => {
             height="64"
             viewBox="0 0 64 64"
             style={{
-                position: 'absolute',
+                position: 'inherit',
                 left: `calc(${x}vw - 32px)`, // Adjust x position based on viewport width
                 top: `calc(${y}vh - 32px)`, // Adjust y position based on viewport height
             }}

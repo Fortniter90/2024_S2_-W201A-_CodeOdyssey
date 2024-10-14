@@ -1,4 +1,5 @@
 import CodeOdysseyLogo from '../components/assets/CodeOdysseyLogo';
+import Footer from '../components/Footer';
 import HomeBanner from '../components/HomeBanner';
 import NavigationBarHome from '../components/NavigationBarHome';
 import './LoggedOutHomePage.css';
@@ -28,8 +29,7 @@ const LoggedOutHomePage = () => {
             {/* Banner about courses */}
             <HomeBanner />
 
-
-            {/* contemplating adding a footer component */}
+            <Footer />
         </div>
     );
 };
