@@ -175,26 +175,42 @@ export const saveUserAnswers = async (usersId, courseId, lessonId, tests, userAn
 // Function to update user data
 export const updateUserData = async (userId, userData) => {
     try {
-        const { username, imageFile, currentProfilePicture } = userData;
+        const { name, imageFile, currentProfilePicture } = userData;
+
+        console.log("Starting updateUserData...");
+        console.log("Received userId:", userId);
+        console.log("Received userData:", userData);
 
         let profilePicture = currentProfilePicture;
 
         if (imageFile) {
+            console.log("Image file found, preparing to upload:", imageFile.name);
             const storage = getStorage();
             const storageRef = ref(storage, `profile_pictures/${imageFile.name}`);
+
+            // Upload the image to storage
             const snapshot = await uploadBytes(storageRef, imageFile);
             console.log("Image uploaded successfully:", snapshot);
+
+            // Get the download URL for the uploaded image
             profilePicture = await getDownloadURL(storageRef);
+            console.log("Download URL for profile picture:", profilePicture);
+        } else {
+            console.log("No new image file provided, using current profile picture.");
         }
 
+        // Update Firestore document
         const db = getFirestore();
         const userRef = doc(db, "users", userId);
         await updateDoc(userRef, {
-            username: username,
+            name: name,
             profilePicture: profilePicture
         });
-
-        console.log("User data updated successfully.");
+        
+        console.log("User data updated successfully. New data:", {
+            name: name,
+            profilePicture: profilePicture
+        });
 
     } catch (error) {
         console.error("Error updating user data:", error);
