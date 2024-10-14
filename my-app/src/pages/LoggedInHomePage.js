@@ -6,37 +6,33 @@ import { Link, useNavigate } from 'react-router-dom';
 import NavigationBarUser from "../components/NavigationBarUser.js";
 import CharacterInformation from "../components/CharacterInformation.js";
 import DeleteUser from "../components/DeleteUser.js";
+import Feedback from "../components/Feedback"; 
 import "./LoggedInHomePage.css";
 
-// Predefined gradients
 const gradients = {
     green: 'linear-gradient(var(--python-light), var(--python-medium), var(--python-dark))',
     orange: 'linear-gradient(var(--java-light), var(--java-medium), var(--java-dark))',
     blue: 'linear-gradient(var(--c-light), var(--c-medium), var(--c-dark))'
 };
 
-// HomePage for when the user is logged in
 const LoggedInHomePage = () => {
-    const { currentuser, isAuthenticated, usersId, usersName, usersCourses } = useAuth();    // Extracting user info
-    const [courseDetails, setCourseDetails] = useState({});                         // State to hold course details
-    const [lessonDetails, setLessonDetails] = useState({});                         // State to hold
-    const [loading, setLoading] = useState(true);                                   // State to manage loading status
-    const [error, setError] = useState(null);                                       // State to manage error messages
-    const navigate = useNavigate(); // Hook for navigation
+    const { currentuser, isAuthenticated, usersId, usersName, usersCourses } = useAuth();    
+    const [courseDetails, setCourseDetails] = useState({});                         
+    const [lessonDetails, setLessonDetails] = useState({});                         
+    const [loading, setLoading] = useState(true);                                   
+    const [error, setError] = useState(null);                                       
+    const navigate = useNavigate(); 
 
-    // Fetch courses and lessons on mount
     useEffect(() => {
         const fetchData = async () => {
             try {
                 if (isAuthenticated) {
                     console.log("Fetching courses...");
     
-                    // Fetch all courses
                     const fetchedCourses = await fetchCourses();
                     console.log("Fetched courses:", fetchedCourses);
                     setCourseDetails(fetchedCourses);
     
-                    // Fetch lessons for each course
                     const lessonPromises = Object.keys(usersCourses).map(async (courseId) => {
                         console.log(`Fetching lessons for courseId: ${courseId}`);
                         if (fetchedCourses[courseId]) {
@@ -48,10 +44,9 @@ const LoggedInHomePage = () => {
                         return null;
                     });
     
-                    // Fetch lesson details
                     const lessonResults = await Promise.all(lessonPromises);
                     const allLessons = lessonResults.reduce((acc, lessons) => {
-                        if (lessons) {
+                        if (lessonResults) {
                             return { ...acc, ...lessons };
                         }
                         return acc;
@@ -71,28 +66,22 @@ const LoggedInHomePage = () => {
         fetchData();
     }, [usersCourses, isAuthenticated]);
     
-
-    // Redirecting if the user is not authenticated
     if (!isAuthenticated) {
         return <p>Redirecting to homepage...</p>;
     }
 
-    // Show loading message while fetching data
     if (loading) {
         return <p>Loading...</p>;
     }
 
-    // Display error message if data loading fails
     if (error) {
         return <p>Error loading data: {error.message}</p>;
     }
 
-    // Function to navigate to the selected course
     const goToCourse = (courseId) => {
         navigate(`/course/${courseId}`);
     }
 
-    // Function to navigate to the selected lesson
     const goToLesson = (courseId, lessonId) => {
         navigate(`/course/${courseId}/lesson/${lessonId}`);
     }
@@ -116,7 +105,6 @@ const LoggedInHomePage = () => {
             <div className='home-page-content'>
                 <h1 className='fira-code'>Welcome, {usersName || 'User'}</h1>
 
-                {/* Recent levels section */}
                 <div className='recent-levels-container'>
                     <h2 className='recent-levels-title roboto-bold'>RECENT LEVELS</h2>
 
@@ -138,7 +126,6 @@ const LoggedInHomePage = () => {
                     })}
                 </div>
 
-                {/* Your courses section */}
                 <div className='recent-levels-container'>
                     <h2 className='recent-levels-title roboto-bold'>YOUR COURSES</h2>
 
@@ -155,7 +142,8 @@ const LoggedInHomePage = () => {
             </div>
             
             <CharacterInformation />
-            <DeleteUser />
+            <DeleteUser/>
+            <Feedback/>
         </div>
     );
 };
