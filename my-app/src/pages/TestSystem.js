@@ -7,6 +7,7 @@ import CompilerComponent from '../components/SubmitCode';
 import CodeEditor from '../components/CodeEditor';
 import { saveUserAnswers } from '../utils/DataSaving';
 import { fetchTests } from '../utils/DataFetching';
+import TTS from '../components/TTS';
 
 const TestSystem = ({ courseId, lessonId }) => {
   const { usersId } = useAuth();  // Get the user ID from the Auth context
@@ -39,43 +40,38 @@ const TestSystem = ({ courseId, lessonId }) => {
 
   const handleCheckAnswer = () => {
     if (userAnswers[currentTestIndex].trim() === currentTest.answer.trim()) {
-      setIsCorrect(true); // Correct answer
+      setIsCorrect(true);
     } else {
-      setIsCorrect(false); // Incorrect answer
+      setIsCorrect(false);
     }
   };
-  // Toggle showing the correct answer
+
   const handleShowAnswer = () => setShowAnswer(true);
 
-  // Moves to the next test, cycling through the list
   const handleNextTest = () => {
     setCurrentTestIndex((prev) => (prev + 1) % tests.length);
     setIsCorrect(null);
     setShowAnswer(false);
   };
 
-  // Moves to the previous test
   const handlePreviousTest = () => {
     setCurrentTestIndex((prev) => (prev - 1 + tests.length) % tests.length);
     setIsCorrect(null);
     setShowAnswer(false);
   };
 
-  // Updates the users anser for the test
   const handleUserInputChange = (e) => {
     const updatedAnswers = [...userAnswers];
     updatedAnswers[currentTestIndex] = e.target.value;
     setUserAnswers(updatedAnswers);
   };
 
-  // Quits the test and navigates back to course page
   const handleQuit = () => {
-    if (window.confirm("Are you sure you want to quit the test? All progress will be lost!")) {
+    if (window.confirm('Are you sure you want to quit the test? All progress will be lost!')) {
       navigate(`/course/${courseId}`);
     }
   };
 
-  // Function to save answers to Firestore
   const saveAnswers = async () => {
     try {
       const success = await saveUserAnswers(usersId, courseId, lessonId, tests, userAnswers);
@@ -90,7 +86,7 @@ const TestSystem = ({ courseId, lessonId }) => {
 
   if (!tests) return <div>Loading...</div>;
 
-  if (tests.length === 0) return <div>No tests avaliable.</div>;
+  if (tests.length === 0) return <div>No tests available.</div>;
 
   return (
     <div className="test-system">
@@ -98,13 +94,15 @@ const TestSystem = ({ courseId, lessonId }) => {
         <button className="quit-button" onClick={handleQuit}>&#x2190; Go Back</button>
       </div>
 
-
-      <HintSystem hint={currentTest.hint} testId={currentTest.number} />
+      <div className="hint-tts-container">
+        <HintSystem hint={currentTest.hint} testId={currentTest.number} />
+        <TTS text={currentTest.question} />
+      </div>
 
       <h2>{currentTest.number}. {currentTest.question}</h2>
 
-      <CodeEditor onCodeChange={setCode} /> {/* Update code in state */}
-      <CompilerComponent code={code} /> {/* Submit the current code */}
+      <CodeEditor onCodeChange={setCode} />
+      <CompilerComponent code={code} />
 
       <div className="buttons">
         <button onClick={handleShowAnswer}>Show Answer</button>
