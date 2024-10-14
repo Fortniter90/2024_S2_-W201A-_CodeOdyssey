@@ -1,26 +1,26 @@
 import './HeadingsTest.css';
 import CourseHeadings from '../components/CourseHeadings';
 import { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebase'; // Adjust the import according to your firebase config file
+import { fetchCourses } from '../utils/DataFetching';
 
 function HeadingsTest() {
   const [courses, setCourses] = useState([]);
 
+  // Load courses component on mount
   useEffect(() => {
-    const fetchCourses = async () => {
-    try {
-      const coursesCollection = collection(db, 'courses');
-      const courseSnapshot = await getDocs(coursesCollection);
-      const courseList = courseSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setCourses(courseList);
-    } catch (error) {
-      console.error('Error fetching courses:', error);
-    }
-    };
+    loadCourses();
+  }, []);
 
-    fetchCourses();
-    }, []);
+  // Load all of the courses
+  const loadCourses = async () => {
+    try {
+      const courseList = await fetchCourses();  // Fetch list of courses
+      setCourses(Object.values(courseList));    // Update the state with the fetched courses
+
+    } catch (error) {
+      console.error('Error loading courses:', error); // Log any errors during data fetching
+    }
+  };
   
 
   return (

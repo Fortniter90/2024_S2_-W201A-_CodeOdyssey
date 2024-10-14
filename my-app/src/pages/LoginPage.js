@@ -1,32 +1,42 @@
 import './AuthPage.css';
 import { AuthProvider } from '../context/AuthContext';
 import LoginComponent from '../components/Login';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import CodeOdysseyLogo from '../components/assets/CodeOdysseyLogo';
+import { FaArrowRightLong, FaX } from "react-icons/fa6";
 
 function LoginPage() {
+  const navigate = useNavigate();
+
+  const goToHomePage = () => {
+    navigate('/');
+  };
+
   return (
-    <div className="container">
-      {/* Left side background image */}
-      <div className="image-half" style={{
-        backgroundImage: `url(${'loginBackground.png'})`  // Inline style to set background image
-      }}></div >
+    <div className="authpage">
+      {/* Left side of the authentication page */}
+      <div className='authpage-left'>
+        <h1 className='fira-code'>Welcome to</h1>
+        <CodeOdysseyLogo width='30vw'/>
+      </div>
 
-      {/* Right side placeholder for any additional content */}
-      <div className="right-half"></div>
+      {/* Right side of the authentication page */}
+      <div className='authpage-right'>
+        {/* Button to close the authentication page */}
+        <button className='authpage-close' onClick={goToHomePage}><FaX /></button>
 
-      {/* Login form container */}
-      <div className="login-half">
-        <h1>User Login</h1>
+        {/* Page content */}
+        <div className='authpage-content'>
+          <h1 className='fira-code'>User Login</h1>
 
-        {/* Wrap components with AuthProvider to manage auth state */}
-        <AuthProvider>
-          <LoginComponent />   {/* Login form */}
-        </AuthProvider>
-
-        {/* Link to sign up page */}
-        <p>
-          Don't have an account? <Link to="/signup">Sign Up</Link>
-        </p>
+          {/* Wrap components with AuthProvider to manage the authentication state */}
+          <AuthProvider>
+            <LoginComponent />   {/* Login form */}
+          </AuthProvider>
+        </div>
+        
+        {/* Link to the sign up page */}
+        <Link className='roboto-regular authpage-navigation' to='/signup'>Don't have an Account? Sign up Now for Free<FaArrowRightLong /></Link>
       </div>
     </div>
   );

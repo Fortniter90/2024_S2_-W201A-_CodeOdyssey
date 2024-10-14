@@ -6,34 +6,32 @@
     width: 100%;
     box-sizing: border-box;
     background-color: var(--white);
-    border-radius: 25px;
-    height: calc(100vh - 150px);
+    border-radius: 1.3rem;
+    height: clamp(20rem, 90vh, calc(90vh - 9rem));
+    margin: inherit;
 }
 
 /* Container for the learning path menu */
 .learning-path {
-    border-radius: 25px 0 0 25px;
-    width: fit-content;
-    height: fit-content;
-    position: relative;
+    border-radius: 1.3rem 0 0 1.3rem;
     overflow: hidden;
-    width: 100%;
-    min-width: 150px;
-    max-width: 350px;
+    width: fit-content;
+    min-width: 15vw;
+    max-width: 35vw;
     height: 100%;
     box-sizing: border-box;
 }
 
 /* Header for the learning path */
 .path-header {
-    padding: 10px 20px 10px 20px;
+    padding: 0.5rem 1rem;
     background-color: var(--logo-purple);
 }
 
 /* Styling for the path title inside the header */
 .path-header h2 {
     color: var(--white);
-    margin: 10px 0;
+    margin: 0.5rem 0;
 }
 
 /* List container for the levels (lessons) */
@@ -42,7 +40,7 @@
     flex-direction: column;
     position: relative;
     overflow-y: auto;
-    height: calc(100% - 69px);
+    height: calc(100% - 4.3rem);
 }
 
 /* Wrapper around each individual level box */
@@ -57,13 +55,13 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 10px 20px;
+    padding: 0.5rem 1rem;
     cursor: pointer;
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 /* Hover effect and selected state for a level box */
-.level-box:hover, 
+.level-box:hover,
 .level-box.selected {
     background-color: var(--background-light);
 }
@@ -71,20 +69,15 @@
 /* Styling for the circle around the level number */
 .number-circle {
     position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    min-height: 40px;
-    max-width: 40px;
-    max-height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 50%;
     color: var(--white);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 22px;
-    z-index: 2
+    font-size: 1.2rem;
+    z-index: 2;
 }
 
 /* Gradient backgrounds for different lesson statuses */
@@ -116,14 +109,13 @@
 /* Styling for the connecting lines between level circles */
 .line {
     position: absolute;
-    width: 5px;
-    height: 25px;
+    width: 0.3rem;
+    height: 1.5rem;
     background-color: #DBD9D9;
-    z-index: 0;
     top: 80%;
     transform: translateX(-50%);
+    margin-left: 0.3rem;
     z-index: 1;
-    margin-left: 5px;
 }
 
 /* Different line styles based on lesson status transitions */
@@ -145,9 +137,9 @@
         #DBD9D9 0,
         #DBD9D9 10px,
         transparent 10px,
-        transparent 15px 
+        transparent 15px
     );
-    border-radius: 10px;
+    border-radius: 0.5rem;
 }
 
 /* Aligns number circle and line vertically */
@@ -155,16 +147,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right: 10px;
+    margin-right: 0.5rem;
 }
 
 /* Preview box for the lesson content on the right */
 .lesson-preview {
     position: relative;
-    padding: 15px 20px;
+    padding: 1rem;
     width: 100%;
-    box-sizing: border-box;
     height: 100%;
+    box-sizing: border-box;
 }
 
 /* Vertical edge colors for the preview based on lesson status */
@@ -173,7 +165,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 8px;
+    width: 0.4rem;
     height: 100%;
 }
 
@@ -199,11 +191,11 @@
 /* Header styling for the lesson tag (status) */
 .lesson-header h2 {
     position: relative;
-    left: -15px;
+    left: -1rem;
     color: var(--white);
-    padding: 10px 10px 10px 40px;
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
+    padding: 0.5rem 0.5rem 0.5rem 2rem;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
 }
 
 /* Different gradient backgrounds based on lesson tag status */
@@ -212,7 +204,7 @@
 }
 
 .tag-current {
-    background-image: linear-gradient(90deg, var(--java-light), var(--java-medium));;
+    background-image: linear-gradient(90deg, var(--java-light), var(--java-medium));
 }
 
 .tag-incomplete {
@@ -221,7 +213,7 @@
 
 /* Lesson title styling */
 .lesson-contents h1 {
-    margin: 5px;
+    margin: 0.5rem;
 }
 
 /* Title color for different lessons */
@@ -247,13 +239,13 @@
 /* Lesson content text */
 .lesson-contents {
     color: var(--dark-blue);
-    margin: 5px 25px;
-    height: calc(100% - 150px);
+    margin: 1rem;
+    height: calc(100% - 9rem);
 }
 
 .lesson-contents h1 {
     margin: 0;
-    font-size: 42px;
+    font-size: clamp(1.5rem, 2vw, 2.5rem);
 }
 
 .lesson-contents p {
@@ -264,17 +256,17 @@
 .lesson-buttons {
     text-align: right;
     align-self: flex-end;
-    margin-top: 20px;
+    margin-top: 1rem;
 }
 
 /* General button styling */
 .button {
     text-decoration: none;
     cursor: pointer;
-    margin-left: 10px;
-    border-radius: 25px;
-    padding: 5px 15px;
-    border: 2px solid var(--logo-purple);
+    margin-left: 0.5rem;
+    border-radius: 1.3rem;
+    padding: 0.5rem 1rem;
+    border: 0.1rem solid var(--logo-purple);
 }
 
 .solid-button {
@@ -282,9 +274,9 @@
     background-color: var(--logo-purple);
 }
 
-.solid-button::hover {
+.solid-button:hover {
     background-color: #424679;
-    border: 2px solid #424679;
+    border: 0.1rem solid #424679;
     transition: background-color 0.3s, border 0.3s;
 }
 
@@ -293,7 +285,7 @@
     background-color: var(--white);
 }
 
-.outline-button::hover {
+.outline-button:hover {
     color: var(--white);
     background-color: var(--logo-purple);
     transition: background-color 0.3s, color 0.3s;

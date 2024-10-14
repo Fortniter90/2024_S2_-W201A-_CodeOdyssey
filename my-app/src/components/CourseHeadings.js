@@ -13,7 +13,7 @@ const gradients = {
 const HeadingInformationContext = createContext();
 const { Provider } = HeadingInformationContext;
 
-const CourseHeadings = ({ name, info, backgroundColor }) => {
+const CourseHeadings = ({ name, information, backgroundColor }) => {
     const [show, setShow] = useState(false); // State to track if course information should be shown
 
     // Context value containing show state and function to toggle it
@@ -32,13 +32,13 @@ const CourseHeadings = ({ name, info, backgroundColor }) => {
         <Provider value={value}>
             <div className='course-heading' style={gradientSytle}>
                 {/* Course name display */}
-                <span className='course-name fira-code'>{name}</span>
+                <span className='fira-code'>{name}</span>
 
                 {/* Information button to toggle course information popup */}
                 <InformationButton/>
 
                 {/* Show the CourseInformation popup if 'show' is true */}
-                {show && <CourseInformation onClose={() => setShow(false)}>{info}</CourseInformation>}
+                {show && <CourseInformation onClose={() => setShow(false)}>{information}</CourseInformation>}
             </div>
         </Provider>
     );

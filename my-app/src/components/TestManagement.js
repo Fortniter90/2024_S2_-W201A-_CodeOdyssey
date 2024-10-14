@@ -1,287 +1,336 @@
-import React, { useState, useEffect } from 'react';
-import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, writeBatch } from 'firebase/firestore';
-import { db } from '../config/firebase';
-import DatabaseTable from './DatabaseTable';
+import { useState, useEffect } from 'react';
+import { FaX } from 'react-icons/fa6';
+import { fetchTests } from '../utils/DataFetching';
+import { saveTest, updateTest } from '../utils/DataSaving';
+import { deleteTest } from '../utils/DataDeleting';
+import ManagementTable from './ManagementTable';
 import Button from './Button';
 import './DatabaseManagement.css';
 
-// Management for the test collection in the database
-const TestManagement = () => {
-  // State for courses, lessons, tests, and selected IDs
-  const [courses, setCourses] = useState([]);
-  const [lessons, setLessons] = useState([]);
-  const [tests, setTests] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState('');
-  const [selectedLesson, setSelectedLesson] = useState('');
 
-  // State for form data and modal management
-  const [formData, setFormData] = useState({ number: '', title: '', question: '', answer: '', hint: '' });
-  const [editingTest, setEditingTest] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+// Component to manage test data
+const TestManagement = ({ selectedCourse, selectedLesson }) => {
   
-  // State for messages and pagination
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 5;
+  // States handling course data
+  const [tests, setTests] = useState([]);   // List of tests
+  const [formData, setFormData] = useState({    // Data for adding and editing test data
+    number: '',
+    question: '',
+    answer: '',
+    hint: '',
+    constraints: []
+  });
 
-  // Fetching courses
-  const fetchCourses = async () => {
+  // States controling modal visibility
+  const [modals, setModals] = useState({
+    add: false,
+    testDetails: false,
+    confirmation: false,
+    deleteConfirmation: false,
+  })
+
+  // States controling test status
+  const [selectedTest, setSelectedTest] = useState(null);   // Stores selected test
+  const [isEditing, setIsEditing] = useState(false);        // Indicates if test is in edit mode
+
+
+  
+  // Load tests component on mount
+  useEffect(() => {
+    loadTests();
+  }, [selectedCourse, selectedLesson]);
+
+  // Fetch all of the tests for the lesson
+  const loadTests = async () => {
     try {
-      const coursesCollection = collection(db, 'courses');
-      const courseSnapshot = await getDocs(coursesCollection);
-      const courseList = courseSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setCourses(courseList);
+      const testList = await fetchTests(selectedCourse.id, selectedLesson.id);  // Fetch list of tests
+      setTests(Object.values(testList));                                        // Update the state with the fetches tests
+
     } catch (error) {
-      console.error('Error fetching courses:', error);
+      console.error('Error loading courses:', error); // Log any errors during data fetching
     }
   };
+  
+  // Handle modal visibility
+  const toggleModal = (modalName, state) => {
+    setModals((prev) => ({ ...prev, [modalName]: state })); // Change state of given modal
 
-  // Fetching lessons based on the selected course
-  const fetchLessons = async (courseId) => {
-    if (!courseId) return;
-
-    try {
-      const lessonsCollection = query(collection(db, `courses/${courseId}/lessons`), orderBy('number'));
-      const lessonSnapshot = await getDocs(lessonsCollection);
-      const lessonList = lessonSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setLessons(lessonList);
-    } catch (error) {
-      console.error('Error fetching lessons:', error);
+    if (state == false) {
+      setFormData({ number: '', question: '', answer: '', hint: '', constraints: [] }); // Reset form data
+      setIsEditing(false); // Set editing mode
     }
+  }
+
+  // Handle test selection for editing and viewing details
+  const handleTestClick = (course) => {
+    setSelectedTest(course);  // Set the selected test
+    toggleModal('testDetails', true);
+  };
+  
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target; // Destructure name and value from event target
+    setFormData(prev => ({ ...prev, [name]: value })); // Update formData state
   };
 
-  // Fetching tests based on the selected lesson
-  const fetchTests = async (lessonId) => {
-    if (!lessonId) return;
-
-    try {
-      const testsCollection = query(collection(db, `courses/${selectedCourse}/lessons/${lessonId}/tests`), orderBy('number'));
-      const testSnapshot = await getDocs(testsCollection);
-      const testList = testSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setTests(testList);
-    } catch (error) {
-      console.error('Error fetching tests:', error);
-    }
+  const handleCheckboxChange = (e, constraint) => {
+    const { checked } = e.target;
+    setFormData(prevData => ({
+      ...prevData,
+      constraints: {
+        ...prevData.constraints,
+        [constraint]: checked
+      }
+    }));
   };
 
-  // Fetching courses when the component first mounts
-  useEffect(() => {
-    fetchCourses();
-  }, []);
-
-  // Fetching lessons whenever a course is selected
-  useEffect(() => {
-    if (selectedCourse) {
-      fetchLessons(selectedCourse);
-    }
-  }, [selectedCourse]);
-
-  // Fetching tests whenever a lesson is selected
-  useEffect(() => {
-    if (selectedLesson) {
-      fetchTests(selectedLesson);
-    }
-  }, [selectedLesson]);
-
-  // Shifting test numbers when a new test is added in between existing tests
-  const shiftTestNumbers = async (lessonId, newNumber) => {
-    const batch = writeBatch(db);
-    const testsToShift = tests.filter(test => test.number >= newNumber);
-
-    testsToShift.forEach(test => {
-      const testRef = doc(db, `courses/${selectedCourse}/lessons/${lessonId}/tests`, test.id);
-      batch.update(testRef, { number: test.number + 1 });
+  // Prepare form for editing
+  const handleEdit = () => {
+    // Set form data for selected course
+    setFormData({ 
+      number: selectedTest.number,
+      question: selectedTest.question,
+      answer: selectedTest.answer,
+      hint: selectedTest.hint,
+      available: selectedTest.available,
+      constraints: selectedTest.constraints
     });
 
-    await batch.commit();
+    setIsEditing(true); // Set editing mode
   };
-
-  // Getting the next available test number for the current lesson
-  const getNextTestNumber = () => {
-    if (tests.length === 0) {
-      return 1; 
-    }
   
-    const lastTest = tests.reduce((prev, current) => (prev.number > current.number ? prev : current));
-  
-    return lastTest.number + 1;
-  };  
-
-  // Handle opening the modal for adding a new test
-  const handleAdd = () => {
-    const nextTestNumber = getNextTestNumber();
-    setFormData({ number: nextTestNumber, question: '', answer: '', hint: '' }); 
-    setEditingTest(null);
-    setIsModalOpen(true);
-  };  
-
-  // Handle saving a new or edited test
-  const handleSave = async () => {
-    if ( !formData.number || !formData.question || !formData.answer || !selectedLesson) {
-      setErrorMessage('All fields must be filled out!');
-      return;
-    }
+  // Handle course addition
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent default form submission
 
     const testNumber = parseInt(formData.number, 10);
+    const newTest = {
+      ...formData,
+      available: false
+    };
 
     try {
-      if (editingTest) {
-        const testRef = doc(db, `courses/${selectedCourse}/lessons/${selectedLesson}/tests`, editingTest.id);
-        await updateDoc(testRef, formData);
-        setSuccessMessage('Test updated successfully!');
+      if (isEditing) {
+        if (testNumber !== selectedTest.number) {
+          await shiftTestNumbers(selectedTest.number, false); // Shift down
+          await shiftTestNumbers(testNumber); // Shift up
+        }
 
-      } else {
-        await shiftTestNumbers(selectedLesson, testNumber);
-
-        await addDoc(collection(db, `courses/${selectedCourse}/lessons/${selectedLesson}/tests`), {
-          ...formData,
-          number: testNumber,
-        });
-
-        setSuccessMessage('Test added successfully!');
+        await updateTest(selectedCourse.id, selectedLesson.id, selectedTest.id, newTest);
+      } 
+      else {
+        await shiftTestNumbers(testNumber);
+        await saveTest(selectedCourse.id, selectedLesson.id, newTest);
       }
 
-      setIsModalOpen(false);
-      setFormData({ number: '', question: '', answer: '', hint: '' });
-      setEditingTest(null);
-      setErrorMessage('');
-      fetchTests(selectedLesson);
+      toggleModal(isEditing ? 'testDetails' : 'add', false); // Close modal
+      setIsEditing(false);
+      loadTests(); // Refresh lesson list
+
     } catch (error) {
-      console.error('Error saving test:', error);
-      setErrorMessage('Error saving test. Please try again.');
+      console.error(`Error ${isEditing ? 'updating' : 'adding'} test:`, error);
     }
   };
 
-  // Handle clicking the edit button for a test
-  const handleEdit = (test) => {
-    setFormData({ number: test.number, title: test.title, question: test.question, answer: test.answer, hint: test.hint });
-    setEditingTest(test);
-    setIsModalOpen(true);
+  // Shift lesson numbers if a new lesson is inserted
+  const shiftTestNumbers = async (newNumber, increment = true) => {
+    const testsToShift = tests.filter(test => (increment ? test.number >= newNumber : test.number > newNumber));
+
+    // Update each lesson number individually
+    for (const test of testsToShift) {
+      const currentNumber = parseInt(test.number, 10);
+      const updatedTestData = { 
+        ...test, 
+        number: increment ? currentNumber + 1 : currentNumber - 1 
+      };
+
+      try {
+        await updateTest(selectedCourse.id, selectedLesson.id, selectedTest.id, updatedTestData);
+      } catch (error) {
+        console.error('Error shifting lesson number:', error);
+      }
+    }
   };
 
-  // Handle deleting a test
-  const handleDelete = async (testId) => {
+  // Handle lesson deletion
+  const handleDelete = async () => {
     try {
-      await deleteDoc(doc(db, `courses/${selectedCourse}/lessons/${selectedLesson}/tests`, testId));
-      setSuccessMessage('Test deleted successfully!');
-      fetchTests(selectedLesson);
+      await deleteTest(selectedCourse.id, selectedLesson.id, selectedTest.id);
+      
+      toggleModal('deleteConfirmation', false); // Close delete confirmation modal
+      toggleModal('testDetails', false);      // Close lesson details
+      loadTests();                            // Refresh lesson list after deletion
+      toggleModal('confirmation', true);        // Show success confirmation
+
     } catch (error) {
-      console.error('Error deleting test:', error);
-      setErrorMessage('Error deleting test. Please try again.');
+      console.error('Error deleting test:', error); // Log any errors during deletion
     }
   };
+
+
+
+  // Render message if no courses are available
+  const renderNoItems = () => <div>No tests available.</div>;
 
   return (
     <div className='management roboto-regular'>
       {/* Header section */}
       <div className='management-header'>
-        <h1 className='roboto-bold'>Test Management</h1>
-        <Button text={'Add New Test'} action={handleAdd} />
+        <h1 className='fira-code'>{selectedLesson.number}. {selectedLesson.title}</h1>
+        <Button text={'Add Test'} action={() => toggleModal('add', true)} />
       </div>
+  
+      {/* Add Test Modal */}
+      {modals.add && (
+        <>
+          <div className='overlay' onClick={() => toggleModal('add', false)} />
+        <div className='modal'>
+          <div className='modal-content'>
+            <button className='authpage-close' onClick={() => toggleModal('add', false)}><FaX /></button>
+            <h2>Add Test</h2>
 
-      {/* Dropdown to select a course for displaying lessons */}
-      <div className='table-filter'>
-        <h3>Course Selection: </h3>
-        <select className='roboto-regular' onChange={(e) => setSelectedCourse(e.target.value)} value={selectedCourse}>
-          <option value="">Select Course</option>
-          {courses.map(course => (
-            <option key={course.id} value={course.id}>{course.title}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Dropdown to select a lessons for displaying tests */}
-      <div className='table-filter'>
-        <h3>Lesson Selection: </h3>
-        <select className='roboto-regular' onChange={(e) => setSelectedLesson(e.target.value)} value={selectedLesson}>
-          <option value="">Select Lesson</option>
-          {lessons.map(lesson => (
-            <option key={lesson.id} value={lesson.id}>{lesson.title}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Table displaying the list of courses */}
-      <DatabaseTable
-        title="Test"
-        data={tests}
-        columns={[
-          { header: 'Test Number', key: 'number' },
-          { header: 'Question', key: 'question' },
-          { header: 'Answer', key: 'answer' },
-          { header: 'Hint', key: 'hint' }
-        ]}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        rowsPerPage={rowsPerPage}
-        totalItems={tests.length}
+            <form onSubmit={handleSubmit}>
+              <div className='form-group'>
+                <label>Test Number:</label>
+                <input type="number" name="number" value={formData.number} onChange={handleInputChange} required />
+              </div>
+              <div className='form-group'>
+                <label>Question:</label>
+                <input type="text" name="question" value={formData.question} onChange={handleInputChange} required />
+              </div>
+              <div className='form-group'>
+                <label>Answer:</label>
+                <input type="text" name="answer" value={formData.answer} onChange={handleInputChange} required />
+              </div>
+              <div className='form-group'>
+                <label>Hint:</label>
+                <input type="text" name="hint" value={formData.hint} onChange={handleInputChange} />
+              </div>
+              <div className='form-group'>
+                <label>
+                  <input type="checkbox" name="constraints-print" checked={formData.constraints?.print || false} onChange={(e) => handleCheckboxChange(e, 'print')} />
+                  Print Constraint
+                </label>
+              </div>
+              <div className='form-group'>
+                <label>
+                  <input type="checkbox" name="constraints-loop" checked={formData.constraints?.loop || false} onChange={(e) => handleCheckboxChange(e, 'loop')} />
+                  Loop Constraint
+                </label>
+              </div>
+              
+              <div className='modal-buttons'>
+                <Button type="submit" text="Add Test" />
+                <Button text="Cancel" outline={true} action={() => toggleModal('add', false)} />
+              </div>
+            </form>
+          </div>
+        </div>
+        </>
+      )}
+  
+      <ManagementTable
+        items={tests}
+        onRowClick={handleTestClick}
+        renderNoItems={renderNoItems}
       />
+  
+      {/* Edit Test Modal */}
+      {modals.testDetails && selectedTest && (
+        <>
+          <div className='overlay' onClick={() => toggleModal('testDetails', false)} />
+          <div className='information-modal'>
+            <h2>Edit Test</h2>
+            <button className='authpage-close' onClick={() => toggleModal('testDetails', false)}><FaX /></button>
+            
+            {isEditing ? (
+              <form onSubmit={handleSubmit}>
+                <h2>Edit Test</h2>
+                
+                <div className='form-group'>
+                  <label>Test Number:</label>
+                  <input type="number" name="number" value={formData.number} onChange={handleInputChange} required />
+                </div>
+                <div className='form-group'>
+                  <label>Question:</label>
+                  <input type="text" name="question" value={formData.question} onChange={handleInputChange} required />
+                </div>
+                <div className='form-group'>
+                  <label>Answer:</label>
+                  <input type="text" name="answer" value={formData.answer} onChange={handleInputChange} required />
+                </div>
+                <div className='form-group'>
+                  <label>Hint:</label>
+                  <input type="text" name="hint" value={formData.hint} onChange={handleInputChange} />
+                </div>
+                <div className='form-group'>
+                  <label>
+                    <input type="checkbox" name="constraints-print" checked={formData.constraints?.print || false} onChange={(e) => handleCheckboxChange(e, 'print')} />
+                    Print Constraint
+                  </label>
+                </div>
+                <div className='form-group'>
+                  <label>
+                    <input type="checkbox" name="constraints-loop" checked={formData.constraints?.loop || false} onChange={(e) => handleCheckboxChange(e, 'loop')} />
+                    Loop Constraint
+                  </label>
+                </div>
 
-      {/* Modal for adding or editing lessons */}
-      {isModalOpen && (
-        <div className='modal-overlay'>
-          <div className='modal'>
-            <h2>{editingTest ? 'Update Test' : 'Add New Test'}</h2>
-            <select
-              value={selectedCourse}
-              onChange={(e) => setSelectedCourse(e.target.value)}
-            >
-              <option value="">Select Course</option>
-              {courses.map(course => (
-                <option key={course.id} value={course.id}>
-                  {course.title}
-                </option>
-              ))}
-            </select>
-            <select
-              value={selectedLesson}
-              onChange={(e) => setSelectedLesson(e.target.value)}
-            >
-              <option value="">Select Lesson</option>
-              {lessons.map(lesson => (
-                <option key={lesson.id} value={lesson.id}>
-                  {lesson.title}
-                </option>
-              ))}
-            </select>
-
-            <input
-              type="number"
-              placeholder="Test Number"
-              value={formData.number}
-              onChange={(e) => setFormData({ ...formData, number: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Question"
-              value={formData.question}
-              onChange={(e) => setFormData({ ...formData, question: e.target.value })}
-            />
-            <textarea
-              placeholder="Answer"
-              value={formData.answer}
-              onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
-            />
-            <textarea
-              placeholder="Hint (optional)"
-              value={formData.hint}
-              onChange={(e) => setFormData({ ...formData, hint: e.target.value })}
-            />
-
-            <Button text={editingTest ? 'Update Test' : 'Add Test'} action={handleSave} />
-            <Button text="Cancel" type="outline" action={() => setIsModalOpen(false)} />
+                <div className='modal-buttons'>
+                  <Button type="submit" text="Update Test" />
+                  <Button text="Cancel" outline={true} action={() => setIsEditing(false)} />
+                </div>
+              </form>
+            ) : (
+              <>
+                <h1>{selectedTest.title}</h1>
+                <div className='row-availability-edit'>
+                  <span className={`availability-tag ${selectedTest.available ? "available" : "unavailable"}`}>
+                    {selectedTest.available ? "Available" : "Unavailable"}
+                  </span>
+                  <Button text="Edit" action={handleEdit} />
+                </div>
+                <div className='row-lesson-test'>
+                  <p><strong>Number:</strong> {selectedTest.number}</p>
+                  <p><strong>Question:</strong> {selectedTest.question}</p>
+                  <p><strong>Answer:</strong> {selectedTest.answer}</p>
+                  <p><strong>Hint:</strong> {selectedTest.hint}</p>
+                </div>
+                <hr className='modal-divider' />
+                <div className='modal-buttons'>
+                  <Button text="Delete" outline={true} action={() => toggleModal('deleteConfirmation', true)} />
+                </div>
+              </>
+            )}
+          </div>
+        </>
+      )}
+  
+      {/* Confirmation Modal */}
+      {modals.confirmation && (
+        <div className='modal'>
+          <div className='modal-content'>
+            <h2>Success</h2>
+            <p>Operation completed successfully!</p>
+            <Button onClick={() => toggleModal('confirmation', false)} text="Close" />
           </div>
         </div>
       )}
-
-      {/* Display error or success messages */}
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
-      {successMessage && <div className="success-message">{successMessage}</div>}
+  
+      {/* Delete Confirmation Modal */}
+      {modals.deleteConfirmation && (
+        <div className='modal'>
+          <div className='modal-content'>
+            <h2>Delete Test</h2>
+            <p>Are you sure you want to delete this test?</p>
+            <Button text="Yes, Delete" onClick={handleDelete} />
+            <Button text="Cancel" onClick={() => toggleModal('deleteConfirmation', false)} />
+          </div>
+        </div>
+      )}
     </div>
-  );
+  );  
 };
 
 export default TestManagement;
