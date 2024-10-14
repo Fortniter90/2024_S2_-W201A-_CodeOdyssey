@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useEffect };
+import { useNavigate } from 'react-router-dom';
 import './TestSystem.css';
 import HintSystem from '../components/HintSystem';
 import { useAuth } from '../context/AuthContext';
@@ -10,13 +10,11 @@ import { fetchTests } from '../utils/DataFetching';
 import TTS from '../components/TTS';
 
 const TestSystem = ({ courseId, lessonId }) => {
-  const { usersId } = useAuth();  // Get the user ID from the Auth context
+  const { usersId } = useAuth();
   const [tests, setTests] = useState(null);
-  const [currentTestIndex, setCurrentTestIndex] = useState(0); // Track current test index
-  const [userAnswers, setUserAnswers] = useState([]); // Track user input for all tests
-  const [showAnswer, setShowAnswer] = useState(false); // Show correct answer toggle
-  const [isCorrect, setIsCorrect] = useState(null); // Track if user's answer is correct
-  const [code, setCode] = useState(''); // State to hold the code
+  const [currentTestIndex, setCurrentTestIndex] = useState(0);
+  const [userAnswers, setUserAnswers] = useState([]);
+  const [showAnswer, setShowAnswer] = useState(false);
   const navigate = useNavigate();
 
   
@@ -49,22 +47,22 @@ const TestSystem = ({ courseId, lessonId }) => {
   const handleShowAnswer = () => setShowAnswer(true);
 
   const handleNextTest = () => {
-    setCurrentTestIndex((prev) => (prev + 1) % tests.length);
-    setIsCorrect(null);
+    setCurrentTestIndex((prevIndex) => Math.min(prevIndex + 1, tests.length - 1));
     setShowAnswer(false);
   };
 
   const handlePreviousTest = () => {
-    setCurrentTestIndex((prev) => (prev - 1 + tests.length) % tests.length);
-    setIsCorrect(null);
+    setCurrentTestIndex((prevIndex) => Math.max(prevIndex - 1, 0));
     setShowAnswer(false);
   };
 
-  const handleUserInputChange = (e) => {
-    const updatedAnswers = [...userAnswers];
-    updatedAnswers[currentTestIndex] = e.target.value;
-    setUserAnswers(updatedAnswers);
-  };
+  const handleUserInputChange = useCallback((newCode) => {
+    setUserAnswers((prevAnswers) => {
+      const updatedAnswers = [...prevAnswers];
+      updatedAnswers[currentTestIndex] = newCode;
+      return updatedAnswers;
+    });
+  }, [currentTestIndex]);
 
   const handleQuit = () => {
     if (window.confirm('Are you sure you want to quit the test? All progress will be lost!')) {
@@ -85,7 +83,6 @@ const TestSystem = ({ courseId, lessonId }) => {
   };
 
   if (!tests) return <div>Loading...</div>;
-
   if (tests.length === 0) return <div>No tests available.</div>;
 
   return (
@@ -101,8 +98,9 @@ const TestSystem = ({ courseId, lessonId }) => {
 
       <h2>{currentTest.number}. {currentTest.question}</h2>
 
-      <CodeEditor onCodeChange={setCode} />
-      <CompilerComponent code={code} />
+      <CodeEditor onCodeChange={handleUserInputChange} code={userAnswers[currentTestIndex] || ''} />
+      <CompilerComponent code={userAnswers[currentTestIndex] || ''} answer={currentTest.requiredOutput} />
+      <HintSystem hint={currentTest.hint} testId={currentTest.number} />
 
       <div className="buttons">
         <button onClick={handleShowAnswer}>Show Answer</button>
@@ -112,12 +110,6 @@ const TestSystem = ({ courseId, lessonId }) => {
           <button onClick={handleNextTest}>Next Test</button>
         }
       </div>
-
-      {isCorrect !== null && (
-        <div className="result">
-          {isCorrect ? <p>Correct!</p> : <p>Incorrect. Please Try Again!</p>}
-        </div>
-      )}
 
       {showAnswer && (
         <div className="answer">
@@ -130,3 +122,4 @@ const TestSystem = ({ courseId, lessonId }) => {
 };
 
 export default TestSystem;
+
