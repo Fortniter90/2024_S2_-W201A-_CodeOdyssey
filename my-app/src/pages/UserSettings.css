@@ -1,0 +1,80 @@
+.usersettings {
+    width: 60%;
+    margin: 25px auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.usersettings-header {
+    margin-bottom: 35px;
+}
+
+.usersettings-header h1 {
+    font-size: 3.5rem;
+    margin-bottom: 0;
+}
+
+.usersettings-header h3 {
+    margin-top: 0;
+    color: var(--logo-purple);
+}
+
+.usersettings-container {
+    align-items: center;
+    margin: 10px auto;
+    width: 60%;
+}
+
+.usersettings-content {
+    background-color: var(--white);
+    padding: 20px;
+    border-radius: 25px;
+}
+
+/* Styling for the profile picture */
+.usersettings-picture {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+}
+
+.usersettings-picture img {
+    width: 200px; 
+    height: 200px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.cropped-image {
+    width: 200px; 
+    height: 200px; 
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    border: 3px solid var(--background-dark);
+    margin-top: 10px;
+}
+
+/* Adjust this if you want to show the cropper interface */
+.cropper-container {
+    width: 100%; 
+    margin-top: 10px; 
+}
+
+
+.picture-upload {
+    display: flex;
+    flex-direction: column;
+}
+
+.usersettings-username {
+    margin-top: 20px;
+}
+
+.usersettings-username input {
+    width: 100%;
+}
+
+.usersettings-buttons {
+    margin-top: 20px;
+}

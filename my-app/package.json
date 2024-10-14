@@ -11,6 +11,7 @@
     "assert": "^2.1.0",
     "buffer": "^6.0.3",
     "constants-browserify": "^1.0.0",
+    "cropperjs": "^1.6.2",
     "dotenv": "^16.4.5",
     "firebase": "^10.14.1",
     "monaco-editor": "^0.52.0",
