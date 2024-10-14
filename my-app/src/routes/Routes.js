@@ -14,6 +14,7 @@ import CourseTemplate from '../pages/CourseTemplate';
 import AllCourses from '../pages/AllCourses';
 import PastTests from '../pages/PastTests';
 import Profile from '../pages/Profile';
+import UserSettings from '../pages/UserSettings';
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -32,6 +33,7 @@ const AppRoutes = () => {
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/pasttests" element={<PastTests />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/settings" element={<UserSettings />} />
     </Routes>
   );
 };

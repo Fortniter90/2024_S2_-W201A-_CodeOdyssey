@@ -1,0 +1,55 @@
+.usersettings {
+    width: 100%;
+}
+
+.usersettings-container {
+    width: 60%;
+    margin: 25px auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.usersettings-header {
+    margin-bottom: 35px;
+}
+
+.usersettings-header h1 {
+    font-size: 3.5rem;
+    margin-bottom: 0;
+}
+
+.usersettings-header h3 {
+    margin-top: 0;
+    color: var(--logo-purple);
+}
+
+.usersettings-content {
+    align-items: center;
+    background-color: var(--white);
+    margin: 10px 0;
+    padding: 20px;
+    border-radius: 25px;
+}
+
+/* Styling for the profile picture */
+.usersettings-picture {
+    display: flex;
+}
+
+.usersettings-picture img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+}
+
+.usersettings-content p
+
+.usersettings-container button {
+    margin-right: auto;
+}
+
+.usersettings-buttons {
+    justify-self: flex-end;
+}
