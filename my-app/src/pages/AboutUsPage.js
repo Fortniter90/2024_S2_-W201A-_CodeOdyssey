@@ -7,7 +7,7 @@ import SnakeHappy from '../components/assets/SnakeS2-Happy.png'; // Image for th
 // Functional component for the About Us page
 const AboutUsPage = () => {
     return (
-      <div className="navbar-left" > {/* Main container for the page with a left-aligned navigation bar */}
+      <div className="aboutus" > {/* Main container for the page with a left-aligned navigation bar */}
         <NavigationBarHome /> {/* Renders the navigation bar at the top of the page */}
 
         {/* Page title */}

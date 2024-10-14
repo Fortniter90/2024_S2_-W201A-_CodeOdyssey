@@ -11,7 +11,7 @@ const ResourcesPage = () => {
   return (
     <div className="resources-container">
       {/* Conditionally rendering the navigation bar based on the user's authentication status */}
-      {isAuthenticated ? <NavigationBarUser /> : <NavigationBarHome />}
+      <NavigationBarUser />
 
       {/* Main title of the Resources Page */}
       <h1 className="resources-title">Resources Page</h1>
@@ -78,6 +78,8 @@ const ResourcesPage = () => {
         We hope this Resources Page serves as a valuable starting point in your programming journey. Remember, learning to code is a marathon, not a sprint. Embrace the challenges, celebrate your progress, and don't forget to enjoy the journey. Happy coding!
         </center>
       </p>
+
+      <Footer />
     </div>
   );
 };
