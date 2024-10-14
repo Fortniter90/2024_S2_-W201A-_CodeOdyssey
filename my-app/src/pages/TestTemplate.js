@@ -12,6 +12,7 @@ import { saveUserAnswers } from '../utils/DataSaving';
 
 import './TestTemplate.css';
 import Button from '../components/Button';
+import TestSystem from './TestSystem';
 
 
 const TestTemplate = () => {
@@ -176,6 +177,9 @@ const TestTemplate = () => {
       )}
       </div>
     
+
+      {/* gotta merge everything */}
+      <TestSystem courseId={courseId} lessonId={lessonId} />
     </div>
   );
 };
