@@ -85,7 +85,7 @@ const CourseManagement = ({ onSelectCourse }) => {
   };
   
   // Handle new course and course update
-  const handleSaveCourse = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
     
     const courseData = {
@@ -102,7 +102,6 @@ const CourseManagement = ({ onSelectCourse }) => {
         await saveCourse(courseData);
       }
   
-      
       toggleModal('courseDetails', false);  // Close course details modal
       setIsEditing(false); // Exit editing mode
       loadCourses();       // Refresh course list
@@ -146,7 +145,8 @@ const CourseManagement = ({ onSelectCourse }) => {
           <div className='modal'>
             <button className='authpage-close' onClick={() => toggleModal('add', false)}><FaX /></button>
             <h2>Add New Course</h2>
-            <form onSubmit={handleSaveCourse}>
+
+            <form onSubmit={handleSubmit}>
               <div className='form-group'>
                 <label>Title:</label>
                 <input type="text" name="title" value={formData.title} onChange={handleInputChange} required />
@@ -187,7 +187,7 @@ const CourseManagement = ({ onSelectCourse }) => {
             <button className='authpage-close' onClick={() => toggleModal('courseDetails', false)}><FaX /></button>
             
             {isEditing ? (
-              <form onSubmit={handleSaveCourse}>
+              <form onSubmit={handleSubmit}>
                 <h2>Edit Course</h2>
                 <div className='form-group'>
                   <label>Title:</label>

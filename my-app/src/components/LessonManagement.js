@@ -60,56 +60,16 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
     }
   }
 
+  // Handle lesson selection for editing and viewing details
+  const handleLessonClick = (lesson) => {
+    setSelectedLesson(lesson);
+    toggleModal('lessonDetails', true);
+  };
+
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target; // Destructure name and value from event target
     setFormData(prev => ({ ...prev, [name]: value })); // Update formData state
-  };
-
-  // Handle lesson addition and updating
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Set the lesson number for new lesson
-    const lessonNumber = isEditing ? formData.number : getNextLessonNumber();
-    const newLesson = { ...formData, number: lessonNumber, available: false, testCount: 0 };
-
-    try {
-      if (isEditing) {
-        await updateLesson(selectedCourse.id, selectedLesson.id, newLesson);
-      } else {
-        await saveLesson(selectedCourse.id, newLesson);
-      }
-
-      loadLessons(); // Refresh lesson list
-      toggleModal(isEditing ? 'lessonDetails' : 'add', false); // Close modal
-    } catch (error) {
-      console.error(`Error ${isEditing ? 'updating' : 'adding'} lesson:`, error);
-    }
-  };
-
-  const getNextLessonNumber = () => {
-    return lessons.length > 0 ? Math.max(...lessons.map(lesson => lesson.number)) + 1 : 1;
-  };
-
-  // Handle lesson selection for editing and viewing details
-  const handleLessonClick = (lesson) => {
-    setSelectedLesson(lesson);
-    setFormData({ title: lesson.title, number: lesson.number, description: lesson.description, content: lesson.content });
-    setIsEditing(true);
-    toggleModal('lessonDetails', true);
-  };
-
-  // Handle lesson deletion
-  const handleDelete = async () => {
-    try {
-      await deleteLesson(selectedCourse.id, selectedLesson.id);
-      loadLessons();
-      toggleModal('deleteConfirmation', false);
-      toggleModal('confirmation', true);
-    } catch (error) {
-      console.error('Error deleting lesson:', error);
-    }
   };
 
   const addContent = () => {
@@ -134,6 +94,98 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
       content: newContent
     }));
   };
+
+  // Prepare form for editing
+  const handleEdit = () => {
+    // Set form data for selected course
+    setFormData({ 
+      title: selectedLesson.title, 
+      number: selectedLesson.number, 
+      description: selectedLesson.description, 
+      content: selectedLesson.content 
+    });
+
+    setIsEditing(true); // Set editing mode
+  };
+
+  // Handle lesson addition and updating
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const lessonNumber = parseInt(formData.number, 10);
+    const newLesson = { 
+      ...formData,
+      testCount: isEditing ? selectedCourse.testCount : 0,    // Keep original test count
+      available: false
+    };
+
+    try {
+      if (isEditing) {
+        if (lessonNumber !== selectedLesson.number) {
+          await shiftLessonNumbers(selectedLesson.number, false); // Shift down
+          await shiftLessonNumbers(lessonNumber); // Shift up
+        }
+
+        await updateLesson(selectedCourse.id, selectedLesson.id, newLesson);
+      } 
+      else {
+        await shiftLessonNumbers(lessonNumber);
+        await saveLesson(selectedCourse.id, newLesson);
+      }
+
+      toggleModal(isEditing ? 'lessonDetails' : 'add', false); // Close modal
+      setIsEditing(false);
+      loadLessons(); // Refresh lesson list
+
+    } catch (error) {
+      console.error(`Error ${isEditing ? 'updating' : 'adding'} lesson:`, error);
+    }
+  };
+
+  // Shift lesson numbers if a new lesson is inserted
+  const shiftLessonNumbers = async (newNumber, increment = true) => {
+    const lessonsToShift = lessons.filter(lesson => (increment ? lesson.number >= newNumber : lesson.number > newNumber));
+
+    // Update each lesson number individually
+    for (const lesson of lessonsToShift) {
+      const currentNumber = parseInt(lesson.number, 10);
+      const updatedLessonData = { 
+        ...lesson, 
+        number: increment ? currentNumber + 1 : currentNumber - 1 
+      };
+
+      try {
+        await updateLesson(selectedCourse.id, lesson.id, updatedLessonData);
+      } catch (error) {
+        console.error('Error shifting lesson number:', error);
+      }
+    }
+  };
+
+  // Get the next lesson number in the sequence
+  const getNextLessonNumber = () => {
+    if (lessons.length === 0) {
+      return 1; 
+    }
+
+    const lastLesson = lessons.reduce((prev, current) => (prev.number > current.number ? prev : current));
+    return lastLesson.number + 1;
+  };  
+
+  // Handle lesson deletion
+  const handleDelete = async () => {
+    try {
+      await deleteLesson(selectedCourse.id, selectedLesson.id);
+      
+      toggleModal('deleteConfirmation', false); // Close delete confirmation modal
+      toggleModal('lessonDetails', false);      // Close lesson details
+      loadLessons();                            // Refresh lesson list after deletion
+      toggleModal('confirmation', true);        // Show success confirmation
+
+    } catch (error) {
+      console.error('Error deleting lesson:', error); // Log any errors during deletion
+    }
+  };
   
 
 
@@ -150,80 +202,80 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
   
       {/* Modal for adding new lesson */}
       {modals.add && (
-        <div className='modal-overlay'>
+        <>
+          <div className='overlay' onClick={() => toggleModal('add', false)} />
           <div className='modal'>
-            <input
-              type="number"
-              name="number" // Add name attribute
-              placeholder="Lesson Number"
-              value={formData.number}
-              onChange={handleInputChange} // Use the simplified input handler
-              required
-            />
-            <input
-              type="text"
-              name="title" // Add name attribute
-              placeholder="Title"
-              value={formData.title}
-              onChange={handleInputChange} // Use the simplified input handler
-              required
-            />
-            <textarea
-              name="description" // Add name attribute
-              placeholder="Lesson Description"
-              value={formData.description}
-              onChange={handleInputChange} // Use the simplified input handler
-              required
-            />
+            <button className='authpage-close' onClick={() => toggleModal('add', false)}><FaX /></button>
+            <h2>Add New Lesson</h2>
 
-            {/* Dynamic Content Management */}
-            {formData.content.map((item, index) => (
-              <div key={index} className='content-item'>
-                <select
-                  value={item.type}
-                  onChange={(e) => handleContentChange(index, 'type', e.target.value)}
-                >
-                  <option value="text">Text</option>
-                  <option value="code">Code</option>
-                </select>
-
-                {item.type === 'text' && (
-                  <textarea
-                    placeholder="Content"
-                    value={item.content}
-                    onChange={(e) => handleContentChange(index, 'content', e.target.value)}
-                  />
-                )}
-
-                {item.type === 'code' && (
-                  <div>
-                    <textarea
-                      placeholder="Code Input"
-                      value={item.input}
-                      onChange={(e) => handleContentChange(index, 'input', e.target.value)}
-                      rows={25}
-                    />
-                    <textarea
-                      placeholder="Code Output"
-                      value={item.output}
-                      onChange={(e) => handleContentChange(index, 'output', e.target.value)}
-                      rows={25}
-                    />
-                  </div>
-                )}
-
-                <button onClick={() => removeContent(index)}>Remove</button>
+            <form onSubmit={handleSubmit}>
+              <div className='form-group'>
+                <label>Lesson Number:</label>
+                <input type="number" name="number" value={formData.number} onChange={handleInputChange} required />
               </div>
-            ))}
+              <div className='form-group'>
+                <label>Title:</label>
+                <input type="text" name="title" value={formData.title} onChange={handleInputChange} required />
+              </div>
+              <div className='form-group'>
+                <label>Description:</label>
+                <textarea name="description" value={formData.description} onChange={handleInputChange} required />
+              </div>
 
-            <button onClick={addContent}>Add Content</button>
+              {/* Dynamic Content Management */}
+              <div className='form-group'>
+                <label>Content:</label>
+                {formData.content.map((item, index) => (
+                  <div key={index} className='content-item'>
+                    <div className='form-group'>
+                      <select
+                        value={item.type}
+                        onChange={(e) => handleContentChange(index, 'type', e.target.value)}
+                      >
+                        <option value="text">Text</option>
+                        <option value="code">Code</option>
+                      </select>
+                    </div>
 
-            <div className='modal-buttons'>
-              <Button text="Add Lesson" action={handleSubmit} />
-              <Button text="Cancel" type="outline" action={() => toggleModal('add', false)} />
-            </div>
+                    {item.type === 'text' && (
+                      <div className='form-group'>
+                        <textarea
+                          placeholder="Content"
+                          value={item.content}
+                          onChange={(e) => handleContentChange(index, 'content', e.target.value)}
+                        />
+                      </div>
+                    )}
+
+                    {item.type === 'code' && (
+                      <div className='form-group'>
+                        <textarea
+                          placeholder="Code Input"
+                          value={item.input}
+                          onChange={(e) => handleContentChange(index, 'input', e.target.value)}
+                          rows={10}
+                        />
+                        <textarea
+                          placeholder="Code Output"
+                          value={item.output}
+                          onChange={(e) => handleContentChange(index, 'output', e.target.value)}
+                          rows={10}
+                        />
+                      </div>
+                    )}
+                    <button onClick={() => removeContent(index)}>Remove</button>
+                  </div>
+                ))}
+                <button type="button" onClick={addContent}>Add Content</button>
+              </div>
+
+              <div className='modal-buttons'>
+                <Button type="submit" text="Add Lesson" />
+                <Button text="Cancel" outline={true} action={() => toggleModal('add', false)} />
+              </div>
+            </form>
           </div>
-        </div>
+        </>
       )}
   
       <ManagementTable 
@@ -233,88 +285,113 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
       />
   
       {/* Lesson information modal */}
-{modals.lessonDetails && selectedLesson && (
-  <>
-    <div className='overlay' onClick={() => toggleModal('lessonDetails', true)} />
-    <div className='information-modal'>
-      <button className='authpage-close' onClick={() => toggleModal('lessonDetails', false)}>
-        <FaX />
-      </button>
-      
-      {isEditing ? (
-        <form onSubmit={handleSubmit}>
-          <h2>Edit Lesson</h2>
-          <label>
-            Title:
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label>
-            Number:
-            <input
-              type="number"
-              name="number"
-              value={formData.number}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label>
-            Description:
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label>
-            Availability:
-            <select
-              name="available"
-              value={formData.available}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="">Select Availability</option>
-              <option value={true}>Available</option>
-              <option value={false}>Unavailable</option>
-            </select>
-          </label>
-          <div className='modal-buttons'>
-            <Button type="submit" text="Update Lesson" />
-            <Button text="Cancel" outline={true} action={() => setIsEditing(false)} />
-          </div>
-        </form>
-      ) : (
+      {modals.lessonDetails && selectedLesson && (
         <>
-          <h1>{selectedLesson.title}</h1>
-          <div className='row-availability-edit'>
-            <span className={`availability-tag ${selectedLesson.available ? "available" : "unavailable"}`}>
-              {selectedLesson.available ? "Available" : "Unavailable"}
-            </span>
-            <Button text="Edit" action={handleSubmit} />
-          </div>
-          <div className='row-lesson-test'>
-            <p><strong>Number:</strong> {selectedLesson.number}</p>
-            <p><strong>Description:</strong> {selectedLesson.description}</p>
-            <p><strong>Tests Count:</strong> {selectedLesson.testCount}</p>
-          </div>
-          <hr className='modal-divider' />
-          <div className='modal-buttons'>
-            <Button text="Manage Lesson Content" action={() => onSelectLesson(selectedLesson)} />
-            <Button text="Delete" outline={true} action={() => toggleModal('deleteConfirmation', true)} />
+          <div className='overlay' onClick={() => toggleModal('lessonDetails', false)} />
+          <div className='information-modal'>
+            <button className='authpage-close' onClick={() => toggleModal('lessonDetails', false)}><FaX /></button>
+            
+            {isEditing ? (
+              <form onSubmit={handleSubmit}>
+                <h2>Edit Lesson</h2>
+                
+                <div className='form-group'>
+                  <label>Lesson Number:</label>
+                  <input type="number" name="number" value={formData.number} onChange={handleInputChange} required />
+                </div>
+                <div className='form-group'>
+                  <label>Title:</label>
+                  <input type="text" name="title" value={formData.title} onChange={handleInputChange} required />
+                </div>
+                <div className='form-group'>
+                  <label>Availability:</label>
+                  <select name="available" value={formData.available} onChange={handleInputChange} required>
+                    <option value="">Select Availability</option>
+                    <option value={true}>Available</option>
+                    <option value={false}>Unavailable</option>
+                  </select>
+                </div>
+                <div className='form-group'>
+                  <label>Description:</label>
+                  <textarea name="description" value={formData.description} onChange={handleInputChange} required />
+                </div>
+
+                {/* Dynamic Content Management */}
+                <div className='form-group'>
+                  <label>Content:</label>
+                  {formData.content.map((item, index) => (
+                    <div key={index} className='content-item'>
+                      <div className='form-group'>
+                        <select
+                          value={item.type}
+                          onChange={(e) => handleContentChange(index, 'type', e.target.value)}
+                        >
+                          <option value="text">Text</option>
+                          <option value="code">Code</option>
+                        </select>
+                      </div>
+
+                      {item.type === 'text' && (
+                        <div className='form-group'>
+                          <textarea
+                            placeholder="Content"
+                            value={item.content}
+                            onChange={(e) => handleContentChange(index, 'content', e.target.value)}
+                          />
+                        </div>
+                      )}
+
+                      {item.type === 'code' && (
+                        <div className='form-group'>
+                          <textarea
+                            placeholder="Code Input"
+                            value={item.input}
+                            onChange={(e) => handleContentChange(index, 'input', e.target.value)}
+                            rows={10}
+                          />
+                          <textarea
+                            placeholder="Code Output"
+                            value={item.output}
+                            onChange={(e) => handleContentChange(index, 'output', e.target.value)}
+                            rows={10}
+                          />
+                        </div>
+                      )}
+                      <button onClick={() => removeContent(index)}>Remove</button>
+                    </div>
+                  ))}
+                  <button type="button" onClick={addContent}>Add Content</button>
+                </div>
+
+                <div className='modal-buttons'>
+                  <Button type="submit" text="Update Lesson" />
+                  <Button text="Cancel" outline={true} action={() => setIsEditing(false)} />
+                </div>
+              </form>
+            ) : (
+              <>
+                <h1>{selectedLesson.title}</h1>
+                <div className='row-availability-edit'>
+                  <span className={`availability-tag ${selectedLesson.available ? "available" : "unavailable"}`}>
+                    {selectedLesson.available ? "Available" : "Unavailable"}
+                  </span>
+                  <Button text="Edit" action={handleEdit} />
+                </div>
+                <div className='row-lesson-test'>
+                  <p><strong>Number:</strong> {selectedLesson.number}</p>
+                  <p><strong>Description:</strong> {selectedLesson.description}</p>
+                  <p><strong>Tests Count:</strong> {selectedLesson.testCount}</p>
+                </div>
+                <hr className='modal-divider' />
+                <div className='modal-buttons'>
+                  <Button text="Manage Lesson Content" action={() => onSelectLesson(selectedLesson)} />
+                  <Button text="Delete" outline={true} action={() => toggleModal('deleteConfirmation', true)} />
+                </div>
+              </>
+            )}
           </div>
         </>
       )}
-    </div>
-  </>
-)}
 
   
       {/* Success Confirmation Modal */}
