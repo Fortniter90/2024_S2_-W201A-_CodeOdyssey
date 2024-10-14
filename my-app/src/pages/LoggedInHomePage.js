@@ -6,6 +6,7 @@ import { FaPlus } from "react-icons/fa6";
 import SignOutComponent from "../components/SignOut";
 import NavigationBarUser from "../components/NavigationBarUser.js";
 import Button from "../components/Button.js";
+import Feedback from "../components/Feedback"; 
 import "./LoggedInHomePage.css";
 import Footer from "../components/Footer.js";
 
@@ -137,6 +138,8 @@ const LoggedInHomePage = () => {
                     })}
                 </Section>
             </div>
+
+            <Feedback/>
 
             <Footer />
         </div>
