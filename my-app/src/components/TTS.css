@@ -1,0 +1,44 @@
+.tts-button {
+    background: none;
+    cursor: pointer;
+    font-size: 24px;
+    transition: opacity 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; 
+}
+
+.tts-button:hover {
+    opacity: 0.7;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/* Tooltip styles */
+.tooltip-container {
+    position: relative;
+    display: inline-block; 
+}
+
+.tooltip {
+    visibility: hidden; 
+    width: 140px; 
+    background-color: black; 
+    color: white; 
+    text-align: center; 
+    border-radius: 5px; 
+    padding: 5px; 
+    position: absolute; 
+    z-index: 1; 
+    bottom: 125%; 
+    left: 50%; 
+    margin-left: -70px;
+    opacity: 0; 
+    transition: opacity 0.3s;
+}
+
+.tooltip-container:hover .tooltip {
+    visibility: visible; 
+    opacity: 1; 
+}
