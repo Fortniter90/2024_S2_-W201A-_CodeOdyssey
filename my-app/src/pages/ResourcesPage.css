@@ -1,0 +1,119 @@
+.resources-body {
+    font-family: "Roboto", sans-serif; 
+    line-height: 1.5;
+    background-color: #ffffff;
+    color: #333; 
+    margin: 0;
+    padding: 20px;
+}
+
+/* Title Styles */
+.resources-title {
+    font-size: 2.5rem;
+    font-family: "Fira Code", monospace;
+    color: #13315C; 
+    text-align: center;
+    margin: 40px 0 20px;
+    border-bottom: 2px solid #585D9D; 
+    padding-bottom: 10px; 
+}
+
+/* Description Styles */
+.resources-description {
+    font-size: 1.1rem; 
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 15px; 
+    display: flex; 
+    line-height: 1.6; 
+    flex-direction: column; 
+    align-items: center; 
+    margin: 20px; 
+    padding: 20px; 
+    max-width: 1200px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    background-color: #f8f9fd; 
+    border-radius: 8px; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+}
+
+/* Section Heading Styles */
+.resources-subtitle {
+    font-size: 2rem;
+    font-family: "Fira Code", monospace;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    color: #585D9D; 
+    margin: 30px 0 10px; 
+    border-bottom: 2px solid #585D9D; 
+    padding-bottom: 10px; 
+    text-align: center;
+}
+
+/* List Styles */
+.resources-list,
+.resources-tips-list {
+    list-style-type: disc; 
+    margin: 20px auto; 
+    padding-left: 40px; 
+    max-width: 1000px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 15px;
+}
+
+/* List Item Styles */
+.resources-list li,
+.resources-tips-list li {
+    margin-bottom: 15px; 
+}
+
+/* Link Styles */
+.resources-list a,
+.resources-tips-list strong {
+    color: #585D9D; 
+    text-decoration: none; 
+    transition: color 0.3s ease; 
+}
+
+.resources-list a:hover {
+    text-decoration: underline; 
+    color: #13315C; 
+}
+
+/* Tips Section Styles */
+.resources-tips-section {
+    font-weight: bold; 
+    margin-top: 20px; 
+    font-family: "Fira Code", monospace;
+    text-align: center;
+}
+
+/* Final Thoughts Styles */
+.resources-final-thoughts {
+    font-size: 25px;
+    font-family: "Fira Code", monospace;
+    margin: 40px 0; 
+    padding: 0 15px; 
+    text-align: center; 
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .resources-title {
+        font-size: 32px; 
+    }
+
+    .resources-description,
+    .resources-final-thoughts {
+        font-size: 16px; 
+    }
+
+    h2 {
+        font-size: 24px; 
+    }
+}
