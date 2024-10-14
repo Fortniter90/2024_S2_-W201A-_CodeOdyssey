@@ -1,4 +1,4 @@
-import React, { useState, useEffect };
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './TestSystem.css';
 import HintSystem from '../components/HintSystem';
@@ -28,21 +28,14 @@ const TestSystem = ({ courseId, lessonId }) => {
     try {
       const testList = await fetchTests(courseId, lessonId);
       setTests(Object.values(testList));
-
+      setUserAnswers(Array(Object.keys(testList).length).fill(''));
     } catch (error) {
       console.error('Error loading courses:', error);
+      setTests([]);
     }
   };
 
   const currentTest = tests ? tests[currentTestIndex] : null;
-
-  const handleCheckAnswer = () => {
-    if (userAnswers[currentTestIndex].trim() === currentTest.answer.trim()) {
-      setIsCorrect(true);
-    } else {
-      setIsCorrect(false);
-    }
-  };
 
   const handleShowAnswer = () => setShowAnswer(true);
 
