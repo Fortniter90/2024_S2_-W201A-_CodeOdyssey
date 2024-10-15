@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { fetchCourses } from '../utils/DataFetching';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import NavigationBarUser from '../components/NavigationBarUser';
@@ -14,10 +15,7 @@ const AllCourses = () => {
     const fetchCourses = async () => {
       try {
         // Fetch all courses from Firestore
-        const coursesCollection = collection(db, 'courses');
-        const courseSnapshot = await getDocs(coursesCollection);
-        const courseList = courseSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
+        const courseList = fetchCourses();
         setCourses(courseList); // Set the courses state with fetched courses
       } catch (error) {
         console.error('Error fetching courses:', error);

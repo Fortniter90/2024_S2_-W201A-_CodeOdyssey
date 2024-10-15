@@ -62,8 +62,7 @@ router.post('/signout', async (req, res) => {
   }
 });
 
-router.get('/deleteuser', verifyToken, async (req, res) => {
-  console.log("getting");
+router.delete('/deleteuser', verifyToken, async (req, res) => {
   try {
     await deleteUser(req.user.uid);
     res.json({ message: 'User deleted successfully' });
@@ -76,6 +75,7 @@ router.get('/deleteuser', verifyToken, async (req, res) => {
 });
 
 router.get(`/userdata/:userId`, async (req, res) => {
+  console.log("getting user Data");
   const { userId } = req.params;
   try {
     const courses = await loadUserData(userId);

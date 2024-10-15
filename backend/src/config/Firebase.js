@@ -2,7 +2,7 @@ import admin from 'firebase-admin';
 import { readFileSync } from 'fs';
 
 // Assuming you're using environment variables to store paths and secrets
-const serviceAccountKeyPath = "codeodysseydatabase-firebase-adminsdk-y8i39-63be9f9f0b.json";
+const serviceAccountKeyPath = "codeodysseydatabaseadmin.json";
 
 // Read and parse the service account JSON
 const serviceAccount = JSON.parse(readFileSync(serviceAccountKeyPath, 'utf-8'));

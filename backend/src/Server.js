@@ -4,6 +4,7 @@ import http from "http";
 import { handleCodeSubmission } from "./controller/Compiler.js"; // Import the function to handle code submissions
 import router from "./routes/AuthRoutes.js";
 import cors from 'cors';
+import fetchRouter from "./routes/DataFetchingRoutes.js";
 
 const app = express(); // Initialize an Express application
 const server = http.createServer(app); // Create an HTTP server using the Express app
@@ -44,6 +45,8 @@ io.on("connection", (socket) => {
 
 // Set up the authentication routes
 app.use("/auth", router);
+
+app.use("/", fetchRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

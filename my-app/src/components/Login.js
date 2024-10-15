@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../config/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useAuth } from '../context/AuthContext';
 
 // Component that logins user
 const LoginComponent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { checkAuthStatus } = useAuth();
 
   const goToHomePage = () => {
     navigate('/');
@@ -24,6 +26,7 @@ const LoginComponent = () => {
       // Retrieve the ID token
       const idToken = await user.getIdToken();
       localStorage.setItem('idToken', idToken);
+      checkAuthStatus();
       goToHomePage();
     } catch (error) {
       alert(`Error: ${error.message}`); // Shows an error message should an error occur

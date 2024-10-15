@@ -28,7 +28,8 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const response = await axios.get('http://localhost:8080/status', {
+      console.log("this is it");
+      const response = await axios.get('http://localhost:8080/auth/status', {
         headers: {
           Authorization: `Bearer ${token}`, // Use backticks for template literals
           'Content-Type': 'application/json', // Set Content-Type correctly
@@ -56,7 +57,7 @@ export const AuthProvider = ({ children }) => {
 
   const loadUserData = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:8080/userdata/${userId}`); // Fetch user data from your backend
+      const response = await axios.get(`http://localhost:8080/auth/userdata/${userId}`); // Fetch user data from your backend
       const userData = response.data;
 
       if (userData.courses) {
