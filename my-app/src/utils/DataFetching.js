@@ -4,7 +4,7 @@ const backendUrl = 'http://localhost:8080'; // Your backend URL
 // Fetch all courses
 export const fetchCourses = async () => {
   try {
-    const response = await axios.get(`${backendUrl}/course`);
+    const response = await axios.get(`${backendUrl}/courses`);
     return response.data;
   } catch (error) {
     console.error('Error fetching courses:', error);
@@ -15,7 +15,7 @@ export const fetchCourses = async () => {
 // Fetch all users
 export const fetchUsers = async () => {
   try {
-    const response = await axios.get(`${backendUrl}/users`);
+    const response = await axios.get(`${backendUrl}/fetch/users`);
     return response.data;
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -26,7 +26,7 @@ export const fetchUsers = async () => {
 // Fetch lessons based on course ID
 export const fetchLessons = async (courseId) => {
   try {
-    const response = await axios.get(`${backendUrl}/${courseId}/lessons`);
+    const response = await axios.get(`${backendUrl}/fetch/${courseId}/lessons`);
     return response.data;
   } catch (error) {
     console.error('Error fetching lessons:', error);
@@ -37,7 +37,7 @@ export const fetchLessons = async (courseId) => {
 // Fetch tests based on course ID and lesson ID
 export const fetchTests = async (courseId, lessonId) => {
   try {
-    const response = await axios.get(`${backendUrl}/${courseId}/lessons/${lessonId}/tests`);
+    const response = await axios.get(`${backendUrl}/fetch/${courseId}/lessons/${lessonId}/tests`);
     return response.data;
   } catch (error) {
     console.error('Error fetching tests:', error);
@@ -48,7 +48,7 @@ export const fetchTests = async (courseId, lessonId) => {
 // Fetch user course progress
 export const fetchUserCourseProgress = async (userId, courseId) => {
   try {
-    const response = await axios.get(`${backendUrl}/users/${userId}/courses/${courseId}/progress`);
+    const response = await axios.get(`${backendUrl}/fetch/users/${userId}/courses/${courseId}/progress`);
     return response.data;
   } catch (error) {
     console.error('Error fetching user course progress:', error);
@@ -59,7 +59,7 @@ export const fetchUserCourseProgress = async (userId, courseId) => {
 // Fetch all admin users
 export const fetchAdminUsers = async () => {
   try {
-    const response = await axios.get(`${backendUrl}/users/admin`);
+    const response = await axios.get(`${backendUrl}/fetch/users/admin`);
     return response.data;
   } catch (error) {
     console.error('Error fetching admin users:', error);
@@ -70,7 +70,7 @@ export const fetchAdminUsers = async () => {
 // Fetch user answers
 export const fetchUsersAnswers = async (userId) => {
   try {
-    const response = await axios.get(`${backendUrl}/users/${userId}/answers`);
+    const response = await axios.get(`${backendUrl}/fetch/users/${userId}/answers`);
     return response.data;
   } catch (error) {
     console.error('Error fetching user answers:', error);

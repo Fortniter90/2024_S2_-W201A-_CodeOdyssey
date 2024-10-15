@@ -2,7 +2,7 @@ import express from "express";
 import { Server } from "socket.io";
 import http from "http";
 import { handleCodeSubmission } from "./controller/Compiler.js"; // Import the function to handle code submissions
-import router from "./routes/AuthRoutes.js";
+import authRouter from "./routes/AuthRoutes.js";
 import cors from 'cors';
 import fetchRouter from "./routes/DataFetchingRoutes.js";
 
@@ -44,9 +44,9 @@ io.on("connection", (socket) => {
 });
 
 // Set up the authentication routes
-app.use("/auth", router);
+app.use("/auth", authRouter);
 
-app.use("/", fetchRouter);
+app.use("/fetch", fetchRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

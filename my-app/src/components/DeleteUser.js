@@ -19,7 +19,7 @@ const DeleteUserComponent = () => {
     if (currentUser) {
       try {
         const user = currentUser;
-        const response = await axios.post('http://localhost:8080/auth/deleteuser', {
+        const response = await axios.delete('http://localhost:8080/auth/deleteuser', {
           user,
         });
         console.log('User deletion successful:', response.data);

@@ -3,9 +3,9 @@ import admin from '../config/Firebase.js';
 import verifyToken from '../middleware/VerifyToken.js'
 import { createUser, deleteUser, revokeTokensAndLogTimestamp, loadUserData } from '../controller/UserManagement.js'; // Adjust import according to your file structure
 
-const router = express.Router();
+const authRouter = express.Router();
 
-router.get('/status', async (req, res) => {
+authRouter.get('/status', async (req, res) => {
   console.log("check");
 
   const token = req.headers.authorization?.split('Bearer ')[1]; // Extract the token from the Authorization header
@@ -27,7 +27,7 @@ router.get('/status', async (req, res) => {
 });
 
 
-router.post('/signup', async (req, res) => {
+authRouter.post('/signup', async (req, res) => {
   const { email, password, name } = req.body;
 
   console.log("attemp to signup");
@@ -47,7 +47,7 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-router.post('/signout', async (req, res) => {
+authRouter.post('/signout', async (req, res) => {
   try {
     const { user } = req.body;
     // Attempt to revoke tokens for the authenticated user
@@ -62,7 +62,7 @@ router.post('/signout', async (req, res) => {
   }
 });
 
-router.delete('/deleteuser', verifyToken, async (req, res) => {
+authRouter.delete('/deleteuser', verifyToken, async (req, res) => {
   try {
     await deleteUser(req.user.uid);
     res.json({ message: 'User deleted successfully' });
@@ -74,7 +74,7 @@ router.delete('/deleteuser', verifyToken, async (req, res) => {
   }
 });
 
-router.get(`/userdata/:userId`, async (req, res) => {
+authRouter.get(`/userdata/:userId`, async (req, res) => {
   console.log("getting user Data");
   const { userId } = req.params;
   try {
@@ -90,4 +90,4 @@ router.get(`/userdata/:userId`, async (req, res) => {
 
 
 
-export default router;
+export default authRouter;

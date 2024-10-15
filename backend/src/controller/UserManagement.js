@@ -59,18 +59,14 @@ async function revokeTokensAndLogTimestamp(uid) {
 
 async function loadUserData(uid) {
   try {
-    console.log("pass1");
     const userDocRef = db.collection('users').doc(uid); // Use Firestore Admin SDK's collection and doc methods
 
-    console.log("pass2");
     const userDocSnap = await userDocRef.get(); // Use get() to fetch the document
 
     if (userDocSnap.exists) { // Check if the document exists
-      console.log("pass3");
       const userData = userDocSnap.data();
       console.log("User data fetched:", userData);
 
-      console.log(userData.courses);
       if (userData.courses) {
         return userData.courses; // Return courses if they exist
       } else {

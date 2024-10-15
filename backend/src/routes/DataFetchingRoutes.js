@@ -4,7 +4,7 @@ import { fetchCourses, fetchTests, fetchLessons, fetchAllUsers, fetchUserAnswer,
 const fetchRouter = express.Router();
 
 // Route to fetch all courses
-fetchRouter.get('/course', async (req, res) => {
+fetchRouter.get('/courses', async (req, res) => {
   console.log("fetching courses");
   try {
     const courses = await fetchCourses();
