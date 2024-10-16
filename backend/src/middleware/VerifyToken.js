@@ -8,8 +8,9 @@ const verifyToken = async (req, res, next) => {
   }
 
   try {
+    console.log(token);
     const decodedToken = await admin.auth().verifyIdToken(token);
-    req.user = decodedToken;  // Attach the decoded token to the request
+    console.log(decodedToken);
     next();
   } catch (error) {
     return res.status(401).json({ error: 'Invalid token' });

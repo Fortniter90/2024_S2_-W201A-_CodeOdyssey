@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import './LessonTemplate.css';
 import Button from '../components/Button';
 import NavigationBarUser from '../components/NavigationBarUser';
-import { fetchLessons } from '../utils/DataFetching';
+import { fetchLessons } from '../utils/dataFetching';
 
 const LessonTemplate = () => {
   const { courseId, lessonId } = useParams();
@@ -28,7 +28,7 @@ const LessonTemplate = () => {
 
       // Find the specific lesson that matches the current lessonId
       const selectedLesson = lessonList.find(lesson => lesson.id === lessonId);
-      
+
       if (selectedLesson) {
         setLesson(selectedLesson); // Update the state with the specific lesson
       } else {
@@ -80,11 +80,11 @@ const LessonTemplate = () => {
           </div>
         ))}
       </div>
-      
-        <div className='lesson-buttons'>
-          <Button text={'RETURN TO COURSE'} outline={true} action={goToCourse}></Button>
-          <Button text={'GO TO TESTS'} action={goToTests}></Button>
-        </div>
+
+      <div className='lesson-buttons'>
+        <Button text={'RETURN TO COURSE'} outline={true} action={goToCourse}></Button>
+        <Button text={'GO TO TESTS'} action={goToTests}></Button>
+      </div>
 
     </div>
   );

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { FaX } from 'react-icons/fa6';
-import { fetchLessons } from '../utils/DataFetching';
-import { saveLesson, updateLesson } from '../utils/DataSaving';
-import { deleteLesson } from '../utils/DataDeleting';
+import { fetchLessons } from '../utils/dataFetching';
+import { saveLesson, updateLesson } from '../utils/dataSaving';
+import { deleteLesson } from '../utils/dataDeleting';
 import ManagementTable from './ManagementTable';
 import Button from './Button';
 import './DatabaseManagement.css';
@@ -28,7 +28,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
     confirmation: false,
     deleteConfirmation: false,
   })
-  
+
   const [selectedLesson, setSelectedLesson] = useState(null);   // Stores selected lesson
   const [isEditing, setIsEditing] = useState(false);            // Indicates if lesson is in edit mode
 
@@ -49,7 +49,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
       console.error('Error loading lessons:', error); // Log any errors during data fetching
     }
   };
-  
+
   // Handle modal visibility
   const toggleModal = (modalName, state) => {
     setModals((prev) => ({ ...prev, [modalName]: state })); // Change state of given modal
@@ -98,11 +98,11 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
   // Prepare form for editing
   const handleEdit = () => {
     // Set form data for selected course
-    setFormData({ 
-      title: selectedLesson.title, 
-      number: selectedLesson.number, 
-      description: selectedLesson.description, 
-      content: selectedLesson.content 
+    setFormData({
+      title: selectedLesson.title,
+      number: selectedLesson.number,
+      description: selectedLesson.description,
+      content: selectedLesson.content
     });
 
     setIsEditing(true); // Set editing mode
@@ -113,7 +113,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
     e.preventDefault();
 
     const lessonNumber = parseInt(formData.number, 10);
-    const newLesson = { 
+    const newLesson = {
       ...formData,
       testCount: isEditing ? selectedCourse.testCount : 0,    // Keep original test count
       available: false
@@ -127,7 +127,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
         }
 
         await updateLesson(selectedCourse.id, selectedLesson.id, newLesson);
-      } 
+      }
       else {
         await shiftLessonNumbers(lessonNumber);
         await saveLesson(selectedCourse.id, newLesson);
@@ -149,9 +149,9 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
     // Update each lesson number individually
     for (const lesson of lessonsToShift) {
       const currentNumber = parseInt(lesson.number, 10);
-      const updatedLessonData = { 
-        ...lesson, 
-        number: increment ? currentNumber + 1 : currentNumber - 1 
+      const updatedLessonData = {
+        ...lesson,
+        number: increment ? currentNumber + 1 : currentNumber - 1
       };
 
       try {
@@ -165,18 +165,18 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
   // Get the next lesson number in the sequence
   const getNextLessonNumber = () => {
     if (lessons.length === 0) {
-      return 1; 
+      return 1;
     }
 
     const lastLesson = lessons.reduce((prev, current) => (prev.number > current.number ? prev : current));
     return lastLesson.number + 1;
-  };  
+  };
 
   // Handle lesson deletion
   const handleDelete = async () => {
     try {
       await deleteLesson(selectedCourse.id, selectedLesson.id);
-      
+
       toggleModal('deleteConfirmation', false); // Close delete confirmation modal
       toggleModal('lessonDetails', false);      // Close lesson details
       loadLessons();                            // Refresh lesson list after deletion
@@ -186,7 +186,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
       console.error('Error deleting lesson:', error); // Log any errors during deletion
     }
   };
-  
+
 
 
   // Render message if no lessons are available
@@ -199,7 +199,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
         <h1 className='fira-code'>{selectedCourse.title}</h1>
         <Button text="Add Lesson" action={() => toggleModal('add', true)} />
       </div>
-  
+
       {/* Modal for adding new lesson */}
       {modals.add && (
         <>
@@ -277,24 +277,24 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
           </div>
         </>
       )}
-  
-      <ManagementTable 
+
+      <ManagementTable
         items={lessons}
         onRowClick={handleLessonClick}
         renderNoItems={renderNoItems}
       />
-  
+
       {/* Lesson information modal */}
       {modals.lessonDetails && selectedLesson && (
         <>
           <div className='overlay' onClick={() => toggleModal('lessonDetails', false)} />
           <div className='information-modal'>
             <button className='authpage-close' onClick={() => toggleModal('lessonDetails', false)}><FaX /></button>
-            
+
             {isEditing ? (
               <form onSubmit={handleSubmit}>
                 <h2>Edit Lesson</h2>
-                
+
                 <div className='form-group'>
                   <label>Lesson Number:</label>
                   <input type="number" name="number" value={formData.number} onChange={handleInputChange} required />
@@ -393,7 +393,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
         </>
       )}
 
-  
+
       {/* Success Confirmation Modal */}
       {modals.confirmation && (
         <>
@@ -423,7 +423,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
         </>
       )}
     </div>
-  );  
+  );
 };
 
 export default LessonManagement;

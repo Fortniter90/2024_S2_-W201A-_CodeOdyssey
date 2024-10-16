@@ -4,6 +4,7 @@ import axios from 'axios';
 import { auth } from '../config/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useAuth } from '../context/AuthContext';
+import Button from './Button';
 
 // Component that signs a user up
 const SignUpComponent = () => {
@@ -66,7 +67,7 @@ const SignUpComponent = () => {
             required
           />
         </div>
-        
+
         {/* Password input field */}
         <div className='authpage-item'>
           <label htmlFor="password">Password</label>
@@ -78,7 +79,7 @@ const SignUpComponent = () => {
             required
           />
         </div>
-        
+
         {/* Name input field */}
         <div className='authpage-item'>
           <label htmlFor="name">Name</label>
@@ -90,7 +91,7 @@ const SignUpComponent = () => {
             required
           />
         </div>
-        
+
         {/* Sign Up button */}
         <Button text={"SIGN UP"} type="submit" />
       </form>

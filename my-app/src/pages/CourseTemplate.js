@@ -4,51 +4,51 @@ import NavigationBarUser from '../components/NavigationBarUser';
 import CourseHeadings from '../components/CourseHeadings';
 import LearningPath from '../components/LearningPath';
 import { useAuth } from '../context/AuthContext';
-import "./CourseTemplate.css";  
-import { fetchCourses, fetchLessons } from '../utils/DataFetching';
-import { updateUserCourseData } from '../utils/DataSaving';
+import "./CourseTemplate.css";
+import { fetchCourses, fetchLessons } from '../utils/dataFetching';
+import { updateUserCourseData } from '../utils/dataSaving';
 
 const CourseTemplate = () => {
-  const { currentuser, isAuthenticated, usersId, usersName, usersCourses } = useAuth(); // Extracting user info
+  const { currentUser } = useAuth(); // Extracting user info
   const { courseId } = useParams();
   const [course, setCourse] = useState(null);
   const [lessons, setLessons] = useState([]);
 
-    // Fetch course data and update user course data
-    useEffect(() => {
-      const fetchCourse = async () => {
-          try {
-              const courseList = await fetchCourses(); // Fetch all courses if needed
-              const courseData = courseList.find(c => c.id === courseId); // Find the specific course
-              
-              if (courseData) {
-                  setCourse(courseData);
+  // Fetch course data and update user course data
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const courseList = await fetchCourses(); // Fetch all courses if needed
+        const courseData = courseList.find(c => c.id === courseId); // Find the specific course
 
-                  // Update user course data
-                  await updateUserCourseData(usersId, courseId);
-              } else {
-                  console.error('Course not found');
-              }
-          } catch (error) {
-              console.error('Error fetching course:', error);
-          }
-      };
+        if (courseData) {
+          setCourse(courseData);
 
-      fetchCourse();
-  }, [courseId, usersId]); // Dependencies
+          // Update user course data
+          await updateUserCourseData(currentUser.uid, courseId);
+        } else {
+          console.error('Course not found');
+        }
+      } catch (error) {
+        console.error('Error fetching course:', error);
+      }
+    };
+
+    fetchCourse();
+  }, [courseId]); // Dependencies
 
   // Fetch lessons for the course
   useEffect(() => {
-      const fetchCourseLessons = async () => {
-          try {
-              const lessonList = await fetchLessons(courseId); // Fetch lessons using the function
-              setLessons(lessonList); // Update state with the lessons
-          } catch (error) {
-              console.error('Error fetching lessons:', error);
-          }
-      };
+    const fetchCourseLessons = async () => {
+      try {
+        const lessonList = await fetchLessons(courseId); // Fetch lessons using the function
+        setLessons(lessonList); // Update state with the lessons
+      } catch (error) {
+        console.error('Error fetching lessons:', error);
+      }
+    };
 
-      fetchCourseLessons();
+    fetchCourseLessons();
   }, [courseId]); // Fetch lessons whenever courseId changes
 
   if (!course) {
@@ -61,7 +61,7 @@ const CourseTemplate = () => {
 
       <div className='course-content'>
         <CourseHeadings name={course.title} description={course.description} backgroundColor={course.color} />
-        <LearningPath courseId={course.id} userId={usersId} />
+        <LearningPath courseId={course.id} userId={currentUser.uid} />
       </div>
     </div>
   );

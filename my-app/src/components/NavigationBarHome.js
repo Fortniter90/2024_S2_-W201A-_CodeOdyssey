@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";  // Import both icons
 import Button from "./Button";
-import { fetchCourses } from "../utils/DataFetching";
+import { fetchCourses } from "../utils/dataFetching";
 import "./NavigationBar.css";
 
 const NavigationBarHome = () => {

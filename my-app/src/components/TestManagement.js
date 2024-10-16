@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { FaX } from 'react-icons/fa6';
-import { fetchTests } from '../utils/DataFetching';
-import { saveTest, updateTest } from '../utils/DataSaving';
-import { deleteTest } from '../utils/DataDeleting';
+import { fetchTests } from '../utils/dataFetching';
+import { saveTest, updateTest } from '../utils/dataSaving';
+import { deleteTest } from '../utils/dataDeleting';
 import ManagementTable from './ManagementTable';
 import Button from './Button';
 import './DatabaseManagement.css';
@@ -11,7 +11,7 @@ import './DatabaseManagement.css';
 
 // Component to manage test data
 const TestManagement = ({ selectedCourse, selectedLesson }) => {
-  
+
   // States handling course data
   const [tests, setTests] = useState([]);   // List of tests
   const [formData, setFormData] = useState({    // Data for adding and editing test data
@@ -35,7 +35,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
   const [isEditing, setIsEditing] = useState(false);        // Indicates if test is in edit mode
 
 
-  
+
   // Load tests component on mount
   useEffect(() => {
     loadTests();
@@ -51,7 +51,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
       console.error('Error loading courses:', error); // Log any errors during data fetching
     }
   };
-  
+
   // Handle modal visibility
   const toggleModal = (modalName, state) => {
     setModals((prev) => ({ ...prev, [modalName]: state })); // Change state of given modal
@@ -67,7 +67,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
     setSelectedTest(course);  // Set the selected test
     toggleModal('testDetails', true);
   };
-  
+
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target; // Destructure name and value from event target
@@ -88,7 +88,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
   // Prepare form for editing
   const handleEdit = () => {
     // Set form data for selected course
-    setFormData({ 
+    setFormData({
       number: selectedTest.number,
       question: selectedTest.question,
       answer: selectedTest.answer,
@@ -99,7 +99,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
 
     setIsEditing(true); // Set editing mode
   };
-  
+
   // Handle course addition
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -118,7 +118,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
         }
 
         await updateTest(selectedCourse.id, selectedLesson.id, selectedTest.id, newTest);
-      } 
+      }
       else {
         await shiftTestNumbers(testNumber);
         await saveTest(selectedCourse.id, selectedLesson.id, newTest);
@@ -140,9 +140,9 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
     // Update each lesson number individually
     for (const test of testsToShift) {
       const currentNumber = parseInt(test.number, 10);
-      const updatedTestData = { 
-        ...test, 
-        number: increment ? currentNumber + 1 : currentNumber - 1 
+      const updatedTestData = {
+        ...test,
+        number: increment ? currentNumber + 1 : currentNumber - 1
       };
 
       try {
@@ -157,7 +157,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
   const handleDelete = async () => {
     try {
       await deleteTest(selectedCourse.id, selectedLesson.id, selectedTest.id);
-      
+
       toggleModal('deleteConfirmation', false); // Close delete confirmation modal
       toggleModal('testDetails', false);      // Close lesson details
       loadTests();                            // Refresh lesson list after deletion
@@ -180,62 +180,62 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
         <h1 className='fira-code'>{selectedLesson.number}. {selectedLesson.title}</h1>
         <Button text={'Add Test'} action={() => toggleModal('add', true)} />
       </div>
-  
+
       {/* Add Test Modal */}
       {modals.add && (
         <>
           <div className='overlay' onClick={() => toggleModal('add', false)} />
-        <div className='modal'>
-          <div className='modal-content'>
-            <button className='authpage-close' onClick={() => toggleModal('add', false)}><FaX /></button>
-            <h2>Add Test</h2>
+          <div className='modal'>
+            <div className='modal-content'>
+              <button className='authpage-close' onClick={() => toggleModal('add', false)}><FaX /></button>
+              <h2>Add Test</h2>
 
-            <form onSubmit={handleSubmit}>
-              <div className='form-group'>
-                <label>Test Number:</label>
-                <input type="number" name="number" value={formData.number} onChange={handleInputChange} required />
-              </div>
-              <div className='form-group'>
-                <label>Question:</label>
-                <input type="text" name="question" value={formData.question} onChange={handleInputChange} required />
-              </div>
-              <div className='form-group'>
-                <label>Answer:</label>
-                <input type="text" name="answer" value={formData.answer} onChange={handleInputChange} required />
-              </div>
-              <div className='form-group'>
-                <label>Hint:</label>
-                <input type="text" name="hint" value={formData.hint} onChange={handleInputChange} />
-              </div>
-              <div className='form-group'>
-                <label>
-                  <input type="checkbox" name="constraints-print" checked={formData.constraints?.print || false} onChange={(e) => handleCheckboxChange(e, 'print')} />
-                  Print Constraint
-                </label>
-              </div>
-              <div className='form-group'>
-                <label>
-                  <input type="checkbox" name="constraints-loop" checked={formData.constraints?.loop || false} onChange={(e) => handleCheckboxChange(e, 'loop')} />
-                  Loop Constraint
-                </label>
-              </div>
-              
-              <div className='modal-buttons'>
-                <Button type="submit" text="Add Test" />
-                <Button text="Cancel" outline={true} action={() => toggleModal('add', false)} />
-              </div>
-            </form>
+              <form onSubmit={handleSubmit}>
+                <div className='form-group'>
+                  <label>Test Number:</label>
+                  <input type="number" name="number" value={formData.number} onChange={handleInputChange} required />
+                </div>
+                <div className='form-group'>
+                  <label>Question:</label>
+                  <input type="text" name="question" value={formData.question} onChange={handleInputChange} required />
+                </div>
+                <div className='form-group'>
+                  <label>Answer:</label>
+                  <input type="text" name="answer" value={formData.answer} onChange={handleInputChange} required />
+                </div>
+                <div className='form-group'>
+                  <label>Hint:</label>
+                  <input type="text" name="hint" value={formData.hint} onChange={handleInputChange} />
+                </div>
+                <div className='form-group'>
+                  <label>
+                    <input type="checkbox" name="constraints-print" checked={formData.constraints?.print || false} onChange={(e) => handleCheckboxChange(e, 'print')} />
+                    Print Constraint
+                  </label>
+                </div>
+                <div className='form-group'>
+                  <label>
+                    <input type="checkbox" name="constraints-loop" checked={formData.constraints?.loop || false} onChange={(e) => handleCheckboxChange(e, 'loop')} />
+                    Loop Constraint
+                  </label>
+                </div>
+
+                <div className='modal-buttons'>
+                  <Button type="submit" text="Add Test" />
+                  <Button text="Cancel" outline={true} action={() => toggleModal('add', false)} />
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
         </>
       )}
-  
+
       <ManagementTable
         items={tests}
         onRowClick={handleTestClick}
         renderNoItems={renderNoItems}
       />
-  
+
       {/* Edit Test Modal */}
       {modals.testDetails && selectedTest && (
         <>
@@ -243,11 +243,11 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
           <div className='information-modal'>
             <h2>Edit Test</h2>
             <button className='authpage-close' onClick={() => toggleModal('testDetails', false)}><FaX /></button>
-            
+
             {isEditing ? (
               <form onSubmit={handleSubmit}>
                 <h2>Edit Test</h2>
-                
+
                 <div className='form-group'>
                   <label>Test Number:</label>
                   <input type="number" name="number" value={formData.number} onChange={handleInputChange} required />
@@ -306,7 +306,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
           </div>
         </>
       )}
-  
+
       {/* Confirmation Modal */}
       {modals.confirmation && (
         <div className='modal'>
@@ -317,7 +317,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
           </div>
         </div>
       )}
-  
+
       {/* Delete Confirmation Modal */}
       {modals.deleteConfirmation && (
         <div className='modal'>
@@ -330,7 +330,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
         </div>
       )}
     </div>
-  );  
+  );
 };
 
 export default TestManagement;

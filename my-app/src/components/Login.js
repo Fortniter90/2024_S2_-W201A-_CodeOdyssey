@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../config/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useAuth } from '../context/AuthContext';
+import Button from './Button';
 
 // Component that logins user
 const LoginComponent = () => {
@@ -22,10 +23,11 @@ const LoginComponent = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
+      const token = await user.getIdToken(); // Force refresh the token
+      console.log(token);
       // Retrieve the ID token
-      const idToken = await user.getIdToken();
-      localStorage.setItem('idToken', idToken);
+      localStorage.removeItem('idToken');
+      localStorage.setItem('idToken', token);
       checkAuthStatus();
       goToHomePage();
     } catch (error) {
@@ -48,7 +50,7 @@ const LoginComponent = () => {
             required
           />
         </div>
-        
+
         {/* Password input field */}
         <div className='authpage-item'>
           <label htmlFor="password">Password</label>
@@ -59,7 +61,7 @@ const LoginComponent = () => {
             required
           />
         </div>
-        
+
         {/* Login button*/}
         <Button text={"LOGIN"} type="submit" />
       </form>

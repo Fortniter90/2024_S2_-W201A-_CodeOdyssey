@@ -1,7 +1,7 @@
 import './HeadingsTest.css';
 import CourseHeadings from '../components/CourseHeadings';
 import { useEffect, useState } from 'react';
-import { fetchCourses } from '../utils/DataFetching';
+import { fetchCourses } from '../utils/dataFetching';
 
 function HeadingsTest() {
   const [courses, setCourses] = useState([]);
@@ -21,17 +21,17 @@ function HeadingsTest() {
       console.error('Error loading courses:', error); // Log any errors during data fetching
     }
   };
-  
+
 
   return (
     <div>
       {courses.length > 0 ? (
         courses.map((course) => (
           <div className='course' key={course.id}>
-            <CourseHeadings 
-              name={course.title} 
-              info={course.information} 
-              backgroundColor={course.backgroundColor} 
+            <CourseHeadings
+              name={course.title}
+              info={course.information}
+              backgroundColor={course.backgroundColor}
             />
           </div>
         ))
@@ -40,7 +40,7 @@ function HeadingsTest() {
       )}
     </div>
   );
-  
+
 }
 
 export default HeadingsTest;

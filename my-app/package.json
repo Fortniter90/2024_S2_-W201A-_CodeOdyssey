@@ -12,6 +12,7 @@
     "axios": "^1.7.7",
     "buffer": "^6.0.3",
     "constants-browserify": "^1.0.0",
+    "cropperjs": "^1.6.2",
     "dotenv": "^16.4.5",
     "firebase": "^10.14.0",
     "monaco-editor": "^0.52.0",

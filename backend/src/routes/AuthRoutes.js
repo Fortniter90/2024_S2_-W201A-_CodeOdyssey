@@ -1,7 +1,7 @@
 import express from 'express';
 import admin from '../config/Firebase.js';
 import verifyToken from '../middleware/VerifyToken.js'
-import { createUser, deleteUser, revokeTokensAndLogTimestamp, loadUserData } from '../controller/UserManagement.js'; // Adjust import according to your file structure
+import { updateUsername, updateProfilePicture, createUser, deleteUser, revokeTokensAndLogTimestamp, loadUserData } from '../controller/UserManagement.js'; // Adjust import according to your file structure
 
 const authRouter = express.Router();
 
@@ -62,9 +62,10 @@ authRouter.post('/signout', async (req, res) => {
   }
 });
 
-authRouter.delete('/deleteuser', verifyToken, async (req, res) => {
+authRouter.delete('/deleteuser', async (req, res) => {
   try {
-    await deleteUser(req.user.uid);
+    const { uid } = req.body;
+    await deleteUser(uid);
     res.json({ message: 'User deleted successfully' });
   } catch (error) {
     res.status(500).json({
@@ -74,20 +75,35 @@ authRouter.delete('/deleteuser', verifyToken, async (req, res) => {
   }
 });
 
-authRouter.get(`/userdata/:userId`, async (req, res) => {
-  console.log("getting user Data");
+authRouter.put(`/updateusername/:userId`, async (req, res) => {
+  console.log("getting username");
   const { userId } = req.params;
+  const { name } = req.body;
+
   try {
-    const courses = await loadUserData(userId);
-    res.json({ courses });
+    await updateUsername(userId, name);
+    res.json({ message: "Username updated" });
   } catch (error) {
     res.status(500).json({
-      message: 'Error getting Courses',
+      message: 'Error updating username',
       error: error.message,
     });
   }
 });
 
-
+authRouter.put(`/updateprofilepicture/:userId`, async (req, res) => {
+  console.log("getting user Data");
+  const { userId } = req.params;
+  const { profilePicture } = req.body;
+  try {
+    await updateProfilePicture(userId, profilePicture);
+    res.json({ message: "Profile picture updated" });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error updating profile picture',
+      error: error.message,
+    });
+  }
+});
 
 export default authRouter;

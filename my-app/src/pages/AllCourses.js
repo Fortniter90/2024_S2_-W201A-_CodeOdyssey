@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import NavigationBarUser from '../components/NavigationBarUser';
 import { useNavigate } from 'react-router-dom';
-import { fetchCourses } from '../utils/DataFetching';
+import { fetchCourses } from '../utils/dataFetching';
 import Button from '../components/Button';
 import "./AllCourses.css";
 
@@ -44,8 +44,8 @@ const AllCourses = () => {
 
       <div className='allcourses-container'>
         <h1 className='fira-code'>Discover Languages</h1>
-        
-        
+
+
         <div className='allcourses-content'>
           {courses.map(course => (
             <div className='course-block' key={course.id} >
@@ -53,30 +53,30 @@ const AllCourses = () => {
 
 
 
-            <div
-              className='recent-levels'
-              style={{ backgroundImage: `linear-gradient(var(--${course.color}-light), var(--${course.color}-medium), var(--${course.color}-dark))` }}
-            >
+              <div
+                className='recent-levels'
+                style={{ backgroundImage: `linear-gradient(var(--${course.color}-light), var(--${course.color}-medium), var(--${course.color}-dark))` }}
+              >
 
-              <div className='header'>
-                <h2 className='fira-code'>{course.title}</h2>
-                <p className='roboto-bold'>{course.lessonCount} {course.lessonCount === 1 ? 'Lesson' : 'Lessons'} </p>
+                <div className='header'>
+                  <h2 className='fira-code'>{course.title}</h2>
+                  <p className='roboto-bold'>{course.lessonCount} {course.lessonCount === 1 ? 'Lesson' : 'Lessons'} </p>
+                </div>
+
+
+
+                <Button text={"VIEW COURSE"} action={(e) => goToCourse(course.id)}
+                  color={`var(--${course.color}-light)`}
+                  backgroundColor={`var(--${course.color}-dark)`}
+                  hoverColor={`var(--white)`}
+                />
               </div>
-              
-
-
-              <Button text={"VIEW COURSE"} action={(e) => goToCourse(course.id)} 
-                color={`var(--${course.color}-light)`} 
-                backgroundColor={`var(--${course.color}-dark)`} 
-                hoverColor={`var(--white)`} 
-              />
             </div>
-            </div>
-          ))} 
+          ))}
 
 
 
-      
+
 
 
         </div>

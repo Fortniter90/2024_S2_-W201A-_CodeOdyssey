@@ -18,14 +18,15 @@ export const fetchCourses = async () => {
 
 // Fetch all lessons based on course ID
 export const fetchLessons = async (courseId) => {
-  if (!courseId) return;
-
+  console.log("fetching lessons");
   try {
     const lessonsSnapshot = await db.collection(`courses/${courseId}/lessons`).orderBy('number').get();
     const lessonList = lessonsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
+
+    console.log(lessonList);
     return lessonList;
   } catch (error) {
     console.error('Error fetching lessons:', error);
@@ -35,8 +36,6 @@ export const fetchLessons = async (courseId) => {
 
 // Fetch all tests based on course ID and lesson ID
 export const fetchTests = async (courseId, lessonId) => {
-  if (!courseId || !lessonId) return;
-
   try {
     const testsSnapshot = await db.collection(`courses/${courseId}/lessons/${lessonId}/tests`).orderBy('number').get();
     const testList = testsSnapshot.docs.map(doc => ({
@@ -69,12 +68,14 @@ export const fetchUserAnswer = async (userId, answerId) => {
 // Fetch specific user course information by userId and courseId
 export const fetchUserCourseProgress = async (userId, courseId) => {
   try {
+    console.log("fetching progress");
     const userSnapshot = await db.doc(`users/${userId}`).get();
 
     if (userSnapshot.exists) {
       const userCoursesData = userSnapshot.data().courses;
       const courseData = userCoursesData[courseId];
 
+      console.log(courseData);
       if (courseData) {
         return courseData;
       } else {

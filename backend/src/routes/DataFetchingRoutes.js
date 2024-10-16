@@ -55,7 +55,7 @@ fetchRouter.get('/users/:userId/courses/:courseId/progress', async (req, res) =>
     if (progress) {
       res.status(200).json(progress);
     } else {
-      res.status(404).json({ message: 'Course progress not found' });
+      res.status(200).json({ completedLessons: [], currentLesson: '' });
     }
   } catch (error) {
     res.status(500).json({ message: 'Error fetching user course progress', error: error.message });

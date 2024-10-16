@@ -1,7 +1,6 @@
 import admin from '../config/Firebase.js';
 const db = admin.firestore(); // Get Firestore instance from adminconst db = admin.firestore(); // Get Firestore instance from admin
 
-
 async function createUser(email, password, name) {
   try {
 
@@ -12,11 +11,11 @@ async function createUser(email, password, name) {
       password: password,
       disabled: false,
       displayName: name,
+      photoURL: 'https://firebasestorage.googleapis.com/v0/b/codeodysseydatabase.appspot.com/o/profile_pictures%2Fdefaultprofilepic.png?alt=media&token=1a7119e5-c0a0-4d88-8433-bc7018602490',
     });
     console.log(userRecord.displayName);
     // Save user details to Firestore
     await db.collection('users').doc(userRecord.uid).set({
-      name: name,
       courses: {},
     });
 
@@ -29,12 +28,14 @@ async function createUser(email, password, name) {
 
 async function deleteUser(uid) {
   try {
-    const docRef = doc(db, 'users', uid); // Reference to Firestore document
-    // Deletes the user's document from Firestore
-    await deleteDoc(docRef);
-    await deleteUser(uid);
+    await admin.auth().deleteUser(uid);
+    const userDocRef = admin.firestore().collection('users').doc(uid);
+    await userDocRef.delete();
+
+    console.log(`Successfully deleted user and Firestore document for UID: ${uid}`);
   } catch (error) {
-    console.log('Error deleting user:', error);
+    console.error('Error deleting user:', error);
+    throw new Error(`Failed to delete user: ${error.message}`);
   }
 }
 
@@ -53,7 +54,7 @@ async function revokeTokensAndLogTimestamp(uid) {
     console.log(`Tokens revoked at: ${timestamp}`);
   } catch (error) {
     // Handle any errors during the process
-    console.error('Error revoking tokens:', error);
+    throw new Error('Error revoking tokens:', error);
   }
 };
 
@@ -80,5 +81,31 @@ async function loadUserData(uid) {
   }
 }
 
-export { createUser, deleteUser, revokeTokensAndLogTimestamp, loadUserData };
+async function updateProfilePicture(uid, picture) {
+  try {
+    const userRecord = await admin.auth().updateUser(uid, {
+      photoURL: picture
+    });
+
+    console.log("Successfully updated user's profile picture:", userRecord.photoURL);
+  } catch (error) {
+    console.error('Error updating profile picture:', error);
+  }
+}
+
+
+async function updateUsername(uid, name) {
+  try {
+    await admin.auth().updateUser(uid, {
+      displayName: name
+    });
+    console.log("Successfully updated user's username:");
+  } catch (error) {
+    console.error('Error updating username:', error);
+  }
+}
+
+
+
+export { createUser, deleteUser, revokeTokensAndLogTimestamp, loadUserData, updateUsername, updateProfilePicture };
 

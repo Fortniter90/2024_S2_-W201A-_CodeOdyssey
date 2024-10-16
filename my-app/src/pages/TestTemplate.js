@@ -3,16 +3,14 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import NavigationBarUser from '../components/NavigationBarUser';
 import { FaArrowLeftLong } from 'react-icons/fa6';
-import { fetchLessons, fetchTests } from '../utils/DataFetching';
+import { fetchLessons, fetchTests } from '../utils/dataFetching';
 import HintSystem from '../components/HintSystem';
 import CodeEditor from '../components/CodeEditor';
 import CompilerComponent from '../components/SubmitCode';
 import { useAuth } from '../context/AuthContext';
-import { saveUserAnswers } from '../utils/DataSaving';
-
+import { saveUserAnswers } from '../utils/dataSaving';
 import './TestTemplate.css';
 import Button from '../components/Button';
-import TestSystem from './TestSystem';
 
 
 const TestTemplate = () => {
@@ -26,7 +24,7 @@ const TestTemplate = () => {
   const [userAnswers, setUserAnswers] = useState([]); // Track user input for all tests
   const [showAnswer, setShowAnswer] = useState(false); // Show correct answer toggle
   const [isCorrect, setIsCorrect] = useState(null); // Track if user's answer is correct
-  const [code, setCode] = useState(''); // State to hold the code
+  const [language, setLanguage] = useState(null);
 
   const navigate = useNavigate();
 
@@ -35,6 +33,7 @@ const TestTemplate = () => {
     const fetchData = async () => {
       await loadLessons();
       await loadTests();
+      await fetchLanguage();
     };
 
     fetchData(); // Call the async function
@@ -47,7 +46,7 @@ const TestTemplate = () => {
 
       // Find the specific lesson that matches the current lessonId
       const selectedLesson = lessonList.find(lesson => lesson.id === lessonId);
-      
+
       if (selectedLesson) {
         setLesson(selectedLesson); // Update the state with the specific lesson
       } else {
@@ -70,9 +69,18 @@ const TestTemplate = () => {
     }
   };
 
-  
+  const fetchLanguage = async () => {
+    try {
+      // Fetch all courses from Firestore
+      const coursesCollection = await fetchCourses();
+      setLanguage(coursesCollection[courseId].language);
+    } catch (error) {
+      console.error('Error fetching course language:', error);
+    }
+  };
+
   const currentTest = tests ? tests[currentTestIndex] : null;
-  
+
   // Toggle showing the correct answer
   const handleShowAnswer = () => setShowAnswer(true);
   const handleHideAnswer = () => setShowAnswer(false);
@@ -96,18 +104,26 @@ const TestTemplate = () => {
       navigate(`/course/${courseId}`);
     }
   }
-  
+
+  const handleUserInputChange = useCallback((newCode) => {
+    setUserAnswers((prevAnswers) => {
+      const updatedAnswers = [...prevAnswers];
+      updatedAnswers[currentTestIndex] = newCode;
+      return updatedAnswers;
+    });
+  }, [currentTestIndex]);
+
 
   // Function to save answers to Firestore
   const saveAnswers = async () => {
     try {
       const success = await saveUserAnswers(usersId, courseId, lessonId, tests, userAnswers);
       if (success) {
-          alert('Answers saved successfully!');
-          navigate(`/course/${courseId}`); // Navigate after saving
+        alert('Answers saved successfully!');
+        navigate(`/course/${courseId}`); // Navigate after saving
       }
     } catch (error) {
-        alert(error.message); // Show error message
+      alert(error.message); // Show error message
     }
   };
 
@@ -122,64 +138,58 @@ const TestTemplate = () => {
 
   return (
     <div>
-        <NavigationBarUser />
-        
-        <div className='go-back-link roboto-medium' onClick={goToCourse}>
-          <FaArrowLeftLong />
-          Go Back
-        </div>
+      <NavigationBarUser />
 
-        <div className='lessontemplate-header'>
-          {/* Display the lesson ID and status */}
-          <h2 className={`tag tag-blue roboto-bold`}>Lesson {lesson.number}</h2>
-          <h1 className='title fira-code'>{lesson.title}</h1>
-        </div>
-
-        <div className='test-container'>
-
-          <div className='test-header'>
-            <h2 className='roboto-medium'>Question {currentTest.number}. {currentTest.question}</h2>
-            <HintSystem hint={currentTest.hint} testId={currentTest.number} />
-          </div>
-
-
-          <CodeEditor onCodeChange={setCode} /> {/* Update code in state */}
-          <CompilerComponent code={code} /> {/* Submit the current code */}
-
-
-
-          <div className='test-answer'>
-            {showAnswer ? (
-              <div className='answer'>
-                <Button text={'HIDE ANSWER'} action={handleHideAnswer} />
-                <h3>Correct Answer:</h3>
-                <pre>{currentTest.answer}</pre>
-              </div>
-            ) : (
-              <div className='answer'>
-                <Button text={'SHOW ANSWER'} action={handleShowAnswer} />
-              </div>
-            )}
-          </div>
-
-      <div className='test-navigation'>
-        {currentTestIndex !== 0 && <Button text={'PREVIOUS QUESTION'} outline={true} action={handlePreviousTest} />}
-        {currentTestIndex === tests.length - 1 ?
-          <Button text={'SAVE AND FINISH'} action={saveAnswers} /> :
-          <Button text={'NEXT QUESTION'} action={handleNextTest} />
-        }
+      <div className='go-back-link roboto-medium' onClick={goToCourse}>
+        <FaArrowLeftLong />
+        Go Back
       </div>
+
+      <div className='lessontemplate-header'>
+        {/* Display the lesson ID and status */}
+        <h2 className={`tag tag-blue roboto-bold`}>Lesson {lesson.number}</h2>
+        <h1 className='title fira-code'>{lesson.title}</h1>
+      </div>
+
+      <div className='test-container'>
+
+        <div className='test-header'>
+          <h2 className='roboto-medium'>Question {currentTest.number}. {currentTest.question}</h2>
+          <HintSystem hint={currentTest.hint} testId={currentTest.number} />
+        </div>
+
+        <CodeEditor onCodeChange={handleUserInputChange} code={userAnswers[currentTestIndex] || ''} />
+        <CompilerComponent code={userAnswers[currentTestIndex] || ''} answer={currentTest.requiredOutput} language={language} />
+
+        <div className='test-answer'>
+          {showAnswer ? (
+            <div className='answer'>
+              <Button text={'HIDE ANSWER'} action={handleHideAnswer} />
+              <h3>Correct Answer:</h3>
+              <pre>{currentTest.answer}</pre>
+            </div>
+          ) : (
+            <div className='answer'>
+              <Button text={'SHOW ANSWER'} action={handleShowAnswer} />
+            </div>
+          )}
+        </div>
+
+        <div className='test-navigation'>
+          {currentTestIndex !== 0 && <Button text={'PREVIOUS QUESTION'} outline={true} action={handlePreviousTest} />}
+          {currentTestIndex === tests.length - 1 ?
+            <Button text={'SAVE AND FINISH'} action={saveAnswers} /> :
+            <Button text={'NEXT QUESTION'} action={handleNextTest} />
+          }
+        </div>
 
         {isCorrect !== null && (
-        <div className="result">
-          {isCorrect ? <p>Correct!</p> : <p>Incorrect. Please Try Again!</p>}
-        </div>
-      )}
+          <div className="result">
+            {isCorrect ? <p>Correct!</p> : <p>Incorrect. Please Try Again!</p>}
+          </div>
+        )}
       </div>
-    
 
-      {/* gotta merge everything */}
-      <TestSystem courseId={courseId} lessonId={lessonId} />
     </div>
   );
 };

@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import './PastTests.css';
-import { fetchUserAnswer, fetchTests, fetchLessons } from '../utils/DataFetching';
-import { fetchUserAnswer, fetchTests, fetchLessons } from '../utils/DataFetching';
 import NavigationBarUser from '../components/NavigationBarUser';
 import { useAuth } from '../context/AuthContext';
-import { fetchUserAnswerData } from '../utils/DataFetching';
+import { fetchUsersAnswers } from '../utils/dataFetching';
 
 function PastTest() {
   const { currentuser, isAuthenticated, usersId, usersName, usersCourses } = useAuth();    // Extracting user info
@@ -15,21 +13,21 @@ function PastTest() {
 
   useEffect(() => {
     const fetchAnswerData = async () => {
-        if (usersId) { // Ensure usersId is available before fetching data
-            try {
-                const { answers, allTests, allLessons } = await fetchUserAnswerData(usersId);
-                setAnswersData(answers);
-                setTestsData(allTests);
-                setLessonsData(allLessons);
-            } catch (error) {
-                setError(error.message); // Set error message if fetch fails
-            }
+      if (usersId) { // Ensure usersId is available before fetching data
+        try {
+          const { answers, allTests, allLessons } = await fetchUsersAnswers(usersId);
+          setAnswersData(answers);
+          setTestsData(allTests);
+          setLessonsData(allLessons);
+        } catch (error) {
+          setError(error.message); // Set error message if fetch fails
         }
+      }
     };
 
     fetchAnswerData();
-}, [usersId]); // Include usersId in the dependency array
-  
+  }, [usersId]); // Include usersId in the dependency array
+
 
   if (error) {
     return <div>{error}</div>;
