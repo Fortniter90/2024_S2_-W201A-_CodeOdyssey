@@ -41,9 +41,7 @@ const SignUpComponent = () => {
       localStorage.setItem('idToken', idToken);
       console.log('Signup successful:', response.data);
       alert('Signup successful:', response.data);
-      checkAuthStatus();
-      // Navigate to home page after successful signup
-      goToHomePage();
+      goToHomePage(); // Navigate to home page after successful signup
     } catch (error) {
       // Alert the user with the error message
       const errorMessage = error.response ? error.response.data.error : error.message;

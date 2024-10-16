@@ -24,11 +24,9 @@ const LoginComponent = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       const token = await user.getIdToken(); // Force refresh the token
-      console.log(token);
       // Retrieve the ID token
       localStorage.removeItem('idToken');
       localStorage.setItem('idToken', token);
-      checkAuthStatus();
       goToHomePage();
     } catch (error) {
       alert(`Error: ${error.message}`); // Shows an error message should an error occur

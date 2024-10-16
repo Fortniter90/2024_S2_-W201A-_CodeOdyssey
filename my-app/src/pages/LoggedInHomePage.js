@@ -21,7 +21,7 @@ const gradients = {
 // Main component for the logged in home page
 const LoggedInHomePage = () => {
   // Destructure values from the authentiction context
-  const { currentuser, isAuthenticated, usersName, usersCourses, isAdmin } = useAuth();
+  const { currentUser, isAuthenticated, usersCourses, isAdmin } = useAuth();
 
   // State variables storing data
   const [courseDetails, setCourseDetails] = useState({});
@@ -106,7 +106,7 @@ const LoggedInHomePage = () => {
 
         {/* Home page header */}
         <div className='homepage-header'>
-          <h1 className='fira-code'>Welcome, {usersName || 'User'}</h1>
+          <h1 className='fira-code'>Welcome, {currentUser.name || 'User'}</h1>
 
           {/* If the user is an admin, show button to navigate to the developer dashboard */}
           {isAdmin && <Button text="DEVELOPER DASHBOARD" action={navigateTo('/developerdashboard')} />}

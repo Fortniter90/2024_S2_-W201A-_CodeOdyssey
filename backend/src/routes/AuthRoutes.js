@@ -75,6 +75,20 @@ authRouter.delete('/deleteuser', async (req, res) => {
   }
 });
 
+authRouter.get(`/userdata/:userId`, async (req, res) => {
+  console.log("getting user Data");
+  const { userId } = req.params;
+  try {
+    const courses = await loadUserData(userId);
+    res.json({ courses });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error getting Courses',
+      error: error.message,
+    });
+  }
+});
+
 authRouter.put(`/updateusername/:userId`, async (req, res) => {
   console.log("getting username");
   const { userId } = req.params;
