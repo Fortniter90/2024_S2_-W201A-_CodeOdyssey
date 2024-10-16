@@ -20,6 +20,7 @@ const NavigationBarHome = () => {
   // Function to handle course selection and navigation
   const handleCourseSelect = (courseId) => {
     navigate(`/course/${courseId}`);
+    navigate(`/course/${courseId}`);
   };
 
   // Load courses component on mount

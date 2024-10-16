@@ -1,20 +1,26 @@
 import React from 'react';
-import { signOut } from 'firebase/auth';
-import { auth } from '../config/firebase';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext'; // Use AuthContext to access checkAuthStatus
+import axios from 'axios';
 
-// Component signs out a user
 const SignOutComponent = () => {
-  const { setCurrentUser, setIsAuthenticated } = useAuth();
+  const { currentUser, checkAuthStatus } = useAuth(); // Access checkAuthStatus from AuthContext
 
   const handleSignOut = async () => {
     try {
-      await signOut(auth);  // Uses firebase to sign user out
-      setCurrentUser(null); // Sets current user to null
-      setIsAuthenticated(false); // Sets user to unauthenticated 
-      alert("Successfully signed out!"); // Alerts user that signout was successful
+      const user = currentUser;
+      const response = await axios.post('http://localhost:8080/auth/signout', {
+        user,
+      }, {
+        headers: {
+          'Content-Type': 'application/json' // Ensure the correct content type is set
+        }
+      });
+
+      console.log('Signout successful:', response.data);
+      localStorage.removeItem('idToken');
+      checkAuthStatus();
     } catch (error) {
-      alert(error.message); // Shows an error message should an error occur
+      console.error('Error during signout:', error.response ? error.response.data : error.message);
     }
   };
 

@@ -17,8 +17,11 @@ import Profile from '../pages/Profile';
 import UserSettings from '../pages/UserSettings';
 
 const AppRoutes = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
+  if (loading) {
+    return <div>Loading...</div>; // Render a loading indicator while checking auth status
+  }
   return (
     <Routes>
         <Route path="/" element={isAuthenticated ? <LoggedInHomePage /> : <LoggedOutHomePage />} />

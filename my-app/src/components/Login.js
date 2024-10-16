@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../config/firebase';
 import { useNavigate } from 'react-router-dom';
-import Button from './Button';
+import { auth } from '../config/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useAuth } from '../context/AuthContext';
 
 // Component that logins user
 const LoginComponent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { checkAuthStatus } = useAuth();
 
   const goToHomePage = () => {
     navigate('/');
@@ -19,8 +20,13 @@ const LoginComponent = () => {
   const loginHandler = async (e) => {
     e.preventDefault(); // Prevents the page from reloading
     try {
-      // Logins user using Firebase auth
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Retrieve the ID token
+      const idToken = await user.getIdToken();
+      localStorage.setItem('idToken', idToken);
+      checkAuthStatus();
       goToHomePage();
     } catch (error) {
       alert(`Error: ${error.message}`); // Shows an error message should an error occur

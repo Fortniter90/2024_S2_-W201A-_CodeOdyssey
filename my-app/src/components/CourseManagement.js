@@ -6,8 +6,24 @@ import { deleteCourse } from '../utils/DataDeleting';
 import ManagementTable from './ManagementTable';
 import Button from './Button';
 import './DatabaseManagement.css';
+<<<<<<< HEAD
+=======
+import { fetchCourses } from '../utils/DataFetching';
+>>>>>>> refactor-firebase-to-the-backend
 
 
+<<<<<<< HEAD
+=======
+  // State for form data and modal management
+  const [formData, setFormData] = useState({ title: '', description: '' });
+  const [editingCourse, setEditingCourse] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // State for messages and pagination
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const rowsPerPage = 5;
+>>>>>>> refactor-firebase-to-the-backend
 
 // Component to manage course data
 const CourseManagement = ({ onSelectCourse }) => {
@@ -39,11 +55,51 @@ const CourseManagement = ({ onSelectCourse }) => {
     loadCourses();
   }, []);
 
+<<<<<<< HEAD
   // Load all of the courses
   const loadCourses = async () => {
     try {
       const courseList = await fetchCourses();  // Fetch list of courses
       setCourses(Object.values(courseList));    // Update the state with the fetched courses
+=======
+  // Handle opening form to add a new course
+  const handleAdd = () => {
+    setFormData({ title: '', description: '' });
+    setEditingCourse(null);
+    setIsModalOpen(true);
+  };
+
+  // Save a new course or update an existing one
+  const handleSave = async () => {
+    if (!formData.title || !formData.description) {
+      setErrorMessage('All fields must be filled out!');
+      return;
+    }
+
+    try {
+      // If editing, update the existing course
+      if (editingCourse) {
+        const courseRef = doc(db, 'courses', editingCourse.id);
+        await updateDoc(courseRef, { ...formData });
+        setSuccessMessage('Course updated successfully!');
+
+      }
+      else {
+        // If adding a new course, create a new document
+        await addDoc(collection(db, 'courses'), { ...formData });
+        setSuccessMessage('Course added successfully!');
+      }
+
+      //Close modal
+      setIsModalOpen(false);
+
+      // Reset data form and clear states
+      setFormData({ title: '', description: '' });
+      setEditingCourse(null);
+      setErrorMessage('');
+
+      loadCourses();
+>>>>>>> refactor-firebase-to-the-backend
 
     } catch (error) {
       console.error('Error loading courses:', error); // Log any errors during data fetching
@@ -108,6 +164,11 @@ const CourseManagement = ({ onSelectCourse }) => {
       setIsEditing(false); // Exit editing mode
       loadCourses();       // Refresh course list
 
+<<<<<<< HEAD
+=======
+      loadCourses();
+
+>>>>>>> refactor-firebase-to-the-backend
     } catch (error) {
       console.error(`Error ${isEditing ? 'updating' : 'adding'} course:`, error);
     }
@@ -136,15 +197,40 @@ const CourseManagement = ({ onSelectCourse }) => {
   return (
     <div className='management roboto-regular'>
       <div className='management-header'>
+<<<<<<< HEAD
         <h1 className='fira-code'>Course Management</h1>
         <Button text={'Add Course'} action={() => toggleModal('add', true)} />
       </div>
+=======
+        <h1 className='roboto-bold'>Course Management</h1>
+        <Button text={'Add New Course'} action={handleAdd} />
+      </div>
+
+      {/* Table displaying the list of courses */}
+      <DatabaseTable
+        title="Course"
+        data={courses}
+        columns={[
+          { header: 'Course Title', key: 'title' },
+          { header: 'Description', key: 'description' },
+          { header: 'Lessons Count', key: 'lessonCount' },
+          { header: 'Tests Count', key: 'testCount' },
+        ]}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        rowsPerPage={rowsPerPage}
+        totalItems={courses.length}
+      />
+>>>>>>> refactor-firebase-to-the-backend
 
       {/* Add Course Modal */}
       {modals.add && (
         <>
           <div className='overlay' onClick={() => toggleModal('add', false)} />
           <div className='modal'>
+<<<<<<< HEAD
             <button className='authpage-close' onClick={() => toggleModal('add', false)}><FaX /></button>
             <h2>Add New Course</h2>
 
@@ -171,6 +257,24 @@ const CourseManagement = ({ onSelectCourse }) => {
                 <Button text="Cancel" outline={true} action={() => toggleModal('add', false)} />
               </div>
             </form>
+=======
+            <h2>{editingCourse ? 'Update Course' : 'Add New Course'}</h2>
+
+            <input
+              type="text"
+              placeholder="Course Title"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            />
+            <textarea
+              placeholder="Information"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            />
+
+            <Button text={editingCourse ? 'Update Course' : 'Add Course'} action={handleSave} />
+            <Button text="Cancel" type="outline" action={() => setIsModalOpen(false)} />
+>>>>>>> refactor-firebase-to-the-backend
           </div>
         </>
       )}

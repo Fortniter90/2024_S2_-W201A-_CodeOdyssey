@@ -1,105 +1,81 @@
-import { onAuthStateChanged } from "firebase/auth";
-import React, { createContext, useState, useEffect, useContext } from "react";
-import { auth } from '../config/firebase';
-import { db } from '../config/firebase';
-import { doc, getDoc } from "firebase/firestore";
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
-// Creates a context for authentication which allows other components to share authentication information
+// Create the AuthContext
 const AuthContext = createContext();
 
-// Creates a hook which allows components to access authContext
-export function useAuth() {
+// Custom hook to use the AuthContext
+export const useAuth = () => {
   return useContext(AuthContext);
-}
+};
 
-// Context provider that manages the authentication state
+// AuthProvider component to wrap your app
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [usersId, setUsersId] = useState(null);
-  const [usersName, setUsersName] = useState(null);
-  const [usersCourses, setUsersCourses] = useState({});
-  const [usersProfilePicture, setUsersProfilePicture] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [usersCourses, setUsersCourses] = useState([]);
 
-  // Effect that mounts and sets up an authentication listener 
   useEffect(() => {
-    // Function that initializes the user state when the auth state is changed
-    const initializeUser = async (user) => {
-      if (user) {
-        console.log("User authenticated:", user.uid);
-        setCurrentUser(user);
-        setIsAuthenticated(true);
-
-        try {
-          const userId = user.uid;  // Using user.uid consistently
-          setUsersId(userId); // Store the user's ID
-
-          // Load user-specific data from Firestore
-          await loadUserData(userId);
-        } catch (error) {
-          console.error("Error during user initialization:", error);
-        }
-      } else {
-        // User is not authenticated
-        setCurrentUser(null);
-        setIsAuthenticated(false);
-        setUsersId(null);
-        setUsersName(null);
-        setUsersCourses({});
-        setUsersProfilePicture(null);
-        console.log("User logged out.");
-      }
-    };
-
-    // Function that fetches user's name and course data from Firestore
-    const loadUserData = async (userId) => {
-      try {
-        const userDocRef = doc(db, 'users', userId);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (userDocSnap.exists()) {
-          const userData = userDocSnap.data();
-          console.log("User data fetched:", userData);
-
-          if (userData.name) {
-            setUsersName(userData.name);
-          } else {
-            console.warn("User name not found in document.");
-          }
-
-          if (userData.courses) {
-            setUsersCourses(userData.courses);
-          } else {
-            console.warn("Courses not found in document.");
-          }
-
-          if (userData.admin) {
-            setIsAdmin(userData.admin);
-          }
-          if (userData.profilePicture) {
-            setUsersProfilePicture(userData.profilePicture);
-          } else {
-            console.warn("Profile Picture not found in document.");
-          }
-
-        } else {
-          console.warn("No user document found for userId:", userId);
-        }
-      } catch (error) {
-        console.error("Error fetching user data from Firestore:", error);
-      }
-    };
-
-    // Set up authentication state listener
-    const unsubscribe = onAuthStateChanged(auth, initializeUser);
-    return () => unsubscribe(); // Clean up the listener when unmounted
+    checkAuthStatus();
   }, []);
 
+  const checkAuthStatus = async () => {
+    const token = localStorage.getItem('idToken'); // or from another place where you store tokens
+    if (!token) {
+      setIsAuthenticated(false);
+      console.log("no token");
+      return;
+    }
+
+    try {
+      console.log("this is it");
+      const response = await axios.get('http://localhost:8080/auth/status', {
+        headers: {
+          Authorization: `Bearer ${token}`, // Use backticks for template literals
+          'Content-Type': 'application/json', // Set Content-Type correctly
+        },
+      });
+
+      const result = response.data;
+
+      if (result.isAuthenticated) {
+        setIsAuthenticated(true);
+        setCurrentUser(result.user);
+        await loadUserData(result.user.uid);
+      } else {
+        setIsAuthenticated(false);
+        setCurrentUser(null);
+        setUsersCourses({});
+      }
+    } catch (error) {
+      console.error('Error checking auth status', error);
+      setIsAuthenticated(false);
+      setCurrentUser(null);
+      setUsersCourses({});
+    }
+  };
+
+  const loadUserData = async (userId) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/auth/userdata/${userId}`); // Fetch user data from your backend
+      const userData = response.data;
+
+      if (userData.courses) {
+        console.log("work", userData.courses);
+        setUsersCourses(userData.courses);
+      } else {
+        throw new Error('Courses not found in user data');
+      }
+    } catch (error) {
+      console.error('Error loading user data', error);
+      setUsersCourses({});
+    }
+  };
+
+
   return (
-    // Provides states to the rest of the program
-    <AuthContext.Provider value={{ currentUser, isAuthenticated, usersId, usersName, usersCourses, usersProfilePicture, isAdmin, setCurrentUser, setIsAuthenticated, setUsersName, setUsersProfilePicture, setIsAdmin }}>
+    <AuthContext.Provider value={{ usersCourses, isAuthenticated, currentUser, checkAuthStatus }}>
       {children}
-    </AuthContext.Provider>
+    </AuthContext.Provider >
   );
 };

@@ -11,9 +11,9 @@ import "./LoggedInHomePage.css";
 import Footer from "../components/Footer.js";
 
 const gradients = {
-    green: 'linear-gradient(var(--python-light), var(--python-medium), var(--python-dark))',
-    orange: 'linear-gradient(var(--java-light), var(--java-medium), var(--java-dark))',
-    blue: 'linear-gradient(var(--c-light), var(--c-medium), var(--c-dark))'
+  green: 'linear-gradient(var(--python-light), var(--python-medium), var(--python-dark))',
+  orange: 'linear-gradient(var(--java-light), var(--java-medium), var(--java-dark))',
+  blue: 'linear-gradient(var(--c-light), var(--c-medium), var(--c-dark))'
 };
 
 
@@ -163,3 +163,4 @@ const Section = ({ title, children, emptyMessage, onEmptyClick }) => (
 );
 
 export default LoggedInHomePage;
+
