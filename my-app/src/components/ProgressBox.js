@@ -1,10 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import "./ProgressBox.css";
+import { auth, db } from "../config/firebase";
 
 const ProgressBox = () => {
-    /* change UseState value based on completion of progress from 0-10, 0 = empty, 10 = full */ 
-    const [progress1] = useState(5); 
-    const [progress2] = useState(7);
+    const [courses, setCourses] = useState([]);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            const coursesSnapshot = await getDocs(collection(db, "courses"));
+            const fetchedCourses = [];
+
+            for (const courseDoc of coursesSnapshot.docs) {
+                const courseData = courseDoc.data();
+                const courseId = courseDoc.id;
+                const auth = getAuth();
+                const user = auth.currentUser;
+
+                let completedLessons = 0;
+                if (user) {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    const userData = userDoc.data();
+                    const userCourses = userData?.courses || {};
+                    completedLessons = userCourses[courseId]?.completedLessons?.length || 0;
+                }
+
+                fetchedCourses.push({
+                    id: courseId,
+                    title: courseData.title,
+                    testCount: courseData.testCount,
+                    color: courseData.color,
+                    completedLessons,
+                });
+            }
+
+            setCourses(fetchedCourses);
+        };
+
+        fetchCourses();
+    }, []);
 
     return (
         <div className="progress-box">
@@ -12,34 +47,31 @@ const ProgressBox = () => {
                 <span className="tab-text">PROGRESS</span>
             </div>
             <div className="progress-content">
-                <div className="progress-item">
-                    <div className="progress-item-box progress-item-box1">
-                        <span className="progress-text">Python</span>
-                        <div className="progress-completed">
-                        <span className="progress-status">Completed 5/10</span>
-                        </div>
-                        <div className="progress-bar-container">
-                            <div 
-                                className="progress-bar"
-                                style={{ width: `${progress1 * 10}%` }}
-                            ></div>
-                        </div>
-                    </div>
-                </div>
-                <div className="progress-item">
-                    <div className="progress-item-box progress-item-box2">
-                        <span className="progress-text">JavaScript</span>
-                        <div className="progress-completed">
-                        <span className="progress-status">Completed 7/10</span>
-                        </div>
-                        <div className="progress-bar-container">
-                            <div
-                                className="progress-bar"
-                                style={{ width: `${progress2 * 10}%` }}
-                            ></div>
+                {courses.map((course) => (
+                    <div className="progress-item" key={course.id}>
+                        <div
+                            className="progress-item-box"
+                            style={{ backgroundColor: course.color }} 
+                        >
+                            <span className="progress-text">{course.title}</span>
+                            <div className="progress-completed">
+                                <span className="progress-status">
+                                    Completed {course.completedLessons}/{course.testCount}
+                                </span>
+                            </div>
+                            <div className="progress-bar-container">
+                                <div
+                                    className="progress-bar"
+                                    style={{
+                                        width: course.testCount
+                                            ? `${(course.completedLessons / course.testCount) * 100}%`
+                                            : "0%",
+                                    }}
+                                ></div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                ))}
             </div>
         </div>
     );
