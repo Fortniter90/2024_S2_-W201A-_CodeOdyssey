@@ -7,14 +7,33 @@ const HEADERS = {
   'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com' // Hostname for the Judge0 API
 };
 
+const languages = [
+  { name: "python", id: 71 },
+  { name: "java", id: 62 },
+  { name: "c", id: 50 },
+  { name: "c++", id: 54 },
+  { name: "javascript", id: 63 },
+  { name: "c#", id: 51 },
+  { name: "go", id: 60 },
+  { name: "rust", id: 73 },
+  { name: "bash", id: 46 }
+];
+
 // Function to handle code submission from the client
 export const handleCodeSubmission = async (data, socket) => {
-  const { source_code, language_id } = data; // Destructure the incoming data (source code and language ID)
+  const { source_code, language } = data; // Destructure the incoming data (source code and language ID)
+
+  console.log(language); // This will log the ID for Python, which is 71
+  const languageObject = languages.find(supportedLangauage => supportedLangauage.name === language.toLowerCase());
+
+  const language_id = languageObject ? languageObject.id : null;
+
+  console.log(language_id); // This will log the ID for Python, which is 71
 
   // Prepare the submission data to send to Judge0 API
   const submissionData = {
     source_code: source_code, // The actual source code provided by the user
-    language_id: language_id  // The programming language ID 
+    language_id: language_id,  // The programming language ID 
   };
 
   try {
