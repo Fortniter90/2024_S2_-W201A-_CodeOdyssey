@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { fetchCourses } from '../utils/DataFetching';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, orderBy, query, addDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
@@ -14,7 +15,23 @@ const TestSystem = ({ courseId, lessonId }) => {
   const [currentTestIndex, setCurrentTestIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState([]);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [language, setLanguage] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchLanguage = async () => {
+      try {
+        // Fetch all courses from Firestore
+        const coursesCollection = await fetchCourses();
+        setLanguage(coursesCollection[courseId].language);
+      } catch (error) {
+        console.error('Error fetching course language:', error);
+      }
+    };
+
+    fetchLanguage();
+  }, [courseId]); // Add courseId as a dependency
+
 
   useEffect(() => {
     const fetchTest = async () => {
@@ -107,7 +124,7 @@ const TestSystem = ({ courseId, lessonId }) => {
       <h2>{currentTest.number}. {currentTest.question}</h2>
 
       <CodeEditor onCodeChange={handleUserInputChange} code={userAnswers[currentTestIndex] || ''} />
-      <CompilerComponent code={userAnswers[currentTestIndex] || ''} answer={currentTest.requiredOutput} />
+      <CompilerComponent code={userAnswers[currentTestIndex] || ''} answer={currentTest.requiredOutput} language={language} />
 
       <div className="buttons">
         <button onClick={handleShowAnswer}>Show Answer</button>

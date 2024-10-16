@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 // Establish a Socket.IO connection to the backend server
 const socket = io("http://localhost:8080");
 
-function CompilerComponent({ code, answer }) {
+function CompilerComponent({ code, answer, language }) {
   const [isCorrect, setIsCorrect] = useState(null);
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
@@ -36,7 +36,7 @@ function CompilerComponent({ code, answer }) {
 
   const handleSubmit = () => {
     setShowResults(false);
-    socket.emit("submitCode", { source_code: code, language_id: 62 });
+    socket.emit("submitCode", { source_code: code, language_id: language || 62 });
   };
 
   return (

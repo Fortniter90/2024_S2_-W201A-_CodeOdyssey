@@ -12,10 +12,10 @@ const CourseManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   // State for form data and modal management
-  const [formData, setFormData] = useState({ title: '', description: '' });
+  const [formData, setFormData] = useState({ title: '', description: '', language: '' });
   const [editingCourse, setEditingCourse] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   // State for messages and pagination
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -38,9 +38,9 @@ const CourseManagement = () => {
 
   // Handle opening form to add a new course
   const handleAdd = () => {
-    setFormData({ title: '', description: '' });
+    setFormData({ title: '', description: '', language: '' });
     setEditingCourse(null);
-    setIsModalOpen(true); 
+    setIsModalOpen(true);
   };
 
   // Save a new course or update an existing one
@@ -53,11 +53,11 @@ const CourseManagement = () => {
     try {
       // If editing, update the existing course
       if (editingCourse) {
-        const courseRef = doc(db, 'courses', editingCourse.id); 
+        const courseRef = doc(db, 'courses', editingCourse.id);
         await updateDoc(courseRef, { ...formData });
         setSuccessMessage('Course updated successfully!');
 
-      } 
+      }
       else {
         // If adding a new course, create a new document
         await addDoc(collection(db, 'courses'), { ...formData });
@@ -68,7 +68,7 @@ const CourseManagement = () => {
       setIsModalOpen(false);
 
       // Reset data form and clear states
-      setFormData({ title: '', description: '' });
+      setFormData({ title: '', description: '', language: '' });
       setEditingCourse(null);
       setErrorMessage('');
 
@@ -82,7 +82,7 @@ const CourseManagement = () => {
 
   // Handle editing an existing course
   const handleEdit = (course) => {
-    setFormData({ title: course.title, description: course.description });
+    setFormData({ title: course.title, description: course.description, language: course.language });
     setEditingCourse(course);
     setIsModalOpen(true);
   };
@@ -102,7 +102,7 @@ const CourseManagement = () => {
       setSuccessMessage('Course deleted successfully!');
 
       loadCourses();
-      
+
     } catch (error) {
       console.error('Error deleting course:', error);
       setErrorMessage('Error deleting course. Please try again.');
@@ -113,10 +113,10 @@ const CourseManagement = () => {
     <div className='management roboto-regular'>
       {/* Header section */}
       <div className='management-header'>
-          <h1 className='roboto-bold'>Course Management</h1>
-          <Button text={'Add New Course'} action={handleAdd}/>
+        <h1 className='roboto-bold'>Course Management</h1>
+        <Button text={'Add New Course'} action={handleAdd} />
       </div>
-      
+
       {/* Table displaying the list of courses */}
       <DatabaseTable
         title="Course"
@@ -124,6 +124,7 @@ const CourseManagement = () => {
         columns={[
           { header: 'Course Title', key: 'title' },
           { header: 'Description', key: 'description' },
+          { header: 'Language', key: 'language' },
           { header: 'Lessons Count', key: 'lessonCount' },
           { header: 'Tests Count', key: 'testCount' },
         ]}
@@ -140,7 +141,7 @@ const CourseManagement = () => {
         <div className='modal-overlay'>
           <div className='modal'>
             <h2>{editingCourse ? 'Update Course' : 'Add New Course'}</h2>
-            
+
             <input
               type="text"
               placeholder="Course Title"
@@ -152,7 +153,13 @@ const CourseManagement = () => {
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             />
-          
+
+            <textarea
+              placeholder="Course Language"
+              value={formData.language}
+              onChange={(e) => setFormData({ ...formData, language: e.target.value })}
+            />
+
             <Button text={editingCourse ? 'Update Course' : 'Add Course'} action={handleSave} />
             <Button text="Cancel" type="outline" action={() => setIsModalOpen(false)} />
           </div>
