@@ -36,7 +36,8 @@ function CompilerComponent({ code, answer, language }) {
 
   const handleSubmit = () => {
     setShowResults(false);
-    socket.emit("submitCode", { source_code: code, language_id: language || 62 });
+
+    socket.emit("submitCode", { source_code: code, language: language });
   };
 
   return (
