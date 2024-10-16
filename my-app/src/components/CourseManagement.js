@@ -11,13 +11,14 @@ import './DatabaseManagement.css';
 
 // Component to manage course data
 const CourseManagement = ({ onSelectCourse }) => {
-  
+
   // States handling course data
   const [courses, setCourses] = useState([]);   // List of courses
   const [formData, setFormData] = useState({    // Data for adding and editing course data
     title: '',
     color: '',
-    description: ''
+    description: '',
+    language: ''
   });
 
   // States controling modal visibility
@@ -54,7 +55,7 @@ const CourseManagement = ({ onSelectCourse }) => {
     setModals((prev) => ({ ...prev, [modalName]: state })); // Change state of given modal
 
     if (state == false) {
-      setFormData({ title: '', color: '', description: '' }); // Reset form data
+      setFormData({ title: '', color: '', description: '', language: '' }); // Reset form data
       setIsEditing(false); // Set editing mode
     }
   }
@@ -74,38 +75,39 @@ const CourseManagement = ({ onSelectCourse }) => {
   // Prepare form for editing
   const handleEdit = () => {
     // Set form data for selected course
-    setFormData({ 
+    setFormData({
       title: selectedCourse.title,
       color: selectedCourse.color,
       description: selectedCourse.description,
+      language: selectedCourse.language,
       available: selectedCourse.available
     });
 
     setIsEditing(true); // Set editing mode
   };
-  
+
   // Handle new course and course update
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
-    
+
     const courseData = {
       ...formData,
       lessonCount: isEditing ? selectedCourse.lessonCount : 0,   // Keep original lesson count
       testCount: isEditing ? selectedCourse.testCount : 0,       // Keep original test count
       available: formData.available || false,
     };
-  
+
     try {
       if (isEditing) {
         await updateCourse(selectedCourse.id, courseData);
       } else {
         await saveCourse(courseData);
       }
-  
+
       toggleModal('courseDetails', false);  // Close course details modal
       setIsEditing(false); // Exit editing mode
       loadCourses();       // Refresh course list
-      
+
     } catch (error) {
       console.error(`Error ${isEditing ? 'updating' : 'adding'} course:`, error);
     }
@@ -125,7 +127,7 @@ const CourseManagement = ({ onSelectCourse }) => {
       console.error('Error deleting course:', error); // Log any errors during deletion
     }
   };
-  
+
 
 
   // Render message if no courses are available
@@ -185,7 +187,7 @@ const CourseManagement = ({ onSelectCourse }) => {
           <div className='overlay' onClick={() => toggleModal('courseDetails', false)} />
           <div className='information-modal'>
             <button className='authpage-close' onClick={() => toggleModal('courseDetails', false)}><FaX /></button>
-            
+
             {isEditing ? (
               <form onSubmit={handleSubmit}>
                 <h2>Edit Course</h2>
