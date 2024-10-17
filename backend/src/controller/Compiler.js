@@ -23,7 +23,7 @@ const languages = [
 export const handleCodeSubmission = async (data, socket) => {
   const { source_code, language } = data; // Destructure the incoming data (source code and language ID)
 
-  console.log(language); // This will log the ID for Python, which is 71
+  console.log(language);
   const languageObject = languages.find(supportedLangauage => supportedLangauage.name === language.toLowerCase());
 
   const language_id = languageObject ? languageObject.id : null;

@@ -99,6 +99,12 @@ export const AuthProvider = ({ children }) => {
         console.log("Courses unchanged, skipping update");
       }
 
+      if (userData.isAdmin) {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+
     } catch (error) {
       console.error('Error loading user data', error);
       setUsersCourses([]);

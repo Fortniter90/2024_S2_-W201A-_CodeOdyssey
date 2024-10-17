@@ -73,7 +73,17 @@ const TestTemplate = () => {
     try {
       // Fetch all courses from Firestore
       const coursesCollection = await fetchCourses();
-      setLanguage(coursesCollection[courseId].language);
+
+      // Find the course object by its courseId
+      const course = coursesCollection.find(item => item.id === courseId);
+
+      if (course) {
+        console.log(course.language);
+        // If the course is found, set the language
+        setLanguage(course.language);
+      } else {
+        console.error('Course not found for ID:', courseId);
+      }
     } catch (error) {
       console.error('Error fetching course language:', error);
     }
