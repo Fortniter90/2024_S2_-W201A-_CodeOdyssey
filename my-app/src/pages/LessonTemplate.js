@@ -4,8 +4,8 @@ import { FaArrowLeftLong } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 import './LessonTemplate.css';
 import Button from '../components/Button';
-import NavigationBarUser from '../components/NavigationBarUser';
 import { fetchLessons } from '../utils/dataFetching';
+import NavigationBar from '../components/NavigationBar';
 
 const LessonTemplate = () => {
   const { courseId, lessonId } = useParams();
@@ -52,7 +52,7 @@ const LessonTemplate = () => {
 
   return (
     <div>
-      <NavigationBarUser />
+      <NavigationBar />
 
       <div className='go-back-link roboto-medium' onClick={goToCourse}>
         <FaArrowLeftLong />

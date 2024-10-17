@@ -15,6 +15,7 @@
 	--background-medium: #DFE7FC;
 	--background-dark: #CDDAFD;
 	
+    /* delete */
 	--python-light: #B4D9BC;
 	--python-medium: #71B39A;
 	--python-dark: #396E59;
@@ -23,6 +24,7 @@
 	--green-medium: #71B39A;
 	--green-dark: #396E59;
 	
+    /* delete */
 	--java-light: #F7B267;
 	--java-medium: #F4845F;
 	--java-dark: #F25C54;
@@ -31,6 +33,7 @@
 	--orange-medium: #F4845F;
 	--orange-dark: #F25C54;
 	
+    /* delete */
 	--c-light: #90E0EF;
 	--c-medium: #00B4D8;
 	--c-dark: #0077B6;
@@ -38,6 +41,10 @@
 	--blue-light: #90E0EF;
 	--blue-medium: #00B4D8;
 	--blue-dark: #0077B6;
+
+    --gray-light: #DBD9D9;
+    --gray-medium: #a8a8a8;
+    --gray-dark: #5F5F5F;
 }
 
 .fira-code {

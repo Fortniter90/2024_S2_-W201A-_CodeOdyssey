@@ -4,11 +4,11 @@ import { fetchCourses, fetchLessons } from "../utils/dataFetching.js";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
 import SignOutComponent from "../components/SignOut";
-import NavigationBarUser from "../components/NavigationBarUser.js";
 import Button from "../components/Button.js";
 import Feedback from "../components/Feedback";
 import "./LoggedInHomePage.css";
 import Footer from "../components/Footer.js";
+import NavigationBar from "../components/NavigationBar.js";
 
 const gradients = {
   green: 'linear-gradient(var(--python-light), var(--python-medium), var(--python-dark))',
@@ -99,7 +99,7 @@ const LoggedInHomePage = () => {
   return (
     <div>
       {/* User navigation bar */}
-      <NavigationBarUser />
+      <NavigationBar isLoggedIn={isAuthenticated} />
 
       {/* Content on the home page */}
       <div className='homepage-content'>

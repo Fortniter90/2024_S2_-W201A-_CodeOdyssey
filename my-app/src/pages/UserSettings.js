@@ -3,11 +3,11 @@ import { updateUsername, updateUserProfilePicture } from '../utils/dataSaving';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Cropper from 'cropperjs';
-import NavigationBarUser from '../components/NavigationBarUser';
 import DeleteUserComponent from '../components/DeleteUser';
 import Button from '../components/Button';
 import 'cropperjs/dist/cropper.css';
 import './UserSettings.css';
+import NavigationBar from '../components/NavigationBar';
 
 const UserSettings = () => {
   const { currentUser } = useAuth();
@@ -151,7 +151,7 @@ const UserSettings = () => {
 
   return (
     <div>
-      <NavigationBarUser />
+      <NavigationBar />
 
       <div className='usersettings'>
         <div className='usersettings-header'>

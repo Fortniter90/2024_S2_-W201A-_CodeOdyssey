@@ -1,9 +1,8 @@
 import ProfilePicture from '../components/ProfilePicture';
 import ProgressBox from '../components/ProgressBox';
-import Achievements from '../components/Achievements';
-import NavigationBarUser from '../components/NavigationBarUser';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
+import NavigationBar from '../components/NavigationBar';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -14,7 +13,7 @@ const Profile = () => {
 
   return (
     <div>
-      <NavigationBarUser />
+      <NavigationBar />
 
 
       <Button text={'SETTINGS'} action={goToSettings} />
@@ -22,7 +21,6 @@ const Profile = () => {
 
       <ProfilePicture />
       <ProgressBox />
-      <Achievements />
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import NavigationBarUser from '../components/NavigationBarUser';
 import { useNavigate } from 'react-router-dom';
 import { fetchCourses } from '../utils/dataFetching';
 import Button from '../components/Button';
 import "./AllCourses.css";
+import NavigationBar from '../components/NavigationBar';
 
 
 
@@ -40,7 +40,7 @@ const AllCourses = () => {
 
   return (
     <div className='allcourses'>
-      <NavigationBarUser />
+      <NavigationBar />
 
       <div className='allcourses-container'>
         <h1 className='fira-code'>Discover Languages</h1>

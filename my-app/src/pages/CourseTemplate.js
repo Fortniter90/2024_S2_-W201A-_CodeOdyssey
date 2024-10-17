@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import NavigationBarUser from '../components/NavigationBarUser';
 import CourseHeadings from '../components/CourseHeadings';
 import LearningPath from '../components/LearningPath';
 import { useAuth } from '../context/AuthContext';
 import "./CourseTemplate.css";
 import { fetchCourses, fetchLessons } from '../utils/dataFetching';
 import { updateUserCourseData } from '../utils/dataSaving';
+import NavigationBar from '../components/NavigationBar';
 
 const CourseTemplate = () => {
   const { currentUser } = useAuth(); // Extracting user info
@@ -57,7 +57,7 @@ const CourseTemplate = () => {
 
   return (
     <div>
-      <NavigationBarUser />
+      <NavigationBar />
 
       <div className='course-content'>
         <CourseHeadings name={course.title} description={course.description} backgroundColor={course.color} />

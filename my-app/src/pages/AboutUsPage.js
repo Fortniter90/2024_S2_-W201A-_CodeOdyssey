@@ -1,14 +1,17 @@
 import "./AboutUsPage.css";
 import Footer from '../components/Footer';
-import NavigationBarHome from '../components/NavigationBarHome'; // Navigation bar component for site navigation
 import CapybaraHappy from '../components/assets/CapybaraS2-Happy.png'; // Image for the happy capybara character
 import SnakeHappy from '../components/assets/SnakeS2-Happy.png'; // Image for the happy snake character
+import NavigationBar from "../components/NavigationBar";
 
 // Functional component for the About Us page
 const AboutUsPage = () => {
+
     return (
       <div className="aboutus" > {/* Main container for the page with a left-aligned navigation bar */}
-        <NavigationBarHome /> {/* Renders the navigation bar at the top of the page */}
+
+        {/* Renders the navigation bar at the top of the page */}
+        <NavigationBar /> 
 
         {/* Page title */}
         <h1 className="aboutus-title">Welcome to Code Odyssey!</h1> 

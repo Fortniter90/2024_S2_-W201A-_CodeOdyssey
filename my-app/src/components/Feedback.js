@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { collection, addDoc, getDoc, doc } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext"; 
+import { FaComment, FaX } from "react-icons/fa6";
 import "./Feedback.css";
 import { auth, db } from "../config/firebase";
+import Button from "./Button";
 
 const Feedback = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,12 +13,25 @@ const Feedback = () => {
   const [popupVisible, setPopupVisible] = useState(false);
   const { currentUser } = useAuth();
 
-  const toggleFeedbackBox = () => {
-    setIsOpen(!isOpen);
-    if (isOpen) { // Only clear feedback when closing
-      setFeedback(''); 
-    }
-  };
+
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      if (currentUser) {
+        const userDocRef = doc(db, "users", currentUser.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setUsername(userData.name); 
+        } else {
+          console.error("No user data found.");
+        }
+      }
+    };
+
+    fetchUsername();
+  }, [currentUser]);
 
   const handleSubmit = async () => {
     if (feedback.trim() === '') return; 
@@ -37,51 +52,71 @@ const Feedback = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchUsername = async () => {
-      if (currentUser) {
-        const userDocRef = doc(db, "users", currentUser.uid);
-        const userDoc = await getDoc(userDocRef);
+  const toggleFeedbackBox = () => {
+    setIsOpen(!isOpen);
+    if (isOpen) { // Only clear feedback when closing
+      setFeedback(''); 
+    }
+  };
 
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          setUsername(userData.name); 
-        } else {
-          console.error("No user data found.");
-        }
-      }
-    };
+  const togglePopUp = () => {
+    setPopupVisible(!popupVisible);
+  }
 
-    fetchUsername();
-  }, [currentUser]);
 
   return (
     <>
-      <button className="feedback-btn" onClick={toggleFeedbackBox}>
-        💬
+      <button className="open-feedback-menu" onClick={popupVisible ? togglePopUp : toggleFeedbackBox}>
+        <FaComment />
       </button>
 
       {isOpen && (
-        <div className="feedback-overlay">
-          <div className="feedback-box">
-            <h2>Any suggestions or bugs to report?</h2>
-            <p>Please enter it here, any feedback is greatly appreciated!</p>
+        <>
+          <div className='overlay' onClick={toggleFeedbackBox} />
+          <div className="feedback-container">
+            <button className='authpage-close' onClick={toggleFeedbackBox} ><FaX /></button>
+
+            <div className="feedback-header">
+              <h1 className='roboto-bold'>
+                Have a Suggestion or Bug to Report?
+              </h1>
+              <p className='roboto-medium'>
+                If so, please enter it here. Any feedback is greatly appreciated!
+              </p>
+            </div>
+            
             <textarea
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
-              placeholder="Enter your feedback here"
+              placeholder="Enter your feedback here..."
             />
-            <button className="submit-btn" onClick={handleSubmit}>
-              Submit Feedback
-            </button>
+
+            <div className="feedback-buttons">
+              <Button text="SUBMIT FEEDBACK" action={handleSubmit} color={'var(--green-medium)'} hoverColor={'var(--green-dark)'} />
+              <Button text="CANCEL" outline={true} action={toggleFeedbackBox} color={'var(--gray-medium)'} />
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       {popupVisible && (
-        <div className="feedback-popup">
-          <p>Feedback submitted, thank you!</p>
-        </div>
+        <>
+          <div className='overlay' onClick={togglePopUp} />
+          <div className="feedback-popup">
+            <button className='authpage-close' onClick={togglePopUp} ><FaX /></button>
+            
+            <div className="feedback-header">
+              <h1 className='roboto-bold'>
+                Thank You!
+              </h1>
+              <p className='roboto-medium'>
+                Thank you for sharing your thoughts. We appreciate your feedback
+              </p>
+            </div>
+
+            <Button text="DONE" action={togglePopUp} color={'var(--green-medium)'} hoverColor={'var(--green-dark)'} />
+          </div>
+        </>
       )}
     </>
   );

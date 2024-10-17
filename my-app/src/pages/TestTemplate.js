@@ -1,9 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import NavigationBarUser from '../components/NavigationBarUser';
+import { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { FaArrowLeftLong } from 'react-icons/fa6';
-import { fetchLessons, fetchTests } from '../utils/dataFetching';
+import { fetchCourses, fetchLessons, fetchTests } from '../utils/dataFetching';
 import HintSystem from '../components/HintSystem';
 import CodeEditor from '../components/CodeEditor';
 import CompilerComponent from '../components/SubmitCode';
@@ -11,6 +9,7 @@ import { useAuth } from '../context/AuthContext';
 import { saveUserAnswers } from '../utils/dataSaving';
 import './TestTemplate.css';
 import Button from '../components/Button';
+import NavigationBar from '../components/NavigationBar';
 
 
 const TestTemplate = () => {
@@ -138,7 +137,7 @@ const TestTemplate = () => {
 
   return (
     <div>
-      <NavigationBarUser />
+      <NavigationBar />
 
       <div className='go-back-link roboto-medium' onClick={goToCourse}>
         <FaArrowLeftLong />

@@ -20,8 +20,8 @@
     font-size: 16px;
     font: Roboto;
     cursor: pointer;
-    background-color: #71B39A;
-    color: white;
+    background-color: var(--green-medium);
+    color: var(--white);
     border: none;
     border-radius: 20px;
     transition: background-color 0.3s ease;
@@ -29,6 +29,6 @@
   
   /* Changes the background color when hovered for visual feedback */
   .switch-button:hover {
-    background-color: #396E59;
+    background-color: var(--green-dark);
   }
   

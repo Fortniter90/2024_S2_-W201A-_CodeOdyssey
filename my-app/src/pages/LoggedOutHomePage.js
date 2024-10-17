@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import CodeOdysseyLogo from '../components/assets/CodeOdysseyLogo';
 import Footer from '../components/Footer';
 import HomeBanner from '../components/HomeBanner';
-import NavigationBarHome from '../components/NavigationBarHome';
 import { useAuth } from '../context/AuthContext';
 import './LoggedOutHomePage.css';
+import NavigationBar from '../components/NavigationBar';
 
 // HomePage for when users are not logged in
 const LoggedOutHomePage = () => {
@@ -17,7 +17,7 @@ const LoggedOutHomePage = () => {
   return (
     <div>
       {/* Navigation bar for the home page */}
-      <NavigationBarHome />
+      <NavigationBar />
 
       {/* Main content area */}
       <div className='main-content'>

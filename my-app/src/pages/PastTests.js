@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import './PastTests.css';
-import NavigationBarUser from '../components/NavigationBarUser';
 import { useAuth } from '../context/AuthContext';
 import { fetchUsersAnswers } from '../utils/dataFetching';
+import NavigationBar from '../components/NavigationBar';
 
 function PastTest() {
   const { currentuser, isAuthenticated, usersId, usersName, usersCourses } = useAuth();    // Extracting user info
@@ -39,7 +39,7 @@ function PastTest() {
 
   return (
     <div>
-      <NavigationBarUser />
+      <NavigationBar />
 
       <h1>User Answer Details</h1>
       {answersData.map((answerData, index) => {
