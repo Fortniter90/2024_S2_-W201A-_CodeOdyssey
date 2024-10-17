@@ -12,7 +12,7 @@ const LoggedOutHomePage = () => {
 
   useEffect(() => {
     checkAuthStatus(); // Check if the user is authenticated when the home page loads
-  }, [checkAuthStatus]);
+  }, []);
 
   return (
     <div>

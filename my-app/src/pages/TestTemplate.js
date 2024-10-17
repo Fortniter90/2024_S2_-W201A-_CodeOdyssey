@@ -15,7 +15,7 @@ import Button from '../components/Button';
 
 const TestTemplate = () => {
   const { courseId, lessonId } = useParams();
-  const { usersId } = useAuth();  // Get the user ID from the Auth context
+  const { currentUser } = useAuth();  // Get the user ID from the Auth context
 
   const [lesson, setLesson] = useState(null);
   const [tests, setTests] = useState(null);
@@ -127,7 +127,7 @@ const TestTemplate = () => {
   // Function to save answers to Firestore
   const saveAnswers = async () => {
     try {
-      const success = await saveUserAnswers(usersId, courseId, lessonId, tests, userAnswers);
+      const success = await saveUserAnswers(currentUser.uid, courseId, lessonId, tests, userAnswers);
       if (success) {
         alert('Answers saved successfully!');
         navigate(`/course/${courseId}`); // Navigate after saving

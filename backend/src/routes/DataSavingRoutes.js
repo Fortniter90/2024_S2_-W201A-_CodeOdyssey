@@ -1,10 +1,10 @@
 import express from 'express';
-import { saveCourse, saveTest, saveLesson, saveUserAnswers, updateTest, updateCourse, updateLesson, updateUserLessons, updateUserCourseData } from '../controller/DataSavingManagement';
+import { saveCourse, saveTest, saveLesson, saveUserAnswers, updateTest, updateCourse, updateLesson, updateUserLessons, updateUserCourseData } from '../controller/DataSavingManagement.js';
 
-const router = express.Router();
+const saveRouter = express.Router();
 
 // Route to add a new course
-router.post('/courses', async (req, res) => {
+saveRouter.post('/courses', async (req, res) => {
   try {
     const courseData = req.body;
     await saveCourse(courseData);
@@ -15,7 +15,7 @@ router.post('/courses', async (req, res) => {
 });
 
 // Route to update an existing course
-router.put('/courses/:courseId', async (req, res) => {
+saveRouter.put('/courses/:courseId', async (req, res) => {
   const { courseId } = req.params;
   const updatedCourseData = req.body;
 
@@ -28,7 +28,7 @@ router.put('/courses/:courseId', async (req, res) => {
 });
 
 // Route to add a new lesson
-router.post('/courses/:courseId/lessons', async (req, res) => {
+saveRouter.post('/courses/:courseId/lessons', async (req, res) => {
   const { courseId } = req.params;
   const lessonData = req.body;
 
@@ -41,7 +41,7 @@ router.post('/courses/:courseId/lessons', async (req, res) => {
 });
 
 // Route to update an existing lesson
-router.put('/courses/:courseId/lessons/:lessonId', async (req, res) => {
+saveRouter.put('/courses/:courseId/lessons/:lessonId', async (req, res) => {
   const { courseId, lessonId } = req.params;
   const lessonData = req.body;
 
@@ -54,7 +54,7 @@ router.put('/courses/:courseId/lessons/:lessonId', async (req, res) => {
 });
 
 // Route to add a new test
-router.post('/courses/:courseId/lessons/:lessonId/tests', async (req, res) => {
+saveRouter.post('/courses/:courseId/lessons/:lessonId/tests', async (req, res) => {
   const { courseId, lessonId } = req.params;
   const testData = req.body;
 
@@ -67,7 +67,7 @@ router.post('/courses/:courseId/lessons/:lessonId/tests', async (req, res) => {
 });
 
 // Route to update an existing test
-router.put('/courses/:courseId/lessons/:lessonId/tests/:testId', async (req, res) => {
+saveRouter.put('/courses/:courseId/lessons/:lessonId/tests/:testId', async (req, res) => {
   const { courseId, lessonId, testId } = req.params;
   const testData = req.body;
 
@@ -80,7 +80,7 @@ router.put('/courses/:courseId/lessons/:lessonId/tests/:testId', async (req, res
 });
 
 // Route to update user lessons
-router.put('/users/:userId/lessons', async (req, res) => {
+saveRouter.put('/users/:userId/lessons', async (req, res) => {
   const { userId } = req.params;
   const { levels, lesson, courseId } = req.body;
 
@@ -93,7 +93,7 @@ router.put('/users/:userId/lessons', async (req, res) => {
 });
 
 // Route to update user course data
-router.put('/users/:userId/courses/:courseId', async (req, res) => {
+saveRouter.put('/users/:userId/courses/:courseId', async (req, res) => {
   const { userId, courseId } = req.params;
 
   try {
@@ -105,11 +105,12 @@ router.put('/users/:userId/courses/:courseId', async (req, res) => {
 });
 
 // Route to save user answers
-router.post('/users/:userId/answers', async (req, res) => {
+saveRouter.post('/users/:userId/answers', async (req, res) => {
   const { userId } = req.params;
   const { courseId, lessonId, tests, userAnswers } = req.body;
 
   try {
+    console.log("saving dem answers");
     await saveUserAnswers(userId, courseId, lessonId, tests, userAnswers);
     res.status(201).send({ message: 'User answers saved successfully' });
   } catch (error) {
@@ -117,5 +118,5 @@ router.post('/users/:userId/answers', async (req, res) => {
   }
 });
 
-export default router;
+export default saveRouter;
 

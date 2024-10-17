@@ -1,5 +1,5 @@
 import express from 'express';
-import { deleteCourse, deleteLesson, deleteTest } from '../controller/DataDeletingManagement';
+import { deleteCourse, deleteLesson, deleteTest } from '../controller/DataDeletingManagement.js';
 
 const deleteRouter = express.Router();
 
@@ -32,5 +32,7 @@ deleteRouter.delete('courses/:courseId/lessons/:lessonId/tests/:testId', async (
     res.status(500).send({ message: 'Error deleting test' });
   }
 });
+
+export default deleteRouter;
 
 
