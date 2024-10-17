@@ -1,0 +1,11 @@
+/* Base styles */
+button {
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 25px;
+    padding: 5px 30px;
+    font-size: clamp(14px, 1vw, 16px);
+    transition: background-color 0.3s, border 0.3s, color 0.3s;
+    position: relative;
+    overflow: hidden;
+}

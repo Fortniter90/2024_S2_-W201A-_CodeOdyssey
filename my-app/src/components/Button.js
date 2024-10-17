@@ -1,51 +1,36 @@
-import React from "react";
+import "./Button.css";
 
-
-// Need outline false on hover to darken
-
-
-const Button = ({ 
-    text, 
-    outline=false, 
-    action, 
-    color="var(--logo-purple)", 
-    backgroundColor="var(--white)", 
-    hoverColor="var(--logo-purple-dark)" 
+const Button = ({
+    text,
+    outline = false,
+    action,
+    color = "var(--logo-purple)",
+    backgroundColor = "var(--white)",
+    hoverColor = "var(--logo-purple-dark)",
 }) => {
-    
-    // Base styles
-    const baseStyle = {
-        textDecoration: "none",
-        cursor: "pointer",
-        borderRadius: "25px",
-        padding: "5px 30px",
-        fontSize: "clamp(14px, 1vw, 16px)",
-        border: `3px solid ${color}`, // Transparent border for outline
-        color: outline ? color : backgroundColor, // Text color based on type
-        backgroundColor: outline ? backgroundColor : color, // No background for outline type
-        transition: "background-color 0.3s, border 0.3s, color 0.3s", // Transition for hover effects
-        position: "relative", // Required for pseudo-element positioning
-        overflow: "hidden", // Ensure no overflow during hover
-    };
 
-    // Hover styles
-    const hoverStyle = {
-        backgroundColor: outline ? color : hoverColor, // Change background on hover
-        border: `3px solid ${outline ? color : hoverColor}`, // Change border on hover
-        color: backgroundColor, // Change color for outline button
+    const [isHovered, setIsHovered] = useState(false);  // State to track if mouse is on button
+
+    // Determine button style based on outline status and hover state
+    const dynamicStyle = {
+        borderColor: isHovered ? (outline ? color : hoverColor) : color,
+        backgroundColor: isHovered
+            ? outline
+                ? color
+                : hoverColor
+            : outline
+            ? backgroundColor
+            : color,
+        color: isHovered ? backgroundColor : outline ? color : backgroundColor,
     };
 
     return (
         <button
-            className={`roboto-bold`}
-            style={baseStyle}
-            onMouseEnter={(e) => {
-                Object.assign(e.currentTarget.style, hoverStyle);
-            }}
-            onMouseLeave={(e) => {
-                Object.assign(e.currentTarget.style, baseStyle);
-            }}
+            className={`roboto-bold ${buttonClass}`}
+            style={dynamicStyle}
             onClick={action}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
             {text}
         </button>

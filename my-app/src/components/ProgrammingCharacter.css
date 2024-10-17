@@ -7,7 +7,7 @@
     margin-top: 20px;
 }
   
-/* Container for the snake image and information icon, sets layout and alignment */
+/* Container for the character and information icon, sets layout and alignment */
 .programmingcharacter-container {
     position: relative;
     display: flex;
@@ -15,7 +15,7 @@
     user-select: none;
 }
   
-/* Styles for the snake image, setting a fixed width */
+/* Styles for the character, setting a fixed width */
 .programmingcharacter-container img {
     width: 150px;
     height: auto;
