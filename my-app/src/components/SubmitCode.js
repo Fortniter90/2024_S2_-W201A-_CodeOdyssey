@@ -4,10 +4,11 @@ import io from 'socket.io-client';
 // Establish a Socket.IO connection to the backend server
 const socket = io("http://localhost:8080");
 
-function CompilerComponent({ code }) {
-  // States to manage source code, output, and errors
-  const [output, setOutput] = useState(''); // State to store the output from the server
-  const [error, setError] = useState(''); // State to store any errors returned from the server
+function CompilerComponent({ code, answer, language }) {
+  const [isCorrect, setIsCorrect] = useState(null);
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
+  const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
     socket.on("codeResult", (data) => {
@@ -75,4 +76,3 @@ function CompilerComponent({ code }) {
 }
 
 export default CompilerComponent;
-

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { auth } from '../config/firebase';
 import { updateUsername, updateUserProfilePicture } from '../utils/dataSaving';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -10,11 +11,10 @@ import 'cropperjs/dist/cropper.css';
 import './UserSettings.css';
 
 const UserSettings = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, refreshToken } = useAuth();
   const [newUsername, setNewUsername] = useState('');
 
   // States to store images
-  const [imageFile, setImageFile] = useState(null);         // Image file
   const [croppedImage, setCroppedImage] = useState(null);  // Cropped image
 
   // States to control cropping
@@ -46,7 +46,6 @@ const UserSettings = () => {
       fileInputRef.current.value = ''; // Clear the file input value
     }
 
-    setImageFile(file);
     const imgUrl = URL.createObjectURL(file);
 
     // If there's an existing cropper instance, destroy it
@@ -93,7 +92,6 @@ const UserSettings = () => {
             setCroppedImage(blob);  // Set the cropped image blob instead of the URL
 
             setIsCropping(false);
-            setImageFile(null);
 
             if (fileInputRef.current) {
               fileInputRef.current.value = '';
@@ -112,6 +110,7 @@ const UserSettings = () => {
 
 
   const updateProfile = async () => {
+    let update = false;
     if (cropper) {
       const canvas = cropper.getCroppedCanvas({
         width: 200,
@@ -124,15 +123,7 @@ const UserSettings = () => {
           if (blob) {
             // Update the user profile picture using the actual image blob
             await updateUserProfilePicture(currentUser.uid, blob);
-
-            // Check if the username has changed and update it
-            if (newUsername !== currentUser.name && newUsername) {
-              await updateUsername(currentUser.uid, newUsername);
-            }
-
-            // Success message and navigation
-            alert('Profile updated successfully!');
-            navigate('/profile');
+            update = true;
           } else {
             console.error("Blob creation failed");
           }
@@ -143,10 +134,28 @@ const UserSettings = () => {
     } else {
       console.error("Cropper is not initialized");
     }
+
+    // Check if the username has changed and update it
+    if (newUsername !== currentUser.name && newUsername) {
+      await updateUsername(currentUser.uid, newUsername);
+      update = true;
+    }
+    if (update) {
+      await refreshToken();
+      alert('Profile updated successfully!');
+      navigate('/profile');
+    } else {
+      alert('Error updating profile');
+    }
+
   };
 
   const exitSettings = () => {
     navigate('/profile');
+  }
+
+  if (currentUser === null) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -203,7 +212,7 @@ const UserSettings = () => {
                 type='text'
                 id='username'
                 value={newUsername}
-                onChange={setNewUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
               />
             </div>
           </div>

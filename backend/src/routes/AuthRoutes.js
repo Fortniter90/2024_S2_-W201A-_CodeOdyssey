@@ -76,11 +76,10 @@ authRouter.delete('/deleteuser', async (req, res) => {
 });
 
 authRouter.get(`/userdata/:userId`, async (req, res) => {
-  console.log("getting user Data");
   const { userId } = req.params;
   try {
-    const courses = await loadUserData(userId);
-    res.json({ courses });
+    const userData = await loadUserData(userId);
+    res.json({ userData });
   } catch (error) {
     res.status(500).json({
       message: 'Error getting Courses',

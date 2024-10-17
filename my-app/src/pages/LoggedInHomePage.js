@@ -106,7 +106,7 @@ const LoggedInHomePage = () => {
 
         {/* Home page header */}
         <div className='homepage-header'>
-          <h1 className='fira-code'>Welcome, {currentUser.name || 'User'}</h1>
+          <h1 className='fira-code'>Welcome, {currentUser.displayName || 'User'}</h1>
 
           {/* If the user is an admin, show button to navigate to the developer dashboard */}
           {isAdmin && <Button text="DEVELOPER DASHBOARD" action={navigateTo('/developerdashboard')} />}

@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import NavigationBarUser from '../components/NavigationBarUser';
 import { FaArrowLeftLong } from 'react-icons/fa6';
-import { fetchLessons, fetchTests } from '../utils/dataFetching';
+import { fetchCourses, fetchLessons, fetchTests } from '../utils/dataFetching';
 import HintSystem from '../components/HintSystem';
 import CodeEditor from '../components/CodeEditor';
 import CompilerComponent from '../components/SubmitCode';
