@@ -8,13 +8,13 @@ const ProfilePicture = () => {
 
   // Fetch user's current profile image from Firestore
   useEffect(() => {
-    setProfileImage(currentUser.photoURL);
+    setProfileImage(currentUser.photoURL || currentUser.picture);
   }, [currentUser]);
 
   return (
     <div className="profile-container">
       <img src={profileImage} alt="Profile icon" className="profile-icon" />
-      <p className="username-text">{currentUser.displayName || 'User'}</p>
+      <p className="username-text">{currentUser.displayName || currentUser.name}</p>
     </div>
   );
 };
