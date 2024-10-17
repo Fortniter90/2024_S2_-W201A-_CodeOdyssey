@@ -4,7 +4,15 @@ import React from "react";
 // Need outline false on hover to darken
 
 
-const Button = ({ text, outline=false, action, color="var(--logo-purple)", backgroundColor="var(--white)", hoverColor="var(--logo-purple-dark)" }) => {
+const Button = ({ 
+    text, 
+    outline=false, 
+    action, 
+    color="var(--logo-purple)", 
+    backgroundColor="var(--white)", 
+    hoverColor="var(--logo-purple-dark)" 
+}) => {
+    
     // Base styles
     const baseStyle = {
         textDecoration: "none",

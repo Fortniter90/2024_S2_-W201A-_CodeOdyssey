@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCourses } from '../utils/dataFetching';
+import NavigationBar from '../components/NavigationBar';
+import Footer from '../components/Footer';
+import Feedback from '../components/Feedback';
 import Button from '../components/Button';
 import "./AllCourses.css";
-import NavigationBar from '../components/NavigationBar';
 
 
 
@@ -78,10 +80,14 @@ const AllCourses = () => {
 
 
 
-
+            
         </div>
 
       </div>
+
+      <Feedback />
+
+      <Footer />
     </div>
   );
 };

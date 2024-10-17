@@ -5,7 +5,6 @@ const Footer = () => {
   return (
     <footer className='footer'>
       <div className='footer-content'>
-
         {/* Star Asset */}
         <Star size="small" />
 

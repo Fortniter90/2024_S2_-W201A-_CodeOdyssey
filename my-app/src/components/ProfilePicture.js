@@ -1,19 +1,14 @@
-import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import "./ProfilePicture.css";
 
+// Function to handle the visuals of  the profile picture
 const ProfilePicture = () => {
-  const { currentUser } = useAuth();
-  const [profilePicture, setProfilePicture] = useState(null);
 
-  // Fetch user's current profile image from Firestore
-  useEffect(() => {
-    setProfilePicture(currentUser.picture);
-  }, [currentUser]);
+  const { currentUser } = useAuth();
 
   return (
     <div className="profile-picture">
-      <img src={profilePicture} alt="Profile Picture" />
+      <img src={currentUser.picture} alt="Profile Picture" />
     </div>
   );
 };
