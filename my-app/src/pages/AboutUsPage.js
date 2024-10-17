@@ -1,8 +1,8 @@
-import "./AboutUsPage.css";
 import Footer from '../components/Footer';
 import CapybaraHappy from '../components/assets/CapybaraS2-Happy.png'; // Image for the happy capybara character
 import SnakeHappy from '../components/assets/SnakeS2-Happy.png'; // Image for the happy snake character
 import NavigationBar from "../components/NavigationBar";
+import "./AboutUsPage.css";
 
 // Functional component for the About Us page
 const AboutUsPage = () => {

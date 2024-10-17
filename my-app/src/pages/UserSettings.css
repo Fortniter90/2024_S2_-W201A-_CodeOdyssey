@@ -75,6 +75,25 @@
     width: 100%;
 }
 
-.usersettings-buttons {
+
+.usersettings-bottom {
+    display: flex;
+    justify-content: space-between;
     margin-top: 20px;
+    align-items: center;
+}
+
+.usersettings-buttons button {
+    margin-right: 10px;
+}
+
+/* Advanced user settings */
+.usersettings-advancedtoggle {
+    color: var(--gray-dark);
+    margin: 0;
+}
+
+.usersettings-advanced {
+    margin-left: auto;
+    max-width: fit-content;
 }

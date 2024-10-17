@@ -12,16 +12,7 @@ const ResourcesPage = () => {
     <div className="resources-container">
       {/* Conditionally rendering the navigation bar based on the user's authentication status */}
       <NavigationBar />
-        <h1>Resources Page</h1>
-        <p>Here are some helpful resources that we recommend for you! </p>
-        <div style={{ marginTop: '250px' }}></div>
-        <JavaCharacter />
-        <div style={{ marginTop: '250px' }}></div>
-        <PythonCharacter />
-        <div style={{ marginTop: '250px' }}></div>
-        <CCharacter />
-        <div style={{ marginTop: '250px' }}></div>
-
+      
       {/* Main title of the Resources Page */}
       <h1 className="resources-title">Resources Page</h1>
 

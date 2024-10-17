@@ -4,7 +4,7 @@
     font-family: "Fira Code", monospace; /*Uses the fira code font for a modern look*/
     margin: 20px 0; /*Adds vertical margin to space out from other elements*/
     font-size: 50px; /*Sets a large font size for prominence*/
-    color: #13315C; /*Dark blue colour for the title*/
+    color: var(--dark-blue); /*Dark blue colour for the title*/
 }
 
 .aboutus-intro {
@@ -28,7 +28,7 @@
     max-width: 1200px; /* Restricts maximum width for large screens */
     margin-left: auto; /* Centers the block horizontally */
     margin-right: auto; /* Centers the block horizontally */
-    background-color: #f8f9fd; /* Light background color for the section */
+    background-color: var(--white); /* Light background color for the section */
     border-radius: 8px; /* Rounds the corners of the section */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow effect */
 }
@@ -40,7 +40,7 @@
 .aboutus-join-title {
     font-family: "Fira Code", monospace; /* Uses Fira Code for consistency */
     font-size: 20px; /* Sets font size for sub-titles */
-    color: #585D9D; /* Lighter blue color for titles */
+    color: var(--logo-purple); /* Lighter blue color for titles */
     margin-bottom: 10px; /* Adds margin below each title for spacing */
 }
 
@@ -55,13 +55,13 @@
 .aboutus-value-item {
     margin-bottom: 20px; /* Adds space below each value item */
     padding: 15px; /* Adds padding inside each value item */
-    background-color: #CDDAFD; /* Light purple background color for value items */
+    background-color: var(--background-dark); /* Light purple background color for value items */
     border-radius: 5px; /* Rounds the corners of each item */
     transition: background-color 0.3s; /* Adds transition effect for hover state */
 }
 
 .aboutus-value-item:hover {
-    background-color: #EEF2FB;  /* Changes background color on hover for interactivity */
+    background-color: var(--background-light);  /* Changes background color on hover for interactivity */
 }
 
 .aboutus-value-title {

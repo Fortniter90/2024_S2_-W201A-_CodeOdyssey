@@ -41,7 +41,7 @@ const LessonTemplate = () => {
   };
 
   const goToCourse = () => {
-    navigate(`course/${courseId}`);
+    navigate(`/course/${courseId}`);
   }
 
   const goToTests = () => {

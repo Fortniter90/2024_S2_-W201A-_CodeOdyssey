@@ -3,6 +3,7 @@ import { fetchLessons, fetchUserCourseProgress } from '../utils/dataFetching';
 import './LearningPath.css';
 import { useNavigate } from 'react-router-dom';
 import { updateUserLessons } from '../utils/dataSaving';
+import Button from './Button';
 
 // Main LearningPath component
 const LearningPath = ({ courseId, userId }) => {
@@ -106,14 +107,23 @@ const LessonMenu = ({ levels, handleLevelClick, selectedLevel }) => {
 const LessonPreview = ({ levels, courseId, userId, lesson }) => {
   const navigate = useNavigate();
 
-  const toTests = () => {
-    navigate(`/course/${courseId}/lesson/${lesson.id}/test`);
-  }
-
-  const beginLesson = async () => {
+  const goToTests = async () => {
     try {
       // Update the user's current lesson and completed lessons in Firestore
-      await updateUserLessons(userId, levels, lesson, courseId);
+      //await updateUserLessons(userId, levels, lesson.id, courseId);
+
+      // Navigate to the test page
+      navigate(`/course/${courseId}/lesson/${lesson.id}/test`);
+
+    } catch (error) {
+      console.error("Error updating current lesson:", error);
+    }
+  }
+
+  const goToLessons = async () => {
+    try {
+      // Update the user's current lesson and completed lessons in Firestore
+      //await updateUserLessons(userId, levels, lesson.id, courseId);
 
       // Navigate to the lesson page
       navigate(`/course/${courseId}/lesson/${lesson.id}`);
@@ -136,12 +146,8 @@ const LessonPreview = ({ levels, courseId, userId, lesson }) => {
       </div>
 
       <div className='lesson-buttons'>
-        <button className='button solid-button roboto-bold' onClick={beginLesson}>
-          BEGIN LESSON
-        </button>
-        <button className='button outline-button roboto-bold' onClick={toTests}>
-          PRACTICE TESTS
-        </button>
+        <Button text={'BEGIN LESSON'} action={goToLessons} />
+        <Button text={'PRACTICE TESTS'} outline={true} action={goToTests} />
       </div>
     </div>
   );

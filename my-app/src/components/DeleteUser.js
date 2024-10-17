@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import Button from './Button';
 
 // Component that deletes a user's account
 const DeleteUserComponent = () => {
@@ -53,9 +54,14 @@ const DeleteUserComponent = () => {
 
   return (
     <div>
-      <button className="button-20" onClick={deleteUserHandler} disabled={!currentUser || loading}>
-        {loading ? 'Deleting...' : 'Delete My Account'}
-      </button>
+      <Button 
+        text={loading ? 'Deleting...' : 'Delete My Account'} 
+        action={deleteUserHandler} 
+        disabled={!currentUser || loading}
+        color={'var(--orange-medium'}
+        hoverColor={'var(--orange-dark'}
+        backgroundColor={'var(--background-medium'}
+      />
       {error && <p className="error-message">{error}</p>} {/* Display error message if any */}
     </div>
   );

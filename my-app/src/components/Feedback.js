@@ -7,6 +7,7 @@ import { auth, db } from "../config/firebase";
 import Button from "./Button";
 
 const Feedback = () => {
+
   const [isOpen, setIsOpen] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [username, setUsername] = useState('');
@@ -16,21 +17,7 @@ const Feedback = () => {
 
 
   useEffect(() => {
-    const fetchUsername = async () => {
-      if (currentUser) {
-        const userDocRef = doc(db, "users", currentUser.uid);
-        const userDoc = await getDoc(userDocRef);
-
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          setUsername(userData.name); 
-        } else {
-          console.error("No user data found.");
-        }
-      }
-    };
-
-    fetchUsername();
+    setUsername(currentUser.name);
   }, [currentUser]);
 
   const handleSubmit = async () => {
