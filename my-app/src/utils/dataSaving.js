@@ -21,7 +21,7 @@ export const saveCourse = async (courseData) => {
 // Function to update an existing course
 export const updateCourse = async (courseId, updatedCourseData) => {
   try {
-    const response = await axios.put(`${backendUrl}/courses/${courseId}`, updatedCourseData, {
+    const response = await axios.put(`${backendUrl}/save/courses/${courseId}`, updatedCourseData, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -35,6 +35,7 @@ export const updateCourse = async (courseId, updatedCourseData) => {
 // Function to save a new lesson
 export const saveLesson = async (courseId, lessonData) => {
   try {
+    console.log(lessonData);
     const response = await axios.post(`${backendUrl}/save/courses/${courseId}/lessons`, lessonData, {
       headers: {
         'Content-Type': 'application/json'
