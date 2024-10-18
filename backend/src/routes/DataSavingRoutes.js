@@ -29,8 +29,10 @@ saveRouter.put('/courses/:courseId', async (req, res) => {
 
 // Route to add a new lesson
 saveRouter.post('/courses/:courseId/lessons', async (req, res) => {
+  console.log("saving lesson");
   const { courseId } = req.params;
   const lessonData = req.body;
+
 
   try {
     await saveLesson(courseId, lessonData);

@@ -1,5 +1,6 @@
 import admin from '../config/Firebase.js';
 const db = admin.firestore(); // Get Firestore instance from adminconst db = admin.firestore(); // Get Firestore instance from admin
+const FieldValue = admin.firestore.FieldValue;
 
 // Function to add a new course
 export const saveCourse = async (courseData) => {
@@ -26,17 +27,19 @@ export const updateCourse = async (courseId, updatedCourseData) => {
 // Function to add a new lesson
 export const saveLesson = async (courseId, lessonData) => {
   try {
-    const newLessonRef = db.collection('courses').doc(courseId).collection('lessons');
-    await newLessonRef.add(lessonData);
-
-    // Increment the lessonCount in the course document
     const courseRef = db.collection('courses').doc(courseId);
-    await courseRef.update({
-      lessonCount: FieldValue.increment(1), // Increment lessonCount by 1
-    });
+    const lessonsRef = courseRef.collection('lessons');
+
+    // Add a timestamp to the lesson data using FieldValue
+    lessonData.createdAt = FieldValue.serverTimestamp();
+
+    // Add the new lesson document to the lessons subcollection
+    const newLessonRef = await lessonsRef.add(lessonData);
+
+    console.log("Lesson saved with ID:", newLessonRef.id);
+    return { id: newLessonRef.id };
   } catch (error) {
-    console.error('Error saving lesson:', error);
-    throw error;
+    throw new Error(`Error saving lesson: ${error.message}`);
   }
 };
 

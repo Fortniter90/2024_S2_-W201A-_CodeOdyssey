@@ -97,6 +97,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
         await updateLesson(selectedCourse.id, lesson.id, newLesson);
       }
       else {
+        console.log(selectedCourse.id, newLesson);
         await shiftLessonNumbers(lessonNumber);
         await saveLesson(selectedCourse.id, newLesson);
       }
