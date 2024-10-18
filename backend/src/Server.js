@@ -5,6 +5,8 @@ import { handleCodeSubmission } from "./controller/Compiler.js"; // Import the f
 import authRouter from "./routes/AuthRoutes.js";
 import cors from 'cors';
 import fetchRouter from "./routes/DataFetchingRoutes.js";
+import saveRouter from "./routes/DataSavingRoutes.js";
+import deleteRouter from "./routes/DataDeletingRoutes.js";
 
 const app = express(); // Initialize an Express application
 const server = http.createServer(app); // Create an HTTP server using the Express app
@@ -47,6 +49,10 @@ io.on("connection", (socket) => {
 app.use("/auth", authRouter);
 
 app.use("/fetch", fetchRouter);
+
+app.use("/save", saveRouter);
+
+app.use("/delete", deleteRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

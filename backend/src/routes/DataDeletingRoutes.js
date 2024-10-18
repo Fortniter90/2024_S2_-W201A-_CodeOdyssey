@@ -1,5 +1,5 @@
 import express from 'express';
-import { deleteCourse, deleteLesson, deleteTest } from '../controller/DataDeletingManagement';
+import { deleteCourse, deleteLesson, deleteTest } from '../controller/DataDeletingManagement.js';
 
 const deleteRouter = express.Router();
 
@@ -33,4 +33,4 @@ deleteRouter.delete('courses/:courseId/lessons/:lessonId/tests/:testId', async (
   }
 });
 
-
+export default deleteRouter;
