@@ -1,5 +1,4 @@
-import { addDoc, collection, doc, getDoc, getFirestore, increment, updateDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
 import axios from 'axios';
 const backendUrl = 'http://localhost:8080';
@@ -51,7 +50,6 @@ export const fetchTests = async (courseId, lessonId) => {
 // Fetch user course progress
 export const fetchUserCourseProgress = async (userId, courseId) => {
   try {
-    console.log("balls2");
     const response = await axios.get(`${backendUrl}/fetch/users/${userId}/courses/${courseId}/progress`);
     return response.data;
   } catch (error) {

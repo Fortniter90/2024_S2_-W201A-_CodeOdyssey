@@ -61,21 +61,32 @@ async function revokeTokensAndLogTimestamp(uid) {
 async function loadUserData(uid) {
   try {
     const userDocRef = db.collection('users').doc(uid); // Use Firestore Admin SDK's collection and doc methods
-
     const userDocSnap = await userDocRef.get(); // Use get() to fetch the document
 
     if (userDocSnap.exists) { // Check if the document exists
       const userData = userDocSnap.data();
       console.log("User data fetched:", userData);
 
+      const result = {};
+
+      // Check if courses exist and add to the result
       if (userData.courses) {
-        return userData.courses; // Return courses if they exist
+        result.courses = userData.courses;
       } else {
         throw new Error("Courses not found in document for userId: " + uid);
       }
+
+      // Check if isAdmin exists and add to the result only if true
+      if (userData.isAdmin) {
+        result.isAdmin = userData.isAdmin;
+      }
+
+      return result;
+
     } else {
       throw new Error("No user document found for userId: " + uid);
     }
+
   } catch (error) {
     throw new Error("Error fetching user data from Firestore: " + error.message);
   }
@@ -96,10 +107,10 @@ async function updateProfilePicture(uid, picture) {
 
 async function updateUsername(uid, name) {
   try {
-    await admin.auth().updateUser(uid, {
+    userRecord = await admin.auth().updateUser(uid, {
       displayName: name
     });
-    console.log("Successfully updated user's username:");
+    console.log("Successfully updated user's username",);
   } catch (error) {
     console.error('Error updating username:', error);
   }

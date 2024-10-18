@@ -11,9 +11,14 @@ const Profile = () => {
 
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
 
   const goToSettings = () => {
     navigate('/profile/settings');
+  }
+
+  if (currentUser === null) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -40,3 +45,4 @@ const Profile = () => {
 };
 
 export default Profile;
+

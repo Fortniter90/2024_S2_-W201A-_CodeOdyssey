@@ -77,4 +77,3 @@ function CompilerComponent({ code, answer, language }) {
 }
 
 export default CompilerComponent;
-

@@ -14,7 +14,7 @@ import NavigationBar from '../components/NavigationBar';
 
 const TestTemplate = () => {
   const { courseId, lessonId } = useParams();
-  const { usersId } = useAuth();  // Get the user ID from the Auth context
+  const { currentUser } = useAuth();  // Get the user ID from the Auth context
 
   const [lesson, setLesson] = useState(null);
   const [tests, setTests] = useState(null);
@@ -72,7 +72,17 @@ const TestTemplate = () => {
     try {
       // Fetch all courses from Firestore
       const coursesCollection = await fetchCourses();
-      setLanguage(coursesCollection[courseId].language);
+
+      // Find the course object by its courseId
+      const course = coursesCollection.find(item => item.id === courseId);
+
+      if (course) {
+        console.log(course.language);
+        // If the course is found, set the language
+        setLanguage(course.language);
+      } else {
+        console.error('Course not found for ID:', courseId);
+      }
     } catch (error) {
       console.error('Error fetching course language:', error);
     }
@@ -116,7 +126,7 @@ const TestTemplate = () => {
   // Function to save answers to Firestore
   const saveAnswers = async () => {
     try {
-      const success = await saveUserAnswers(usersId, courseId, lessonId, tests, userAnswers);
+      const success = await saveUserAnswers(currentUser.uid, courseId, lessonId, tests, userAnswers);
       if (success) {
         alert('Answers saved successfully!');
         navigate(`/course/${courseId}`); // Navigate after saving
