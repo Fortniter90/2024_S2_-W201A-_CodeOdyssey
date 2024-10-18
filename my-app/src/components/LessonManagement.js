@@ -79,9 +79,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
   };
 
   // Handle lesson addition and updating
-  const handleSubmit = async (e, lesson, isEditing) => {
-    e.preventDefault();
-
+  const handleSubmit = async (lesson, isEditing) => {
     const lessonNumber = parseInt(formData.number, 10);
     const newLesson = {
       ...formData,
@@ -104,6 +102,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
       }
 
       loadLessons(); // Refresh lesson list
+      setFormData({ title: '', number: '', description: '', content: [] }); // Reset form data
 
     } catch (error) {
       console.error(`Error ${isEditing ? 'updating' : 'adding'} lesson:`, error);

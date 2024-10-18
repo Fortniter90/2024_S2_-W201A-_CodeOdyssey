@@ -91,7 +91,11 @@ const ManagementTable = ({
                 onClose={() => toggleModal('add', false)}
                 title={`Add New ${type}`}
                 children={
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={(e) => { 
+                        e.preventDefault();
+                        handleSubmit(selectedItem, isEditing); 
+                        toggleModal('add', false);
+                    }}>
                     
                     {itemAdd()}
                     
@@ -145,7 +149,10 @@ const ManagementTable = ({
                     children={
                         <>
                             {isEditing ? (
-                                <form onSubmit={handleSubmit()}>
+                                <form onSubmit={(e) => { 
+                                    e.preventDefault();
+                                    handleSubmit(selectedItem, isEditing); 
+                                }}>
                                     {itemEditing()}
 
                                     <div className='modal-buttons'>
@@ -162,8 +169,8 @@ const ManagementTable = ({
                                     <div className='modal-buttons'>
                                         {onSelectItem ? <Button text={`Manage ${type} Content`} action={() => onSelectItem(selectedItem)} /> : <></>}
                                         
-                                        <Button text={`Edit ${type}`} action={() => handleEdit} />
-                                        <Button text="Delete" outline={true} action={() => toggleModal('delete', true)} />
+                                        <Button text={`Edit ${type}`} action={() => handleEdit(selectedItem)} />
+                                        <Button text="Delete" outline={true} action={() => { toggleModal('details', false); toggleModal('delete', true) }} />
                                     </div>
                                 </>
                             )}
@@ -196,7 +203,7 @@ const ManagementTable = ({
                         <p>Are you sure you want to delete this {type.toLocaleLowerCase()}?</p>
                         
                         <div className='modal-buttons'>
-                            <Button text="Delete" action={handleDelete()} />
+                            <Button text="Delete" action={() => { handleDelete(selectedItem); toggleModal('delete', false); toggleModal('success', true) }} />
                             <Button text="Cancel" outline={true} action={() => toggleModal('delete', false)} />
                         </div>
                     </>

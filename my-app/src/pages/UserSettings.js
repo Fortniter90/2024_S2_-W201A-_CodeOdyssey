@@ -165,6 +165,10 @@ const UserSettings = () => {
   const exitSettings = () => {
     navigate('/profile');
   }
+  
+  const toggleAdvancedSettings = () => {
+    setAdvancedSettings(!advancedSettings);
+  };
 
   if (currentUser === null) {
     return <div>Loading...</div>;

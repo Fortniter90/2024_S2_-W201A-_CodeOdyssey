@@ -70,9 +70,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
   };
 
   // Handle course addition
-  const handleSubmit = async (e, test, isEditing) => {
-    e.preventDefault(); // Prevent default form submission
-
+  const handleSubmit = async (test, isEditing) => {
     const testNumber = parseInt(formData.number, 10);
     const newTest = {
       ...formData,
@@ -94,6 +92,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
       }
       
       loadTests(); // Refresh test list
+      setFormData({ number: '', question: '', answer: '', hint: '', constraints: [] }); // Reset form data
 
     } catch (error) {
       console.error(`Error ${isEditing ? 'updating' : 'adding'} test:`, error);

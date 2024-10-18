@@ -55,9 +55,7 @@ const CourseManagement = ({ onSelectCourse }) => {
   };
 
   // Handle new course and course update
-  const handleSubmit = async (e, course, isEditing) => {
-    e.preventDefault(); // Prevent default form submission
-
+  const handleSubmit = async (course, isEditing) => {
     const courseData = {
       ...formData,
       lessonCount: isEditing ? course.lessonCount : 0,   // Keep original lesson count
@@ -73,6 +71,7 @@ const CourseManagement = ({ onSelectCourse }) => {
       }
 
       loadCourses();  // Refresh course list
+      setFormData({ title: '', color: '', description: '' }); // Reset form data
 
     } catch (error) {
       console.error(`Error ${isEditing ? 'updating' : 'adding'} course:`, error);

@@ -11,7 +11,6 @@ const Profile = () => {
 
   const { currentUser } = useAuth();
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
 
   const goToSettings = () => {
     navigate('/profile/settings');
