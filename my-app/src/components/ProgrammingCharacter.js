@@ -23,7 +23,7 @@ const ProgrammingCharacter = ({
                 characterVoice.current.play();
             }
         }
-        setShowText(!isNeutral); // Toggle text status
+        setShowText(!showText); // Toggle text status
     }
 
     return (

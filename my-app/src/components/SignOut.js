@@ -30,7 +30,13 @@ const SignOutComponent = () => {
   };
 
   return (
-    <Button text={'SIGN OUT'} outline={true} action={handleSignOut} color={'var(--gray-medium)'} backgroundColor={'var(--background-medium)'} />
+    <Button 
+      text={'SIGN OUT'} 
+      outline={true} 
+      action={handleSignOut} 
+      color={'var(--gray-medium)'} 
+      backgroundColor={'var(--background-medium)'} 
+    />
   );
 };
 

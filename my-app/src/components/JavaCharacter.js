@@ -1,3 +1,4 @@
+import ProgrammingCharacter from './ProgrammingCharacter';
 import CapybaraNeutral from './assets/CapybaraS2-Neutral.png'; // Importing the neutral capybara image
 import CapybaraHappy from './assets/CapybaraS2-Happy.png'; // Importing the happy capybara image
 import JavabaraVoice from './assets/JavabaraVoice.mp3'; // Importing the audio file

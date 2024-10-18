@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./Button.css";
 
 const Button = ({
@@ -26,7 +27,7 @@ const Button = ({
 
     return (
         <button
-            className={`roboto-bold ${buttonClass}`}
+            className={`roboto-bold`}
             style={dynamicStyle}
             onClick={action}
             onMouseEnter={() => setIsHovered(true)}

@@ -1,7 +1,7 @@
+import ProgrammingCharacter from './ProgrammingCharacter';
 import SnakeNeutral from './assets/SnakeS2-Neutral.png'; // Importing the neutral snake image
 import SnakeHappy from './assets/SnakeS2-Happy.png'; // Importing the happy snake image
 import SnakeVoice from './assets/SnakeVoice.mp3'; // Importing the audio file
-import ProgrammingCharacter from './ProgrammingCharacter';
 
 // Defining the PythonCharacter component
 const PythonCharacter = () => {

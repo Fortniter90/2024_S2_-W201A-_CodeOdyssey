@@ -1,112 +1,214 @@
 import { useState } from "react";
 import Button from "./Button";
 import "./ManagementTable.css";
-import { FaMagnifyingGlass } from "react-icons/fa6";
+import './DatabaseManagement.css';
+import Filter from "./Filter";
+import Pagination from "./Pagination";
+import Modal from "./Modal";
 
 const ManagementTable = ({  
+    type="Item", 
     items,
-    onRowClick,
-    renderNoItems,
+    onSelectItem, 
+    itemAdd,
+    itemDetails,
+    itemEditing,
+    itemSubmit, 
+    itemEdit,
+    itemDelete, 
 }) => {
 
-    // States controlling filtering and searching
-    const [filter, setFilter] = useState('all');        // Control the filter dropdown
-    const [searchTerm, setSearchTerm] = useState('');   // Hold the search term for filtering courses
-
-    // States controlling pagination
+    const [filteredItems, setFilteredItems] = useState(items);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 7;
-
-    // Calculate the index range for the current page for pagination
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     
-    // Filter items based on the search term and filter type
-    const filteredItems = items.filter((item) => {
-        const title = item.title ? item.title.toLowerCase() : ''; // Safely access title
-        const matchesSearch = title.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesFilter =
-        filter === 'all' ||
-        (filter === 'available' && item.available) ||
-        (filter === 'unavailable' && !item.available);
-    
-        return matchesSearch && matchesFilter;
-    });
     
     // Replace currentItems with filteredItems
-    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+
+    const currentItems = filteredItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    // States controling modal visibility
+    const [modals, setModals] = useState({
+        add: false,
+        details: false,
+        success: false,
+        delete: false,
+    })
+
+
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+
+
+    // Handle course selection for editing and viewing details
+    const handleItemClick = (item) => {
+      setSelectedItem(item);          // Set the selected item
+      toggleModal('details', true); // Open the details modal
+    };
+
+    // Handle modal visibility
+    const toggleModal = (modalName, state) => {
+      setModals((prev) => ({ ...prev, [modalName]: state })); // Change state of given modal
+  
+      if (state == false) {
+        setIsEditing(false); // Set editing mode
+      }
+    }
+
+    // Handle preparing an item for editing
+    const handleEdit = () => {
+        itemEdit(selectedItem);
+        setIsEditing(true);
+    }
+
+    // Handle submitting a new or updated item
+    const handleSubmit = () => {
+        itemSubmit(selectedItem, isEditing);
+        setIsEditing(false);
+    }
+
+    // Handle deleteing an item
+    const handleDelete = () => {
+        itemDelete(selectedItem);
+    }
+
+
+    // Render message if no items are available
+    const renderNoItems = () => <div>No items available.</div>;
 
 
     return (
-        <div className='management-list-table'>
-            {/* Filtering and searching for items */}
-            <div className='management-filters'>
-                <div className='filter-dropdown'>
-                {/* Dropdown for filtering by availability */}
-                <select 
-                    className='filter-select' 
-                    value={filter} 
-                    onChange={(e) => setFilter(e.target.value)}
-                >
-                    <option value="all">Show All</option>
-                    <option value="available">Available</option>
-                    <option value="unavailable">Unavailable</option>
-                </select>
-                </div>
-
-                <div className='search-container roboto-regular'>
-                <FaMagnifyingGlass className='search-icon' />
-                <input 
-                    type='text' 
-                    placeholder='Type to search' 
-                    value={searchTerm} 
-                    onChange={(e) => setSearchTerm(e.target.value)} 
-                />
-                </div>
+        <div className='management roboto-regular'>
+            <div className='management-header'>
+                <h1 className='fira-code'>{type} Management</h1>
+                <Button text={`Add ${type}`} action={() => toggleModal('add', true)} />
             </div>
 
-            {/* List of items */}
-            <div className='management-list'>
-                {currentItems.length > 0 ? (
-                    currentItems.map((item) => (
-                        <div
-                            className='management-row'
-                            key={item.id}
-                            onClick={() => onRowClick(item)} // Handle row click
-                        >
-                            <div className='management-title'>{item.title || item.question}</div>
-                            <div className='management-list-right'>
-                                <div className='management-availability roboto-bold'>
-                                    {item.available ? 'AVAILABLE' : 'UNAVAILABLE'}
-                                </div>
-                                <div className='management-counts'>
-                                    {item.lessonCount !== undefined && <span>Lessons: {item.lessonCount || 0}</span>}
-                                    {item.testCount !== undefined && <span>Tests: {item.testCount || 0}</span>}
+            {/* Add Item Modal */}
+            <Modal 
+                isOpen={modals.add}
+                onClose={() => toggleModal('add', false)}
+                title={`Add New ${type}`}
+                children={
+                    <form onSubmit={handleSubmit}>
+                    
+                    {itemAdd()}
+                    
+                    <div className='modal-buttons'>
+                        <Button type="submit" text="Add Course" />
+                        <Button text="Cancel" outline={true} action={() => toggleModal('add', false)} />
+                    </div>
+                    </form>
+                }
+            />
+
+            <div className='management-list-table'>
+                <Filter
+                    items={items}
+                    setFilteredItems={setFilteredItems}
+                />
+
+                {/* List of items */}
+                <div className='management-list'>
+                    {currentItems.length > 0 ? (
+                        currentItems.map((item) => (
+                            <div
+                                className='management-row'
+                                key={item.id}
+                                onClick={() => handleItemClick(item)} // Handle row click
+                            >
+                                <div className='management-title'>{item.title || item.question}</div>
+                                <div className='management-list-right'>
+                                    <div className='management-availability roboto-bold'>
+                                        {item.available ? 'AVAILABLE' : 'UNAVAILABLE'}
+                                    </div>
+                                    <div className='management-counts'>
+                                        {item.lessonCount !== undefined && <span>Lessons: {item.lessonCount || 0}</span>}
+                                        {item.testCount !== undefined && <span>Tests: {item.testCount || 0}</span>}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))
-                ) : (
-                    renderNoItems() // Call the function to render no items message
-                )}
+                        ))
+                    ) : (
+                        renderNoItems() // Call the function to render no items message
+                    )}
+                </div>
             </div>
+            
+            {/* Course Details and Edit Modal */}
+            {selectedItem ? (
+                <Modal
+                    isOpen={modals.details}
+                    onClose={() => toggleModal('details', false)}
+                    title={isEditing ? `Edit ${type}` : selectedItem.title}
+                    children={
+                        <>
+                            {isEditing ? (
+                                <form onSubmit={handleSubmit()}>
+                                    {itemEditing()}
 
-            {/* Pagination buttons */}
-            <div className='pagination'>
-                <Button
-                    text="Previous"
-                    disabled={currentPage === 1}
-                    action={() => setCurrentPage(prevPage => Math.max(prevPage - 1, 1))}
+                                    <div className='modal-buttons'>
+                                        <Button type="submit" text={`Update ${type}`} />
+                                        <Button text="Cancel" outline={true} action={() => setIsEditing(false)} />
+                                    </div>
+                                </form>
+                            ) : (
+                                <>
+                                    {itemDetails(selectedItem)}
+
+                                    <hr className='modal-divider' />
+                                    
+                                    <div className='modal-buttons'>
+                                        {onSelectItem ? <Button text={`Manage ${type} Content`} action={() => onSelectItem(selectedItem)} /> : <></>}
+                                        
+                                        <Button text={`Edit ${type}`} action={() => handleEdit} />
+                                        <Button text="Delete" outline={true} action={() => toggleModal('delete', true)} />
+                                    </div>
+                                </>
+                            )}
+                        </>
+                    }
+                    isCentered={false}
                 />
-                <span>
-                    Page {currentPage} of {Math.ceil(items.length / itemsPerPage)}
-                </span>
-                <Button
-                    text="Next"
-                    disabled={currentPage === Math.ceil(items.length / itemsPerPage)}
-                    action={() => setCurrentPage(prevPage => Math.min(prevPage + 1, Math.ceil(items.length / itemsPerPage)))}
-                />
-            </div>
+            ) : (<></>)}
+
+            {/* Success Confirmation Modal */}
+            <Modal
+                isOpen={modals.success}
+                onClose={() => toggleModal('success', false)}
+                title={'Success!'}
+                children={
+                    <>
+                        <p>Action completed successfully.</p>
+                        <Button text="Close" action={() => toggleModal('success', false)} />
+                    </>
+                }
+            />
+
+            {/* Delete Confirmation Modal */}
+            <Modal
+                isOpen={modals.delete}
+                onClose={() => toggleModal('delete', false)}
+                title={'Delete Confirmation'}
+                children={
+                    <>
+                        <p>Are you sure you want to delete this {type.toLocaleLowerCase()}?</p>
+                        
+                        <div className='modal-buttons'>
+                            <Button text="Delete" action={handleDelete()} />
+                            <Button text="Cancel" outline={true} action={() => toggleModal('delete', false)} />
+                        </div>
+                    </>
+                }
+            />
+
+            {/* Page navigation controls */}
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+            />
         </div>
     );
 }

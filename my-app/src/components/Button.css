@@ -8,4 +8,30 @@ button {
     transition: background-color 0.3s, border 0.3s, color 0.3s;
     position: relative;
     overflow: hidden;
+    border: 3px solid var(--logo-purple);
+}
+
+/* Outline styles */
+.button-outline {
+    background-color: var(--white);
+    color: var(--logo-purple);
+}
+
+/* Filled styles */
+.button-filled {
+    background-color: var(--logo-purple);
+    color: var(--white);
+}
+
+/* Hover styles for outline */
+.button-outline:hover {
+    background-color: var(--logo-purple);
+    border-color: var(--logo-purple);
+    color: var(--white);
+}
+
+/* Hover styles for filled */
+.button-filled:hover {
+    background-color: var(--logo-purple-dark);
+    border-color: var(--logo-purple-dark);
 }

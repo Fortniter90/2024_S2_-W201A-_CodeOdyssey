@@ -5,9 +5,11 @@ import LessonManagement from '../components/LessonManagement';
 import TestManagement from '../components/TestManagement';
 import CodeOdysseyLogo from '../components/assets/CodeOdysseyLogo';
 import { Link } from 'react-router-dom';
-import { FaBookBookmark, FaDesktop, FaFilePen, FaFolderClosed, FaHouse, FaUsers, FaTurnUp } from 'react-icons/fa6';
+import { FaBookBookmark, FaFilePen, FaFolderClosed, FaHouse, FaUsers, FaTurnUp, FaComment } from 'react-icons/fa6';
 import AdminManagement from '../components/AdminManagement';
-import ManagementDashboard from '../components/ManagementDashboard';
+import FeedbackManagement from '../components/FeedbackManagement';
+
+
 
 // DeveloperDashboard to allow developers to easily manage course, lesson, and test information
 const DeveloperDashboard = () => {
@@ -30,8 +32,6 @@ const DeveloperDashboard = () => {
     // Function to render the appropriate management component based on the active tab
     const managementTab = () => {
         switch (activeTab) {
-            case 'dashboard':
-                return <ManagementDashboard />;
             case 'courses':
                 return <CourseManagement onSelectCourse={handleCourseSelect} />;
             case 'lessons':
@@ -50,8 +50,10 @@ const DeveloperDashboard = () => {
                 );
             case 'admin':
                 return <AdminManagement />;
+            case 'feedback':
+                return <FeedbackManagement />;
             default: 
-                return <ManagementDashboard />;
+                return <CourseManagement onSelectCourse={handleCourseSelect} />;
         }
     };
 
@@ -74,9 +76,6 @@ const DeveloperDashboard = () => {
                     <CodeOdysseyLogo width='10vw' darkBackground={true} />
 
                     <div className='developer-tabs'>
-                        <button className={`roboto-bold ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => handleTabChange('dashboard')}>
-                            <FaDesktop /> Dashboard
-                        </button>
 
                         <button className={`roboto-bold ${activeTab === 'courses' ? 'active' : ''}`} onClick={() => handleTabChange('courses')}>
                             <FaFolderClosed /> Courses
@@ -105,7 +104,11 @@ const DeveloperDashboard = () => {
                         )}
 
                         <button className={`roboto-bold ${activeTab === 'admin' ? 'active' : ''}`} onClick={() => handleTabChange('admin')}>
-                            <FaUsers /> Admin
+                            <FaUsers /> Admins
+                        </button>
+
+                        <button className={`roboto-bold ${activeTab === 'feedback' ? 'active' : ''}`} onClick={() => handleTabChange('feedback')}>
+                            <FaComment /> Feedback
                         </button>
                     </div>
                 </div>
