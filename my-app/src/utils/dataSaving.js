@@ -161,9 +161,7 @@ export const updateUserProfilePicture = async (userId, imageFile) => {
       },
     });
     console.log("Profile picture updated successfully:", response.data);
-    return response.data;
   } catch (error) {
-    console.error("Error updating profile picture:", error);
     throw new Error(`Error updating profile picture: ${error.response?.data?.error || error.message}`);
   }
 };
@@ -171,20 +169,42 @@ export const updateUserProfilePicture = async (userId, imageFile) => {
 // Function to update username
 export const updateUsername = async (userId, name) => {
   try {
-    const response = await axios.put(`${backendUrl}/auth/updateusername/${userId}`, { name }, {
+    await axios.put(`${backendUrl}/auth/updateusername/${userId}`, { name }, {
       headers: {
         'Content-Type': 'application/json'
       }
     });
-    console.log(response);
   } catch (error) {
     throw new Error(`Error updating username: ${error.response?.data?.error || error.message}`);
   }
 };
 
-// Function to set user admin status
 export const setAdminStatus = async (userId, isAdmin) => {
-  const userRef = doc(db, 'users', userId);
-  await updateDoc(userRef, { admin: isAdmin });
+  try {
+    await axios.put(`${backendUrl}/auth/users/${userId}/admin`, {
+      isAdmin: isAdmin
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  } catch (error) {
+    throw new Error('Error updating admin status:', error.response?.data?.error || error.message);
+  }
 };
 
+
+export const submitFeedback = async (userId, userEmail, feedback) => {
+  try {
+    await axios.post(`${backendUrl} / save / feedback / ${userId}`, {
+      userEmail: userEmail,
+      feedback: feedback
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  } catch (error) {
+    throw new Error('Error saving feedback:', error.response?.data?.error || error.message);
+  }
+};

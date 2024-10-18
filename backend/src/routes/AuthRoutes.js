@@ -1,13 +1,11 @@
 import express from 'express';
 import admin from '../config/Firebase.js';
 import verifyToken from '../middleware/VerifyToken.js'
-import { updateUsername, updateProfilePicture, createUser, deleteUser, revokeTokensAndLogTimestamp, loadUserData } from '../controller/UserManagement.js'; // Adjust import according to your file structure
+import { updateUsername, updateProfilePicture, createUser, deleteUser, revokeTokensAndLogTimestamp, loadUserData, setAdminStatus } from '../controller/UserManagement.js'; // Adjust import according to your file structure
 
 const authRouter = express.Router();
 
 authRouter.get('/status', async (req, res) => {
-  console.log("check");
-
   const token = req.headers.authorization?.split('Bearer ')[1]; // Extract the token from the Authorization header
 
   if (token) {
@@ -29,10 +27,6 @@ authRouter.get('/status', async (req, res) => {
 
 authRouter.post('/signup', async (req, res) => {
   const { email, password, name } = req.body;
-
-  console.log("attemp to signup");
-
-  console.log(email);
 
   try {
     await createUser(email, password, name);
@@ -89,10 +83,8 @@ authRouter.get(`/userdata/:userId`, async (req, res) => {
 });
 
 authRouter.put(`/updateusername/:userId`, async (req, res) => {
-  console.log("getting username");
   const { userId } = req.params;
   const { name } = req.body;
-
   try {
     await updateUsername(userId, name);
     res.json({ message: "Username updated" });
@@ -105,11 +97,24 @@ authRouter.put(`/updateusername/:userId`, async (req, res) => {
 });
 
 authRouter.put(`/updateprofilepicture/:userId`, async (req, res) => {
-  console.log("getting user Data");
   const { userId } = req.params;
   const { profilePicture } = req.body;
   try {
     await updateProfilePicture(userId, profilePicture);
+    res.json({ message: "Profile picture updated" });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error updating profile picture',
+      error: error.message,
+    });
+  }
+});
+
+authRouter.put("/users/:userId/admin", async (req, res) => {
+  const { userId } = req.params;
+  const { isAdmin } = req.body;
+  try {
+    await setAdminStatus(userId, isAdmin);
     res.json({ message: "Profile picture updated" });
   } catch (error) {
     res.status(500).json({

@@ -1,59 +1,36 @@
 import React, { useState, useEffect } from "react";
-import { collection, addDoc, getDoc, doc } from "firebase/firestore";
-import { useAuth } from "../context/AuthContext"; 
+import { useAuth } from "../context/AuthContext";
+import { submitFeedback } from "../utils/dataSaving";
 import "./Feedback.css";
-import { auth, db } from "../config/firebase";
 
 const Feedback = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [feedback, setFeedback] = useState('');
-  const [username, setUsername] = useState('');
   const [popupVisible, setPopupVisible] = useState(false);
   const { currentUser } = useAuth();
 
   const toggleFeedbackBox = () => {
     setIsOpen(!isOpen);
     if (isOpen) { // Only clear feedback when closing
-      setFeedback(''); 
+      setFeedback('');
     }
   };
 
   const handleSubmit = async () => {
-    if (feedback.trim() === '') return; 
+    if (feedback.trim() === '') return;
 
     try {
-      await addDoc(collection(db, 'feedback'), {
-        userId: currentUser.uid,
-        username,
-        feedback,
-      });
+      await submitFeedback(currentUser.uid, currentUser.email, feedback);
+
       console.log('Feedback submitted:', feedback);
-      setFeedback(''); 
+      setFeedback('');
       setIsOpen(false);
       setPopupVisible(true);
-      setTimeout(() => setPopupVisible(false), 3000); 
+      setTimeout(() => setPopupVisible(false), 3000);
     } catch (error) {
       console.error('Error submitting feedback:', error);
     }
   };
-
-  useEffect(() => {
-    const fetchUsername = async () => {
-      if (currentUser) {
-        const userDocRef = doc(db, "users", currentUser.uid);
-        const userDoc = await getDoc(userDocRef);
-
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          setUsername(userData.name); 
-        } else {
-          console.error("No user data found.");
-        }
-      }
-    };
-
-    fetchUsername();
-  }, [currentUser]);
 
   return (
     <>

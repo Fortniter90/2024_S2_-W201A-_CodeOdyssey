@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchUserEmailByUID, fetchAdminUsers, fetchUsers } from '../utils/dataFetching';
+import { fetchAdminUsers, fetchUsers } from '../utils/dataFetching';
 import { setAdminStatus } from '../utils/dataSaving';
 import { FaMagnifyingGlass, FaX, FaEllipsisVertical, FaEllipsis } from 'react-icons/fa6';
 import Button from './Button';
@@ -70,7 +70,7 @@ const AdminManagement = () => {
       const updatedAdminUsers = await fetchAdminUsers(); // Fetch updated admin users
       const usersWithEmails = await Promise.all(
         updatedAdminUsers.map(async (user) => {
-          const email = await fetchUserEmailByUID(user.id); // Fetch email for each updated admin
+          const email = user.email;
           return { ...user, email }; // Return the user object with email
         })
       );
@@ -95,7 +95,7 @@ const AdminManagement = () => {
       const updatedAdminUsers = await fetchAdminUsers(); // Fetch updated admin users
       const usersWithEmails = await Promise.all(
         updatedAdminUsers.map(async (user) => {
-          const email = await fetchUserEmailByUID(user.id); // Fetch email for each updated admin
+          const email = user.email;
           return { ...user, email }; // Return the user object with email
         })
       );

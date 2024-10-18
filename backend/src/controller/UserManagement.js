@@ -116,7 +116,16 @@ async function updateUsername(uid, name) {
   }
 }
 
-
+export const setAdminStatus = async (userId, isAdmin) => {
+  try {
+    const userRef = db.collection('users').doc(userId);
+    await userRef.update({ admin: isAdmin });
+    console.log(`Successfully updated admin status for user ${userId}`);
+  } catch (error) {
+    console.error('Error updating admin status:', error.message);
+    throw new Error('Failed to update admin status');
+  }
+};
 
 export { createUser, deleteUser, revokeTokensAndLogTimestamp, loadUserData, updateUsername, updateProfilePicture };
 

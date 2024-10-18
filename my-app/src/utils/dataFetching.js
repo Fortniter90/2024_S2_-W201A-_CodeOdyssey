@@ -79,21 +79,3 @@ export const fetchUsersAnswers = async (userId) => {
     throw error;
   }
 };
-
-export const fetchUserEmailByUID = async (uid) => {
-  try {
-    const userDocRef = doc(db, 'users', uid);
-    const userDoc = await getDoc(userDocRef);
-
-    if (userDoc.exists()) {
-      const userData = userDoc.data();
-      console.log('User email:', userData.email);
-      return userData.email;
-    } else {
-      console.log('No such user found!');
-    }
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-  }
-};
-
