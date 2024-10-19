@@ -12,6 +12,7 @@ markdown
 - Tests to apply what you've learned. 
 - User authentication and profiles to save your progress.
 - Create your own courses, lessons, and tests with the developer dashboard.
+
 ---
 ## Prerequisites 
 Before installing and running Code Odyssey, ensure you have the following:
@@ -24,16 +25,12 @@ Before installing and running Code Odyssey, ensure you have the following:
 - A modern web browser (Chrome, Firefox, etc.).
 
 ### Firebase Console Setup
-
 1. Create a Firebase project in [Firebase Console](https://console.firebase.google.com/).
 2. In Firebase Console, enable the Firestore and Storage services for data management, as well as the Authentication service, and select email and password to allow users to sign up/login.
 3. Go to project settings, then service accounts, and generate a Firebase Admin SDK private-key file.
 
-## Installation
 ---
-
 ## Installation
----
 ### 1. Clone The Repository
 Clone the project to your local machine:
 ```bash
@@ -72,9 +69,9 @@ BACKEND_URL=your-backend-url
 ### 3. Configure Back-end
 #### Go To Front-end Directory
 Enter the front-end directory using:
-```
-cd backend/
 ```bash
+cd backend/
+```
 #### Install Dependencies
 Install the required dependencies using:
 ```bash
@@ -104,9 +101,9 @@ Next  execute the following command in the `my-app/` directory:
 ```bash
 npm start
 ```
-
 Finally visit `http://localhost:3000` in your browser to access the application.
-<h2 style="border-top: 3px solid #555;"</h2>
+
+---
 ## Usage
 
 ---
@@ -115,6 +112,7 @@ Finally visit `http://localhost:3000` in your browser to access the application.
 ---
 ## Collaboration
 
+---
 ## License 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
