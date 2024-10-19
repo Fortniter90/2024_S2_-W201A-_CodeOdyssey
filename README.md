@@ -1,6 +1,21 @@
 # Code Odyssey
 
 ---
+## Table of Contents
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Firebase Console Setup](#firebase-console-setup)
+- [Installation](#installation)
+  - [Clone The Repository](#1-clone-the-repository)
+  - [Configure Front-end](#2-configure-front-end)
+  - [Configure Back-end](#3-configure-back-end)
+- [Usage](#usage)
+- [Technologies Used](#technologies-used)
+- [Collaboration](#collaboration)
+- [License](#license)
+- [Contact](#contact)
+
+---
 ## Features
 - Coding lessons covering various programming languages. 
 - Real-time code editor with compile and output functionality. 
