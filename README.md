@@ -4,21 +4,17 @@ markdown
 
 # Code Odyssey
 
-## Features
 ---
-
+## Features
 - Coding lessons covering various programming languages. 
 - Real-time code editor with compile and output functionality. 
 - Progress tracking to monitor your learning journey. 
 - Tests to apply what you've learned. 
 - User authentication and profiles to save your progress.
 - Create your own courses, lessons, and tests with the developer dashboard.
-
-## Prerequisites 
 ---
-
+## Prerequisites 
 Before installing and running Code Odyssey, ensure you have the following:
-
 - A [Firebase](https://firebase.google.com/) account.
 - A [RapidAPI](https://rapidapi.com/) account.
 - A [Judge0](https://judge0.com/) API server (this can be self-hosted, but we are going to be hosting it with a service called [RapidAPI](https://rapidapi.com/judge0-official/api/judge0-ce)).
@@ -42,16 +38,13 @@ Clone the project to your local machine:
 
 ```bash
 git clone https://github.com/Fortniter90/2024_S2_-W201A-_CodeOdyssey
-
+```
 2. Configure Front-end
 Go To Front-end Directory
-
 Enter the front-end directory using:
-
-bash
-
+```bash
 cd my-app/
-
+```
 Install Dependencies
 
 Install the required dependencies using:
