@@ -14,7 +14,7 @@
 Before installing and running Code Odyssey, ensure you have the following:
 - A [Firebase](https://firebase.google.com/) account.
 - A [RapidAPI](https://rapidapi.com/) account.
-- A [Judge0](https://judge0.com/) API server (this can be self-hosted, but we are going to be hosting it with a service called [RapidAPI](https://rapidapi.com/judge0-official/api/judge0-ce)).
+- A [Judge0](https://judge0.com/) API server this can be self-hosted, but we are going to be hosting it with a service called [RapidAPI](https://rapidapi.com/judge0-official/api/judge0-ce).
 - A machine with the following tools installed:
   - [Node.js](https://nodejs.org/) (latest version).
   - [npm](https://www.npmjs.com/) (latest version).
