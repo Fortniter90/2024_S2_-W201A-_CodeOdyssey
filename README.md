@@ -1,7 +1,3 @@
-Here’s your content converted to GitHub-flavored Markdown. I’ve adjusted the headings and list formatting for compatibility:
-
-markdown
-
 # Code Odyssey
 
 ---
