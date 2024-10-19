@@ -117,17 +117,44 @@ Finally visit `http://localhost:3000` in your browser to access the application.
 
 ---
 ## Usage
+First signup / login to access the logged in home page. From there you can explore the website.
+
+On the top right you can find your user profile which shows the users progress from the profile you can also find the user setting which allows the user to change their profile picture and username.
+
+Hover over the courses tab in the navigation bar to see all the courses that are available from there you can choose a course and start the lessons within the course.
+
+Once finished with lesson you can take tests which uses a website code editor to allow you to write and compile your code.
+
+If you are a developer you can access what is called the developer dashboard this allows you to create, delete and update courses, lessons and tests. If you want to add another developer you can do this by going to the admin panel and selecting a account to become an admin.
 
 ---
 ## Technologies Used
+- [Create React App](https://create-react-app.dev/)
+- [Firebase](https://firebase.google.com/)
+- [Node.js](https://nodejs.org/)
+- [Express](https://expressjs.com/)
+- [Socket.io](https://socket.io/)
+- [Judge0](https://judge0.com/)
+- [GitHub](https://github.com/)
 
 ---
 ## Collaboration
+Contributions to Code Odyssey are welcome! If you'd like to contribute, please follow these steps:
+1. **Fork the Repository**: Create a copy of the repository in your GitHub account. 
+2. **Create a Branch**: Create a new branch for your feature or bug fix. 
+3. **Make Your Changes**: Implement your changes and ensure that everything works as expected.
+4. **Commit Your Changes**: Save your changes with a descriptive message.
+5. **Push Your Changes**: Upload your changes to your forked repository. 
+6. **Create a Pull Request**: Submit your changes to the original repository by creating a pull request.
 
 ---
 ## License 
-This project is licensed under the MIT License. See the LICENSE file for details.
+
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/Fortniter90/2024_S2_-W201A-_CodeOdyssey/blob/main/LICENSE.adoc) file for details.
 
 ---
 ## Contact
+For any inquiries, please contact us at [codeodyssey@gmail.com](https://www.youtube.com/watch?v=dQw4w9WgXcQ).
+
+---
 
