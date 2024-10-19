@@ -9,6 +9,7 @@
   - [Clone The Repository](#1-clone-the-repository)
   - [Configure Front-end](#2-configure-front-end)
   - [Configure Back-end](#3-configure-back-end)
+  - [Run Application](#4-run-application)
 - [Usage](#usage)
 - [Technologies Used](#technologies-used)
 - [Collaboration](#collaboration)
