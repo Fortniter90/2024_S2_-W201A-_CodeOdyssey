@@ -91,13 +91,22 @@ export const fetchUserCourseProgress = async (userId, courseId) => {
 export const fetchAdminUsers = async () => {
   try {
     const querySnapshot = await db.collection('users').where('admin', '==', true).get();
-    const adminUsers = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
+
+    const adminUsers = await Promise.all(querySnapshot.docs.map(async (doc) => {
+      const userId = doc.id;
+      const userRecord = await admin.auth().getUser(userId); // Fetch the user object that contains the email
+
+      return {
+        id: userId,
+        email: userRecord.email, // Access the email from the user object
+        ...doc.data(),            // Include other fields from the Firestore document
+      };
     }));
+
     return adminUsers;
   } catch (error) {
     console.error('Error loading admins:', error);
+    throw new Error('Failed to fetch admin users');
   }
 };
 

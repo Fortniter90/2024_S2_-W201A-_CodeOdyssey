@@ -1,5 +1,5 @@
 import express from 'express';
-import { saveCourse, saveTest, saveLesson, saveUserAnswers, updateTest, updateCourse, updateLesson, updateUserLessons, updateUserCourseData } from '../controller/DataSavingManagement.js';
+import { saveCourse, saveTest, saveLesson, saveUserAnswers, updateTest, updateCourse, updateLesson, updateUserLessons, updateUserCourseData, submitFeedback } from '../controller/DataSavingManagement.js';
 
 const saveRouter = express.Router();
 
@@ -112,9 +112,20 @@ saveRouter.post('/users/:userId/answers', async (req, res) => {
   const { courseId, lessonId, tests, userAnswers } = req.body;
 
   try {
-    console.log("saving dem answers");
     await saveUserAnswers(userId, courseId, lessonId, tests, userAnswers);
     res.status(201).send({ message: 'User answers saved successfully' });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
+saveRouter.post('/feedback/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const { userEmail, feedback } = req.body;
+
+  try {
+    await submitFeedback(userId, userEmail, feedback);
+    res.status(201).send({ message: "Feedback Saved successfully" });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }

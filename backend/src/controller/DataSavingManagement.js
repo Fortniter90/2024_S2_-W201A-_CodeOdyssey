@@ -138,12 +138,7 @@ export const updateUserCourseData = async (userId, courseId) => {
 
 // Function to save answers to Firestore
 export const saveUserAnswers = async (usersId, courseId, lessonId, tests, userAnswers) => {
-  if (!usersId) {
-    throw new Error('User ID is not available. Please log in.');
-  }
-
   console.log('Saving answers for user:', usersId);
-
   try {
     for (let i = 0; i < tests.length; i++) {
       const answerData = {
@@ -166,3 +161,19 @@ export const saveUserAnswers = async (usersId, courseId, lessonId, tests, userAn
     throw new Error('Failed to save answers. Please try again.');
   }
 };
+
+export const submitFeedback = async (userId, userEmail, feedback) => {
+  try {
+    await db.collection('feedback').add({
+      userId: userId,
+      email: userEmail,
+      feedback: feedback,
+    });
+
+    console.log('Feedback submitted');
+  } catch (error) {
+    console.error('Error submitting feedback:', error.message);
+    throw new Error('Failed to submit feedback');
+  }
+};
+

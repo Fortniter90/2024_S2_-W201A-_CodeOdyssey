@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { collection, addDoc, getDoc, doc } from "firebase/firestore";
-import { useAuth } from "../context/AuthContext"; 
-import { FaComment, FaX } from "react-icons/fa6";
+import { useAuth } from "../context/AuthContext";
+import { submitFeedback } from "../utils/dataSaving";
 import "./Feedback.css";
-import { auth, db } from "../config/firebase";
-import Button from "./Button";
 
 const Feedback = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [feedback, setFeedback] = useState('');
-  const [username, setUsername] = useState('');
   const [popupVisible, setPopupVisible] = useState(false);
   const { currentUser } = useAuth();
 
@@ -21,19 +17,16 @@ const Feedback = () => {
   }, [currentUser]);
 
   const handleSubmit = async () => {
-    if (feedback.trim() === '') return; 
+    if (feedback.trim() === '') return;
 
     try {
-      await addDoc(collection(db, 'feedback'), {
-        userId: currentUser.uid,
-        username,
-        feedback,
-      });
+      await submitFeedback(currentUser.uid, currentUser.email, feedback);
+
       console.log('Feedback submitted:', feedback);
-      setFeedback(''); 
+      setFeedback('');
       setIsOpen(false);
       setPopupVisible(true);
-      setTimeout(() => setPopupVisible(false), 3000); 
+      setTimeout(() => setPopupVisible(false), 3000);
     } catch (error) {
       console.error('Error submitting feedback:', error);
     }
