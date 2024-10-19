@@ -91,6 +91,7 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.get(`http://localhost:8080/auth/userdata/${userId}`);
       const userData = response.data;
 
+      console.log("Comparing courses:", JSON.stringify(userData.courses), JSON.stringify(usersCourses));
       // Only update if the courses have changed
       if (userData.courses && JSON.stringify(userData.courses) !== JSON.stringify(usersCourses)) {
         setUsersCourses(userData.courses);

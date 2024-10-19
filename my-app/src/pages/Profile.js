@@ -13,7 +13,11 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const goToSettings = () => {
-    navigate('/profile/settings');
+    navigate('settings');
+  }
+
+  const goToPastTests = () => {
+    navigate('pasttests')
   }
 
   if (currentUser === null) {
@@ -34,6 +38,7 @@ const Profile = () => {
         </div>
 
         <div className='profile-right'>
+          <Button text={"PAST TESTS"} action={goToPastTests} />
           <ProgressBox />
         </div>
         

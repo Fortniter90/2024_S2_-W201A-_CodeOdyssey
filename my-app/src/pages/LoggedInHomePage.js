@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { fetchCourses, fetchLessons } from "../utils/dataFetching.js";
+import { fetchCourses, fetchLessons, fetchUserCourseProgress } from "../utils/dataFetching.js";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
-import SignOutComponent from "../components/SignOut";
 import Button from "../components/Button.js";
 import Feedback from "../components/Feedback";
 import "./LoggedInHomePage.css";
@@ -21,27 +20,37 @@ const gradients = {
 // Main component for the logged in home page
 const LoggedInHomePage = () => {
   // Destructure values from the authentiction context
-  const { currentUser, isAuthenticated, usersCourses, isAdmin } = useAuth();
+  const { currentUser, isAuthenticated, isAdmin } = useAuth();
 
   // State variables storing data
-  const [courseDetails, setCourseDetails] = useState({});
+  const [courses, setCourses] = useState({});
   const [lessonDetails, setLessonDetails] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [selectedLesson, setSelectedLesson] = useState();
+
+  const [userCourses, setUserCourses] = useState({});
 
   const navigate = useNavigate(); // Hook to navigate between different pages
 
   // Fetch course and lesson data whenever authentication status or user course changes
   useEffect(() => {
     const fetchData = async () => {
+  
       // If not authenticated, do not attempt to fetch data
-      if (!isAuthenticated) return;
-
+      if (!isAuthenticated) {
+        return;
+      }
+  
       try {
+        const usersCourses = await fetchUserCourseProgress(currentUser.uid, "WhWBHUFHy6M3eOHSxKfd");
+        console.log(userCourses);
+
         // Fetch course data
         const fetchedCourses = await fetchCourses();
-        setCourseDetails(fetchedCourses);
-
+        setCourses(fetchedCourses);
+  
         // Fetch lesson for each course that the user has done
         const lessonPromises = Object.keys(usersCourses).map(async (courseId) => {
           if (fetchedCourses[courseId]) {
@@ -50,12 +59,12 @@ const LoggedInHomePage = () => {
           }
           return null;
         });
-
+  
         // Combine the lessons data into a single object
         const lessonsData = (await Promise.all(lessonPromises)).reduce((acc, lessons) => {
           return lessons ? { ...acc, ...lessons } : acc;
         }, {});
-
+  
         setLessonDetails(lessonsData);
       } catch (err) {
         // If an error occurs, set error state
@@ -65,10 +74,12 @@ const LoggedInHomePage = () => {
         setLoading(false);
       }
     };
-
+  
     // Call the fetchData function
     fetchData();
-  }, [isAuthenticated, usersCourses]);
+  }, [isAuthenticated]);
+  
+  
 
   // Redirect to the homepage if not authenticated
   if (!isAuthenticated) return <p>Redirecting to homepage...</p>;
@@ -115,9 +126,9 @@ const LoggedInHomePage = () => {
 
         {/* Render the "Recent Levels" section */}
         <Section title="RECENT LEVELS" emptyMessage="You Have No Recent Levels" onEmptyClick={navigateTo('/course')}>
-          {Object.keys(usersCourses).map(courseId => {
-            const course = usersCourses[courseId];
-            const courseData = courseDetails[courseId] || {};
+          {Object.keys(userCourses).map(courseId => {
+            const course = userCourses[courseId];
+            const courseData = courses[courseId] || {};
             const latestLesson = lessonDetails[courseId]?.[course.currentLesson] || {};
             return renderCourseBox(courseId, courseData, latestLesson);
           })}
@@ -125,8 +136,8 @@ const LoggedInHomePage = () => {
 
         {/* Render the "Your Courses" section */}
         <Section title="YOUR COURSES" emptyMessage="You Have No Courses" onEmptyClick={navigateTo('/course')}>
-          {Object.keys(usersCourses).map(courseId => {
-            const courseData = courseDetails[courseId] || {};
+          {Object.keys(userCourses).map(courseId => {
+            const courseData = courses[courseId] || {};
             return (
               <div
                 className='recent-levels'

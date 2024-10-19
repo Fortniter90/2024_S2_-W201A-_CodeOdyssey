@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { auth } from '../config/firebase';
 import { updateUsername, updateUserProfilePicture } from '../utils/dataSaving';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import Cropper from 'cropperjs';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa6';
+import NavigationBar from '../components/NavigationBar';
 import DeleteUserComponent from '../components/DeleteUser';
 import Button from '../components/Button';
+import ProfilePicture from '../components/ProfilePicture';
+import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
 import './UserSettings.css';
-import NavigationBar from '../components/NavigationBar';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa6';
 
 const UserSettings = () => {
   const { currentUser, refreshToken } = useAuth();
@@ -17,6 +17,7 @@ const UserSettings = () => {
 
   // States to store images
   const [croppedImage, setCroppedImage] = useState(null);  // Cropped image
+  const [croppedImageBlob, setCroppedImageBlob] = useState(null); // Blob for the cropped image
 
   // States to control cropping
   const [cropper, setCropper] = useState(null);           // Cropper instance
@@ -41,15 +42,20 @@ const UserSettings = () => {
   // Trigger the file input dialog when the upload button is clicked
   const triggerFileInput = () => {
     if (fileInputRef.current) {
-      fileInputRef.current.click();
       setIsCropping(true);
+      fileInputRef.current.click();
     }
   };
 
   // Handle file input changes when the user selects a file
   const handleFileChange = (e) => {
     const file = e.target.files && e.target.files[0];
-    if (!file) return; // If no file is selected, do nothing
+    
+    // Check if the user canceled the file selection
+    if (!file) {
+      setIsCropping(false); // Set cropping mode to false if no file is selected
+      return; // Exit the function if no file was selected
+    }
 
     // Reset the file input to prevent future triggers
     if (fileInputRef.current) {
@@ -63,26 +69,26 @@ const UserSettings = () => {
       cropper.destroy();
     }
 
-    // Get the image element and set up the cropper
-    const imageElement = imagePreviewRef.current;
-    if (imageElement) { // Check if the ref is valid
-      imageElement.src = imgUrl; // Set the uploaded image as the source
+    initializeCropper(imgUrl);
+  };
 
-      imageElement.onload = () => {
-        // Initialize Cropper.js with options
+
+
+  // Function to reinitialize the cropper when needed
+  const initializeCropper = (imgUrl) => {
+    const imageElement = imagePreviewRef.current;
+    if (imageElement) {
+        imageElement.src = imgUrl; // Set the uploaded image as the source
         const newCropper = new Cropper(imageElement, {
-          aspectRatio: 1, // Square crop
-          viewMode: 1,
-          responsive: true,
-          autoCropArea: 1,
-          ready() {
-            setIsCropping(true); // Enter cropping mode
-          },
+            aspectRatio: 1,
+            viewMode: 1,
+            responsive: true,
+            autoCropArea: 1,
+            ready() {
+                setIsCropping(true);
+            },
         });
-        setCropper(newCropper); // Save the cropper instance
-      };
-    } else {
-      console.error("Image element is not available");
+        setCropper(newCropper); // Save the new cropper instance
     }
   };
 
@@ -98,13 +104,14 @@ const UserSettings = () => {
       if (canvas) {
         canvas.toBlob((blob) => {
           if (blob) {
-            // Store the actual blob instead of the URL
-            setCroppedImage(blob);  // Set the cropped image blob instead of the URL
-
-            setIsCropping(false);
+            const croppedImageUrl = URL.createObjectURL(blob);
+            setCroppedImage(croppedImageUrl); // Set the cropped image for preview
+            setCroppedImageBlob(blob); // Save the blob for later use
+            setIsCropping(false); // Exit cropping mode
+            cropper.destroy(); // Destroy the cropper instance
 
             if (fileInputRef.current) {
-              fileInputRef.current.value = '';
+              fileInputRef.current.value = ''; // Clear the file input
             }
           } else {
             console.error("Blob creation failed");
@@ -116,34 +123,26 @@ const UserSettings = () => {
     } else {
       console.error("Cropper is not initialized");
     }
-  }
+  };
+
+  // Function to exit cropping mode
+  const exitCropping = () => {
+    if (cropper) {
+      cropper.destroy(); // Destroy the cropper to remove its elements
+      setCropper(null); // Clear the cropper instance
+    }
+    setIsCropping(false); // Exit cropping mode
+  };
 
 
   const updateProfile = async () => {
-
     let update = false;
-    if (cropper) {
-      const canvas = cropper.getCroppedCanvas({
-        width: 200,
-        height: 200,
-      });
 
-      if (canvas) {
-        // Instead of getting the image URL, we use the blob
-        canvas.toBlob(async (blob) => {
-          if (blob) {
-            // Update the user profile picture using the actual image blob
-            await updateUserProfilePicture(currentUser.uid, blob);
-            update = true;
-          } else {
-            console.error("Blob creation failed");
-          }
-        }, 'image/jpeg');
-      } else {
-        console.error("Cropped canvas is null");
-      }
-    } else {
-      console.error("Cropper is not initialized");
+    // Update the profile picture if a new image blob exists
+    if (croppedImageBlob) {
+      await updateUserProfilePicture(currentUser.uid, croppedImageBlob);
+      update = true; // Mark as updated
+      setCroppedImageBlob(null); // Clear the blob after updating
     }
 
     // Check if the username has changed and update it
@@ -159,20 +158,21 @@ const UserSettings = () => {
     } else {
       alert('Error updating profile');
     }
-
   };
-
-  const exitSettings = () => {
-    navigate('/profile');
-  }
   
   const toggleAdvancedSettings = () => {
     setAdvancedSettings(!advancedSettings);
   };
 
+  const exitSettings = () => {
+    navigate('/profile');
+  }
+
   if (currentUser === null) {
     return <div>Loading...</div>;
   }
+
+
 
   return (
     <div>
@@ -186,25 +186,23 @@ const UserSettings = () => {
 
         <div className='usersettings-container'>
           <div className='usersettings-content roboto-regular'>
-            <div className='usersettings-picture'>
 
+            <div className='usersettings-picture'>
               {/* Always show the current profile picture */}
               {isCropping ? (
-                <img
-                  ref={imagePreviewRef}
-                  src={croppedImage}
-                  alt='Profile Picture'
-                  className='cropped-image'
-                />
-              ) : (
-                <div>
+                <>
                   <img
+                    ref={imagePreviewRef}
                     src={croppedImage}
-                    alt='Profile Picture'
-                    className='cropped-image'
+                    alt='Image Cropper'
+                    className='image-cropper'
                   />
-                </div>
+                </>
+              ) : (
+                <ProfilePicture picture={croppedImage} />
               )}
+              
+              
 
               <input
                 type="file"
@@ -213,13 +211,18 @@ const UserSettings = () => {
                 onChange={handleFileChange}
               />
 
-              <div className='picture-upload'>
-                <Button
-                  text={isCropping ? 'SAVE IMAGE' : 'UPLOAD YOUR AVATAR'}
-                  action={isCropping ? saveCroppedImage : triggerFileInput}
-                />
-                <p>Images should be a square.</p>
-              </div>
+              {/* Buttons for uploading and saving the image */}
+              {isCropping ? (
+                <div className='usersettings-saveimage'>
+                  <Button text={'SAVE IMAGE'} action={saveCroppedImage} />
+                  <Button text={'CANCEL'} outline={true} action={exitCropping} color={'var(--gray-medium)'} backgroundColor={'var(--white)'} />
+                </div>
+              ) : (
+                <div className='usersettings-uploadimage'>
+                  <Button text={'UPLOAD IMAGE'} action={triggerFileInput} />
+                  <p>Images should be a square.</p>
+                </div>
+              )}
             </div>
 
             <div className='usersettings-username roboto-medium'>

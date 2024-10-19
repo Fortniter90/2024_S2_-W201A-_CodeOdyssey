@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { fetchLessons, fetchUserCourseProgress } from '../utils/dataFetching';
 import './LearningPath.css';
 import { useNavigate } from 'react-router-dom';
-import { updateUserLessons } from '../utils/dataSaving';
+import { updateUserCourseData, updateUserLessons } from '../utils/dataSaving';
 import Button from './Button';
 
 // Main LearningPath component
@@ -26,6 +26,8 @@ const LearningPath = ({ courseId, userId }) => {
 
       // Fetch user progress for the specific course
       const userProgress = await fetchUserCourseProgress(userId, courseId);
+      console.log('progress: ',userProgress);
+
       const progressData = userProgress;
 
       // Ensure completedLessons is an array
@@ -110,7 +112,7 @@ const LessonPreview = ({ levels, courseId, userId, lesson }) => {
   const goToTests = async () => {
     try {
       // Update the user's current lesson and completed lessons in Firestore
-      //await updateUserLessons(userId, levels, lesson.id, courseId);
+      await updateUserLessons(userId, levels, lesson.id, courseId);
 
       // Navigate to the test page
       navigate(`/course/${courseId}/lesson/${lesson.id}/test`);
@@ -123,7 +125,8 @@ const LessonPreview = ({ levels, courseId, userId, lesson }) => {
   const goToLessons = async () => {
     try {
       // Update the user's current lesson and completed lessons in Firestore
-      //await updateUserLessons(userId, levels, lesson.id, courseId);
+      await updateUserLessons(userId, levels, lesson.id, courseId);
+      await updateUserCourseData(userId, courseId);
 
       // Navigate to the lesson page
       navigate(`/course/${courseId}/lesson/${lesson.id}`);

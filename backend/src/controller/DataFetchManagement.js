@@ -74,8 +74,6 @@ export const fetchUserCourseProgress = async (userId, courseId) => {
     if (userSnapshot.exists) {
       const userCoursesData = userSnapshot.data().courses;
       const courseData = userCoursesData[courseId];
-
-      console.log(courseData);
       if (courseData) {
         return courseData;
       } else {

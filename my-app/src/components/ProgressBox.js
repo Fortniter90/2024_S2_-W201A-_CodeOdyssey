@@ -1,45 +1,35 @@
-import React, { useState, useEffect } from "react";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 import "./ProgressBox.css";
-import { auth, db } from "../config/firebase";
+import { fetchUserCourseProgress } from "../utils/dataFetching";
 
 const ProgressBox = () => {
-    const [courses, setCourses] = useState([]);
+    // Destructure values from the authentiction context
+    const { isAuthenticated } = useAuth();
 
+    const [userCourses, setUserCourses] = useState([]);
+
+    // Fetch course and lesson data whenever authentication status or user course changes
     useEffect(() => {
-        const fetchCourses = async () => {
-            const coursesSnapshot = await getDocs(collection(db, "courses"));
-            const fetchedCourses = [];
+        const fetchData = async () => {
+        // If not authenticated, do not attempt to fetch data
+        if (!isAuthenticated) return;
 
-            for (const courseDoc of coursesSnapshot.docs) {
-                const courseData = courseDoc.data();
-                const courseId = courseDoc.id;
-                const auth = getAuth();
-                const user = auth.currentUser;
-
-                let completedLessons = 0;
-                if (user) {
-                    const userDoc = await getDoc(doc(db, "users", user.uid));
-                    const userData = userDoc.data();
-                    const userCourses = userData?.courses || {};
-                    completedLessons = userCourses[courseId]?.completedLessons?.length || 0;
-                }
-
-                fetchedCourses.push({
-                    id: courseId,
-                    title: courseData.title,
-                    testCount: courseData.testCount,
-                    color: courseData.color,
-                    completedLessons,
-                });
-            }
-
-            setCourses(fetchedCourses);
+        try {
+            // Fetch course data
+            const fetchedCourses = await fetchUserCourseProgress();
+            setUserCourses(fetchedCourses);
+        } catch (err) {
+            // If an error occurs, set error state
+            console.log(err);
+        }
         };
 
-        fetchCourses();
-    }, []);
+        // Call the fetchData function
+        fetchData();
+
+        console.log('User Courses: ', userCourses);
+    }, [isAuthenticated]);
 
     return (
         <div className="progress-box">
@@ -47,7 +37,7 @@ const ProgressBox = () => {
                 <span className="tab-text">PROGRESS</span>
             </div>
             <div className="progress-content">
-                {courses.map((course) => (
+                {Object.keys(userCourses).map((course) => (
                     <div className="progress-item" key={course.id}>
                         <div
                             className="progress-item-box"

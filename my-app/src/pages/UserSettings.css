@@ -1,21 +1,23 @@
+/* Styling for user settings */
 .usersettings {
     width: 60%;
+    max-width: 1000px;
     margin: 25px auto;
     display: flex;
     flex-direction: column;
 }
 
 .usersettings-header {
-    margin-bottom: 35px;
+    margin: 5vh 0;
 }
 
 .usersettings-header h1 {
     font-size: 3.5rem;
-    margin-bottom: 0;
+    margin: 0;
 }
 
 .usersettings-header h3 {
-    margin-top: 0;
+    margin: 0;
     color: var(--logo-purple);
 }
 
@@ -23,6 +25,7 @@
     align-items: center;
     margin: 10px auto;
     width: 60%;
+    min-width: 600px;
 }
 
 .usersettings-content {
@@ -38,22 +41,39 @@
     align-items: center; 
 }
 
-.usersettings-picture img {
-    width: 200px; 
-    height: 200px;
-    object-fit: cover;
-    object-position: center;
-}
-
-.cropped-image {
-    width: 200px; 
-    height: 200px; 
+.image-cropper {
+    width: 20vh; 
+    height: 20vh; 
     object-fit: cover;
     object-position: center;
     border-radius: 50%;
     border: 3px solid var(--background-dark);
+}
+
+.usersettings-saveimage,
+.usersettings-uploadimage {
+    display: flex;
+}
+
+.usersettings-saveimage button,
+.usersettings-uploadimage button {
+    margin: auto 5px;
+}
+
+.usersettings-saveimage {
+    margin-top: 14px;
+}
+
+.usersettings-uploadimage {
+    align-items: center;
     margin-top: 10px;
 }
+
+.usersettings-uploadimage p {
+    margin: 0;
+    margin-left: 5px;
+}
+
 
 /* Adjust this if you want to show the cropper interface */
 .cropper-container {
