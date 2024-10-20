@@ -196,7 +196,7 @@ export const setAdminStatus = async (userId, isAdmin) => {
 
 export const submitFeedback = async (userId, userEmail, feedback) => {
   try {
-    await axios.post(`${backendUrl} / save / feedback / ${userId}`, {
+    await axios.post(`${backendUrl}/save/feedback/ ${userId}`, {
       userEmail: userEmail,
       feedback: feedback
     }, {

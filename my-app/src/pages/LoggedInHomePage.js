@@ -53,7 +53,8 @@ const LoggedInHomePage = () => {
   
         // Fetch lesson for each course that the user has done
         const lessonPromises = Object.keys(usersCourses).map(async (courseId) => {
-          if (fetchedCourses[courseId]) {
+          const courseIndex = fetchedCourses.findIndex(course => course.id === courseId);
+          if (fetchedCourses[courseIndex]) {
             const lessons = await fetchLessons(courseId);
             return { [courseId]: lessons };
           }
@@ -126,18 +127,19 @@ const LoggedInHomePage = () => {
 
         {/* Render the "Recent Levels" section */}
         <Section title="RECENT LEVELS" emptyMessage="You Have No Recent Levels" onEmptyClick={navigateTo('/course')}>
-          {Object.keys(userCourses).map(courseId => {
-            const course = userCourses[courseId];
-            const courseData = courses[courseId] || {};
-            const latestLesson = lessonDetails[courseId]?.[course.currentLesson] || {};
+          {Object.keys(usersCourses).map(courseId => {
+            const course = usersCourses[courseId];
+            const courseData = courseDetails.find(course => course.id === courseId) || {};
+            const latestLesson = lessonDetails[courseId]?.find(lesson => lesson.id === course.currentLesson) || {};
             return renderCourseBox(courseId, courseData, latestLesson);
           })}
         </Section>
 
         {/* Render the "Your Courses" section */}
         <Section title="YOUR COURSES" emptyMessage="You Have No Courses" onEmptyClick={navigateTo('/course')}>
-          {Object.keys(userCourses).map(courseId => {
-            const courseData = courses[courseId] || {};
+          {Object.keys(usersCourses).map(courseId => {
+            const courseIndex = courseDetails.findIndex(course => course.id === courseId);
+            const courseData = courseIndex !== -1 ? courseDetails[courseIndex] : {};
             return (
               <div
                 className='recent-levels'

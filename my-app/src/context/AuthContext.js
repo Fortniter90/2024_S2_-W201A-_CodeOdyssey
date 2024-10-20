@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }) => {
       console.log("Fetching user data for userId:", userId); // Log to check
 
       const response = await axios.get(`http://localhost:8080/auth/userdata/${userId}`);
-      const userData = response.data;
+      const userData = response.data.userData;
 
       console.log("Comparing courses:", JSON.stringify(userData.courses), JSON.stringify(usersCourses));
       // Only update if the courses have changed
