@@ -1,0 +1,7 @@
+.pasttests {
+    width: 60%;
+    max-width: 1000px;
+    margin: 25px auto;
+    display: flex;
+    flex-direction: column;
+}

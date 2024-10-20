@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { fetchCourses, fetchLessons, fetchUserCourseProgress } from "../utils/dataFetching.js";
+import { fetchCourses, fetchLessons } from "../utils/dataFetching.js";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
 import Button from "../components/Button.js";
@@ -20,17 +20,13 @@ const gradients = {
 // Main component for the logged in home page
 const LoggedInHomePage = () => {
   // Destructure values from the authentiction context
-  const { currentUser, isAuthenticated, isAdmin } = useAuth();
+  const { currentUser, isAuthenticated, usersCourses, isAdmin } = useAuth();
 
   // State variables storing data
-  const [courses, setCourses] = useState({});
-  const [lessonDetails, setLessonDetails] = useState({});
+  const [courseDetails, setCourseDetails] = useState([]);
+  const [lessonDetails, setLessonDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const [selectedLesson, setSelectedLesson] = useState();
-
-  const [userCourses, setUserCourses] = useState({});
 
   const navigate = useNavigate(); // Hook to navigate between different pages
 
@@ -44,12 +40,9 @@ const LoggedInHomePage = () => {
       }
   
       try {
-        const usersCourses = await fetchUserCourseProgress(currentUser.uid, "WhWBHUFHy6M3eOHSxKfd");
-        console.log(userCourses);
-
         // Fetch course data
         const fetchedCourses = await fetchCourses();
-        setCourses(fetchedCourses);
+        setCourseDetails(fetchedCourses);
   
         // Fetch lesson for each course that the user has done
         const lessonPromises = Object.keys(usersCourses).map(async (courseId) => {
@@ -93,20 +86,8 @@ const LoggedInHomePage = () => {
 
   // Navigation helper functions
   const navigateTo = (path) => () => navigate(path);
-  const goToCourse = (courseId) => () => navigate(`/course/${courseId}`);
-  const goToLesson = (courseId, lessonId) => () => navigate(`/course/${courseId}/lesson/${lessonId}`);
-
-  // Render a course box with its latest lesson
-  const renderCourseBox = (courseId, courseData, latestLesson) => (
-    <div
-      className='recent-levels'
-      key={courseId}
-      style={{ backgroundImage: gradients[courseData.backgroundColor] || gradients.blue }}
-      onClick={goToLesson(courseId, latestLesson?.id)}>
-      <p className='roboto-medium'>{courseData.title || 'Unknown Course'}</p>
-      <h3 className='fira-code'>{latestLesson?.title || 'Unknown Lesson'}</h3>
-    </div>
-  );
+  const goToCourse = (courseId) => () => navigate(`./course/${courseId}`);
+  const goToLesson = (courseId, lessonId) => () => navigate(`./course/${courseId}/lesson/${lessonId}`);
 
   return (
     <div>
@@ -126,26 +107,37 @@ const LoggedInHomePage = () => {
 
 
         {/* Render the "Recent Levels" section */}
-        <Section title="RECENT LEVELS" emptyMessage="You Have No Recent Levels" onEmptyClick={navigateTo('/course')}>
+        <Section title="RECENT LEVELS" emptyMessage="You Have No Recent Levels" onEmptyClick={navigateTo('./course')}>
           {Object.keys(usersCourses).map(courseId => {
             const course = usersCourses[courseId];
             const courseData = courseDetails.find(course => course.id === courseId) || {};
             const latestLesson = lessonDetails[courseId]?.find(lesson => lesson.id === course.currentLesson) || {};
-            return renderCourseBox(courseId, courseData, latestLesson);
-          })}
-        </Section>
-
-        {/* Render the "Your Courses" section */}
-        <Section title="YOUR COURSES" emptyMessage="You Have No Courses" onEmptyClick={navigateTo('/course')}>
-          {Object.keys(usersCourses).map(courseId => {
-            const courseIndex = courseDetails.findIndex(course => course.id === courseId);
-            const courseData = courseIndex !== -1 ? courseDetails[courseIndex] : {};
             return (
               <div
                 className='recent-levels'
                 key={courseId}
-                style={{ backgroundImage: gradients[courseData.backgroundColor] || gradients.blue }}
-                onClick={goToCourse(courseId)}>
+                style={{ backgroundImage: `linear-gradient(var(--${courseData.color}-light), var(--${courseData.color}-medium), var(--${courseData.color}-dark))` }}
+                onClick={goToLesson(courseId, latestLesson.id)}
+              >
+                <p className='roboto-medium'>{courseData.title || 'Unknown Course'}</p>
+                <h3 className='fira-code'>{latestLesson.title || 'Unknown Lesson'}</h3>
+              </div>
+            );
+          })}
+        </Section>
+
+        {/* Render the "Your Courses" section */}
+        <Section title="YOUR COURSES" emptyMessage="You Have No Courses" onEmptyClick={navigateTo('./course')}>
+          {Object.keys(usersCourses).map(courseId => {
+            const courseData = courseDetails.find(course => course.id === courseId) || {};
+            
+            return (
+              <div
+                className='recent-levels'
+                key={courseId}
+                style={{ backgroundImage: `linear-gradient(var(--${courseData.color}-light), var(--${courseData.color}-medium), var(--${courseData.color}-dark))` }}
+                onClick={goToCourse(courseId)}
+              >
                 <h3 className='fira-code'>{courseData.title || 'Unknown Course'}</h3>
               </div>
             );
@@ -163,9 +155,11 @@ const LoggedInHomePage = () => {
 const Section = ({ title, children, emptyMessage, onEmptyClick }) => (
   <div className='recent-levels-container'>
     <h2 className='recent-levels-title roboto-bold'>{title}</h2>
+
     {children.length > 0 ? children : (
       <div className='recent-levels selected-courses-empty' onClick={onEmptyClick}>
         <h3 className='fira-code'>{emptyMessage}</h3>
+        
         <div className='empty-align'>
           <p className='roboto-medium'>Start a new journey today!</p>
           <FaPlus className='faplus' />

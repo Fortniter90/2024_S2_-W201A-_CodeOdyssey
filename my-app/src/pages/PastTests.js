@@ -3,6 +3,8 @@ import './PastTests.css';
 import { useAuth } from '../context/AuthContext';
 import { fetchUsersAnswers } from '../utils/dataFetching';
 import NavigationBar from '../components/NavigationBar';
+import Feedback from '../components/Feedback';
+import Footer from '../components/Footer';
 
 function PastTest() {
   const { currentuser, isAuthenticated, usersId, usersName, usersCourses } = useAuth();    // Extracting user info
@@ -25,7 +27,9 @@ function PastTest() {
       }
     };
 
+
     fetchAnswerData();
+    console.log(answersData);
   }, [usersId]); // Include usersId in the dependency array
 
 
@@ -33,7 +37,7 @@ function PastTest() {
     return <div>{error}</div>;
   }
 
-  if (answersData.length === 0 || Object.keys(testsData).length === 0 || Object.keys(lessonsData).length === 0) {
+  if (false) {
     return <div>Loading...</div>;
   }
 
@@ -41,24 +45,17 @@ function PastTest() {
     <div>
       <NavigationBar />
 
-      <h1>User Answer Details</h1>
-      {answersData.map((answerData, index) => {
-        const testData = testsData[answerData.testId];
-        const lessonData = lessonsData[answerData.lessonId];
+      <div className='pasttests'>
+        <h1 className='fira-code'>Past Tests</h1>
 
-        return (
-          <div key={answerData.testId}>
-            <h2>{lessonData.title}</h2>
-            {testData && (
-              <div>
-                <p><strong>Test Question:</strong> {testData.question}</p>
-                <p><strong>Correct Answer:</strong> {testData.answer}</p>
-              </div>
-            )}
-            <p><strong>User Answer:</strong> {answerData.userAnswer}</p>
-          </div>
-        );
-      })}
+        <div>
+
+
+        </div>
+      </div>
+
+      <Feedback />
+      <Footer />
     </div>
   );
 }

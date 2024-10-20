@@ -9,6 +9,7 @@
 .homepage-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .homepage-header h1 {
@@ -46,7 +47,7 @@
     background-size: cover;
     border-radius: 20px;
     padding: 1em;
-    width: 90%;
+    width: 100%;
     max-width: 400px;
     color: var(--white);
     margin: 0.5em;
@@ -71,8 +72,8 @@
 
 /* Empty message styling for selected courses */
 .selected-courses-empty {
-    background-color: gainsboro;
-    color: #5F5F5F;
+    background-color: var(--gray-light);
+    color: var(--gray-dark);
     width: 90%;
     max-width: 400px;
     margin: 0.5em;
@@ -86,7 +87,7 @@
 }
 
 .empty-align p {
-    color: #5F5F5F;
+    color: var(--gray-dark);
 }
 
 /* Styling for the plus icon */
