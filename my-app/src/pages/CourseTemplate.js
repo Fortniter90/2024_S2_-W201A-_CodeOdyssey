@@ -60,7 +60,7 @@ const CourseTemplate = () => {
       <NavigationBar />
 
       <div className='course-content'>
-        <CourseHeadings name={course.title} description={course.description} backgroundColor={course.color} />
+        <CourseHeadings title={course.title} information={course.description} color={course.color} />
         <LearningPath courseId={course.id} userId={currentUser.uid} />
       </div>
     </div>

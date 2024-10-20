@@ -112,7 +112,8 @@ const LessonPreview = ({ levels, courseId, userId, lesson }) => {
   const goToTests = async () => {
     try {
       // Update the user's current lesson and completed lessons in Firestore
-      await updateUserLessons(userId, levels, lesson.id, courseId);
+      await updateUserLessons(userId, levels, lesson, courseId);
+      await updateUserCourseData(userId, courseId);
 
       // Navigate to the test page
       navigate(`/course/${courseId}/lesson/${lesson.id}/test`);
@@ -125,7 +126,7 @@ const LessonPreview = ({ levels, courseId, userId, lesson }) => {
   const goToLessons = async () => {
     try {
       // Update the user's current lesson and completed lessons in Firestore
-      await updateUserLessons(userId, levels, lesson.id, courseId);
+      await updateUserLessons(userId, levels, lesson, courseId);
       await updateUserCourseData(userId, courseId);
 
       // Navigate to the lesson page
