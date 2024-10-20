@@ -1,11 +1,7 @@
-.allcourses {
-
-}
-
 .allcourses-container {
     height: auto;
-    width: calc(100% - 150px);
-    margin: 20px 75px;
+    width: 80%;
+    margin: 25px auto;
 }
 
 .allcourses-container h1 {
@@ -17,32 +13,48 @@
 .allcourses-content {
     background-color: var(--white);
     border-radius: 25px;
+    padding: 1em;
     width: 100%;
     height: max-content;
     box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
+    gap: 10px; /* Add some spacing between the course blocks */
 }
 
 .course-block {
-    padding: 10px;
+    flex: 1 1 600px; /* Allow the item to grow, shrink, and set a minimum width of 300px */
     width: 100%;
     color: var(--white);
+    box-sizing: border-box;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--white);
+    border-radius: 20px;
+    position: relative;
 }
 
-.recent-levels .header {
+.course-block-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 15px;
 }
 
-.recent-levels .header h2 {
-    font-size: clamp(20px, 2vw, 40px);
+.course-block-header h2 {
+    font-size: 2.3rem;
+    line-height: 1.2;
     margin: 0;
 }
 
-.recent-levels .header p {
+.course-block-header p {
     align-self: flex-start;
     color: var(--white);
+    margin: 0 0 0.5em 0;
+    font-size: 1em;
+}
+
+.course-block button {
+    margin-left: auto;
 }

@@ -41,37 +41,26 @@ const AllCourses = () => {
 
 
   return (
-    <div className='allcourses'>
+    <div>
       <NavigationBar />
 
       <div className='allcourses-container'>
         <h1 className='fira-code'>Discover Languages</h1>
 
-
         <div className='allcourses-content'>
           {courses.map(course => (
-            <div className='course-block' key={course.id} >
+            <div className='course-block' key={course.id} style={{ backgroundImage: `linear-gradient(var(--${course.color}-light), var(--${course.color}-medium), var(--${course.color}-dark))` }}>
 
+                <div className='course-block-header'>
+                  <h2 className='fira-code'>{course.title}</h2>
+                  <p className='roboto-bold'>{course.lessonCount} {course.lessonCount === 1 ? 'Lesson' : 'Lessons'} </p>
+                </div>
 
-
-
-              <div
-                className='recent-levels'
-                style={{ backgroundImage: `linear-gradient(var(--${course.color}-light), var(--${course.color}-medium), var(--${course.color}-dark))` }}
-              >
-
-                  <div className='header'>
-                    <h2 className='fira-code'>{course.title}</h2>
-                    <p className='roboto-bold'>{course.lessonCount} {course.lessonCount === 1 ? 'Lesson' : 'Lessons'} </p>
-                  </div>
-
-
-                  <Button text={"VIEW COURSE"} action={() => goToCourse(course.id)}
-                    color={`var(--${course.color}-light)`}
-                    backgroundColor={`var(--${course.color}-dark)`}
-                    hoverColor={`var(--${course.color}-medium)`}
-                  />
-              </div>
+                <Button text={"VIEW COURSE"} action={() => goToCourse(course.id)}
+                  color={`var(--${course.color}-light)`}
+                  backgroundColor={`var(--${course.color}-dark)`}
+                  hoverColor={`var(--${course.color}-medium)`}
+                />
             </div>
           ))}
         </div>
