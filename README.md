@@ -4,7 +4,7 @@
 ## Table of Contents
 - [Features](#features)
 - [Prerequisites](#prerequisites)
- - [Firebase Console Setup](#firebase-console-setup)
+  - [Firebase Console Setup](#firebase-console-setup)
 - [Installation](#installation)
   - [Clone The Repository](#1-clone-the-repository)
   - [Configure Front-end](#2-configure-front-end)
