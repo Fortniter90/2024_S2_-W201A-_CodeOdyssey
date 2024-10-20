@@ -1,4 +1,4 @@
-# Code Odyssey
+![Code Odyssey Banner](https://github.com/Fortniter90/2024_S2_-W201A-_CodeOdyssey/blob/main/CodeOdyyseyBanner.png)
 
 ---
 ## Table of Contents

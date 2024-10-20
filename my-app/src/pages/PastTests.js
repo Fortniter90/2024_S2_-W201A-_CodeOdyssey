@@ -22,24 +22,26 @@ function PastTest() {
   const [testsData, setTestsData] = useState([]);
   const [lessonsData, setLessonsData] = useState([]);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchAnswerData = async () => {
-      if (!isAuthenticated) return;
-
-      try {
-        const { answers, allTests, allLessons } = await fetchUsersAnswers(currentUser.uid);
-        setAnswersData(answers);
-        setTestsData(allTests);
-        setLessonsData(allLessons);
-        console.log('answers:', allLessons);
-      } catch (error) {
-        setError(error.message); // Set error message if fetch fails
+      if (currentUser && currentUser.uid) { // Wait for currentUser to be available
+        try {
+          const usersAnswers = await fetchUsersAnswers(currentUser.uid);
+          console.log(usersAnswers);
+          setAnswersData(usersAnswers.answers);
+          setTestsData(usersAnswers.allTests);
+          setLessonsData(usersAnswers.allLessons);
+        } catch (err) {
+          setError(err.message);  // Set the error message from the caught error
+        } finally {
+          setIsLoading(false);
+        }
       }
     };
-
     fetchAnswerData();
-  }, [currentUser, isAuthenticated]); // Include usersId in the dependency array
+  }, [currentUser]); // Include usersId in the dependency array
 
   // Function to render the appropriate management component based on the active tab
   const managementTab = () => {
@@ -83,9 +85,15 @@ function PastTest() {
     // If already on courses, do nothing or handle accordingly
   };
 
+  // Handle error case
   if (error) {
     return <div>{error}</div>;
   }
+  // Handle case where answersData is empty or user is not authenticated
+  if (!answersData.length) {
+    return <div>No answers available</div>;
+  }
+
 
   return (
     <div>
@@ -106,7 +114,6 @@ function PastTest() {
             {managementTab()}
           </div>
         </div>
-      </div>
 
       <Feedback />
       <Footer />
@@ -115,3 +122,4 @@ function PastTest() {
 }
 
 export default PastTest;
+
