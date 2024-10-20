@@ -1,0 +1,33 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-top: 13px;
+}
+
+.pagination button {
+    background-color: var(--logo-purple); /* Primary button color */
+    color: white; /* Button text color */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners for buttons */
+    padding: 8px 12px; /* Padding for buttons */
+    margin: 0 5px; /* Space between buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth background transition */
+    font-size: 1em; /* Consistent font size */
+}
+
+.pagination button:hover:not(:disabled) {
+    background-color: darken(var(--logo-purple), 10%); /* Darken on hover */
+}
+
+.pagination button:disabled {
+    background-color: #ccc; /* Disabled button color */
+    cursor: not-allowed; /* Not-allowed cursor for disabled */
+}
+
+.pagination .active {
+    background-color: var(--dark-blue); /* Active page color */
+    color: white; /* Active page text color */
+    font-weight: bold; /* Bold text for active page */
+}

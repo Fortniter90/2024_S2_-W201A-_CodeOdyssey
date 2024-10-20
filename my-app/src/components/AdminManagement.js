@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAdminUsers, fetchUsers } from '../utils/dataFetching';
 import { setAdminStatus } from '../utils/dataSaving';
-import { FaMagnifyingGlass, FaX, FaEllipsisVertical, FaEllipsis } from 'react-icons/fa6';
+import { FaMagnifyingGlass, FaX, FaEllipsis } from 'react-icons/fa6';
 import Button from './Button';
 import './DatabaseManagement.css';
 
@@ -179,7 +179,7 @@ const AdminManagement = () => {
             {filteredAdminUsers.length > 0 ? (
               filteredAdminUsers.map((user) => (
                 <tr key={user.id}>
-                  <td>Profile Picture</td>
+                  <td>{user.picture}</td>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
 

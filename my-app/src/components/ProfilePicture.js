@@ -6,6 +6,7 @@ import "./ProfilePicture.css";
 const ProfilePicture = ({ picture }) => {
 
   const { currentUser } = useAuth();
+  
   if (!picture) picture = currentUser.picture;
 
   return (

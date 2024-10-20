@@ -4,18 +4,24 @@ import './DeveloperDashboard.css';
 import LessonManagement from '../components/LessonManagement';
 import TestManagement from '../components/TestManagement';
 import CodeOdysseyLogo from '../components/assets/CodeOdysseyLogo';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaBookBookmark, FaFilePen, FaFolderClosed, FaHouse, FaUsers, FaTurnUp, FaComment } from 'react-icons/fa6';
 import AdminManagement from '../components/AdminManagement';
 import FeedbackManagement from '../components/FeedbackManagement';
+import { useAuth } from '../context/AuthContext';
 
 
 
 // DeveloperDashboard to allow developers to easily manage course, lesson, and test information
 const DeveloperDashboard = () => {
+
+    const { currentUser, isAdmin } = useAuth();
+
     const [activeTab, setActiveTab] = useState('dashboard'); // State to track the currently active tab
     const [selectedCourse, setSelectedCourse] = useState(null); // Store the selected course
     const [selectedLesson, setSelectedLesson] = useState(null); // Store the selected course
+
+    const navigate = useNavigate();
 
     // Handle course selection
     const handleCourseSelect = (course) => {
@@ -68,6 +74,9 @@ const DeveloperDashboard = () => {
         }
     };
 
+
+    if (!isAdmin) navigate('/');
+
     return (
         <div className='developer-dashboard'>
             <div className='page-content'>
@@ -117,7 +126,7 @@ const DeveloperDashboard = () => {
                 <div className='developer-management'>
                     <div className='developer-navbar roboto-medium'>
                         <Link to={'/'} className='home'><FaHouse /> Return to Home Page</Link>
-                        <p>Account Name</p>
+                        <p>currentUser.email</p>
                     </div>
                     
                     {managementTab()}

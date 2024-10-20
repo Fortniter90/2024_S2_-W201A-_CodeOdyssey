@@ -77,7 +77,7 @@
 /* Management area */
 .developer-management {
     background-color: var(--white);
-    padding: 40px;
+    padding: 2%;
     border-radius: 25px; 
     width: 90%;
     height: calc(100vh - 20px);
