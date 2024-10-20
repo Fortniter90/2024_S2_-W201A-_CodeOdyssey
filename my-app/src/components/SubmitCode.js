@@ -14,15 +14,17 @@ function CompilerComponent({ code, answer, language, showAnswer, navigationButto
 
   useEffect(() => {
     socket.on("codeResult", (data) => {
-      setShowResults(true);
-      if (data.error) {
-        setError(data.error);
-        setOutput('');
-        setIsCorrect(false);
-      } else {
-        setOutput(data.output);
-        setError('');
-        setIsCorrect(data.output.trim() === answer.trim());
+      if (data.output !== null) {
+        setShowResults(true);
+        if (data.error) {
+          setError(data.error);
+          setOutput('');
+          setIsCorrect(false);
+        } else {
+          setOutput(data.output);
+          setError('');
+          setIsCorrect(data.output.trim() === answer.trim());
+        }
       }
     });
 

@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { auth } from '../config/firebase';
-import { setAdminStatus } from '../utils/dataSaving';
 
 // Create the AuthContext
 const AuthContext = createContext();
@@ -106,7 +105,7 @@ export const AuthProvider = ({ children }) => {
       } else if (userData.isAdmin === false || userData.isAdmin === null) {
         setIsAdmin(false);
       } else {
-        setAdminStatus(false);
+        setIsAdmin(false);
       }
     } catch (error) {
       console.error('Error loading user data', error);
