@@ -1,3 +1,35 @@
 .profile {
-    margin: 1em 5%;
+    display: flex;
+    gap: 3.5em;
+    margin: 25px auto;
+    width: 80%;
+    max-width: 1250px;
+}
+
+.profile-left {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+}
+
+.profile-left h1 {
+    margin: 10px 0 15px 0;
+}
+
+.profile-left .profile-picture {
+    align-self: center;
+}
+
+.profile-left button {
+    margin-bottom: 5px;
+}
+
+.profile-right {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.profile-right button {
+    margin-left: auto;
 }

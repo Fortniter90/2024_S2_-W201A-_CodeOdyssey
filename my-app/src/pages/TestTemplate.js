@@ -1,15 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FaArrowLeftLong } from 'react-icons/fa6';
 import { fetchCourses, fetchLessons, fetchTests } from '../utils/dataFetching';
+import { useAuth } from '../context/AuthContext';
+import { saveUserAnswers } from '../utils/dataSaving';
+import Button from '../components/Button';
 import HintSystem from '../components/HintSystem';
 import CodeEditor from '../components/CodeEditor';
 import CompilerComponent from '../components/SubmitCode';
-import { useAuth } from '../context/AuthContext';
-import { saveUserAnswers } from '../utils/dataSaving';
-import './TestTemplate.css';
-import Button from '../components/Button';
 import NavigationBar from '../components/NavigationBar';
+import LessonTestLayout from '../components/LessonTestLayout';
+import Footer from '../components/Footer';
+import Feedback from '../components/Feedback';
+import './TestTemplate.css';
 
 
 const TestTemplate = () => {
@@ -91,8 +93,7 @@ const TestTemplate = () => {
   const currentTest = tests ? tests[currentTestIndex] : null;
 
   // Toggle showing the correct answer
-  const handleShowAnswer = () => setShowAnswer(true);
-  const handleHideAnswer = () => setShowAnswer(false);
+  const handleShowAnswer = () => setShowAnswer(!showAnswer);
 
   // Moves to the next test, cycling through the list
   const handleNextTest = () => {
@@ -149,56 +150,71 @@ const TestTemplate = () => {
     <div>
       <NavigationBar />
 
-      <div className='go-back-link roboto-medium' onClick={goToCourse}>
-        <FaArrowLeftLong />
-        Go Back
-      </div>
+      <LessonTestLayout 
+        lesson={lesson}
+        goTo={goToCourse}
+      
+        content={
+          <div className='test-container'>
 
-      <div className='lessontemplate-header'>
-        {/* Display the lesson ID and status */}
-        <h2 className={`tag tag-blue roboto-bold`}>Lesson {lesson.number}</h2>
-        <h1 className='title fira-code'>{lesson.title}</h1>
-      </div>
+          <div className='test-header'>
+            <h2 className='roboto-medium'>Question {currentTest.number}. {currentTest.question}</h2>
+            <HintSystem hint={currentTest.hint} testId={currentTest.number} />
+          </div>
 
-      <div className='test-container'>
+          <CodeEditor onCodeChange={handleUserInputChange} code={userAnswers[currentTestIndex] || ''} />
+          
 
-        <div className='test-header'>
-          <h2 className='roboto-medium'>Question {currentTest.number}. {currentTest.question}</h2>
-          <HintSystem hint={currentTest.hint} testId={currentTest.number} />
-        </div>
 
-        <CodeEditor onCodeChange={handleUserInputChange} code={userAnswers[currentTestIndex] || ''} />
-        <CompilerComponent code={userAnswers[currentTestIndex] || ''} answer={currentTest.requiredOutput} language={language} />
-
-        <div className='test-answer'>
-          {showAnswer ? (
-            <div className='answer'>
-              <Button text={'HIDE ANSWER'} action={handleHideAnswer} />
-              <h3>Correct Answer:</h3>
-              <pre>{currentTest.answer}</pre>
+          {/* Buttons for the test */}
+          <div className='test-buttons'>
+            <div>
+              
             </div>
-          ) : (
-            <div className='answer'>
-              <Button text={'SHOW ANSWER'} action={handleShowAnswer} />
+            
+            
+          </div>
+          
+          <CompilerComponent 
+            code={userAnswers[currentTestIndex] || ''} 
+            answer={currentTest.requiredOutput} 
+            language={language}
+            showAnswer={<Button text={showAnswer ? 'HIDE ANSWER' : 'SHOW ANSWER'} outline={true} action={handleShowAnswer} color={'var(--green-medium)'} backgroundColor={'var(--background-light)'} hoverColor={'var(--green-dark)'} />}
+            navigationButtons={
+              <div>
+              {currentTestIndex !== 0 && <Button text={'PREVIOUS QUESTION'} outline={true} action={handlePreviousTest} backgroundColor={'var(--background-light)'} />}
+              
+              {currentTestIndex === tests.length - 1 ?
+                <Button text={'SAVE AND FINISH'} action={saveAnswers} backgroundColor={'var(--background-light)'} /> :
+                <Button text={'NEXT QUESTION'} action={handleNextTest} backgroundColor={'var(--background-light)'} />
+              }
+            </div>
+            }
+          />
+
+          <div className='test-answer'>
+            {showAnswer ? (
+              <div className='answer'>
+                <h3>Correct Answer:</h3>
+                <pre>{currentTest.answer}</pre>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+
+
+          {isCorrect !== null && (
+            <div className="result">
+              {isCorrect ? <p>Correct!</p> : <p>Incorrect. Please Try Again!</p>}
             </div>
           )}
         </div>
+        }
+      />
 
-        <div className='test-navigation'>
-          {currentTestIndex !== 0 && <Button text={'PREVIOUS QUESTION'} outline={true} action={handlePreviousTest} />}
-          {currentTestIndex === tests.length - 1 ?
-            <Button text={'SAVE AND FINISH'} action={saveAnswers} /> :
-            <Button text={'NEXT QUESTION'} action={handleNextTest} />
-          }
-        </div>
-
-        {isCorrect !== null && (
-          <div className="result">
-            {isCorrect ? <p>Correct!</p> : <p>Incorrect. Please Try Again!</p>}
-          </div>
-        )}
-      </div>
-
+        <Feedback />
+        <Footer />
     </div>
   );
 };

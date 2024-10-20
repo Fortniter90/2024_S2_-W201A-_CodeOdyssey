@@ -1,20 +1,38 @@
+/* Styling for the test contents */
 .test-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    width: 80%;
+    max-width: 1250px;
+    margin: 0 auto;
     
 }
 
+/* Test header */
 .test-header {
     display: flex;
     flex-direction: row;
+    margin-bottom: 15px;
+    align-self: flex-start;
 }
 
-.test-header {
-    font-size: 14px;
+/* Styling for the question */
+.test-header h2 {
+    font-size: 16px;
 }
 
-.test-navigation button {
-    margin-right: 20px;
+
+/* Styling for test navigation buttons */
+.test-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 80%;
+    margin-top: 5px;
+}
+
+.test-buttons button {
+    margin: 0 5px;
 }

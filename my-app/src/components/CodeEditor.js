@@ -37,7 +37,7 @@ const CodeEditor = ({ onCodeChange, code }) => {
       ref={containerRef}
       style={{
         height: '50vh',
-        width: '50%',
+        width: '80%',
         border: '1px solid #ccc',
       }}
     />

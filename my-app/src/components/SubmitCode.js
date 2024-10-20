@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
+import Button from './Button';
 
 // Establish a Socket.IO connection to the backend server
 const socket = io("http://localhost:8080");
 
-function CompilerComponent({ code, answer, language }) {
+function CompilerComponent({ code, answer, language, showAnswer, navigationButtons }) {
   // States to manage source code, output, and errors
   const [isCorrect, setIsCorrect] = useState(null);
   const [output, setOutput] = useState(''); // State to store the output from the server
@@ -42,8 +43,17 @@ function CompilerComponent({ code, answer, language }) {
   };
 
   return (
-    <div>
-      <button onClick={handleSubmit}>Run Code/Check Answer</button>
+    <>
+      
+      
+      <div className='test-buttons'>
+        <div>
+          <Button text={'RUN CODE'} action={handleSubmit} color={'var(--green-medium)'} backgroundColor={'var(--background-light)'} hoverColor={'var(--green-dark)'} />
+          {showAnswer}
+        </div>
+        
+          {navigationButtons}
+      </div>
 
       {showResults && (
         <>
@@ -72,7 +82,7 @@ function CompilerComponent({ code, answer, language }) {
           </pre>
         </>
       )}
-    </div>
+    </>
   );
 }
 

@@ -6,6 +6,8 @@ import NavigationBar from '../components/NavigationBar';
 import { useAuth } from '../context/AuthContext';
 import SignOutComponent from '../components/SignOut';
 import './Profile.css';
+import Footer from '../components/Footer';
+import Feedback from '../components/Feedback';
 
 const Profile = () => {
 
@@ -33,17 +35,22 @@ const Profile = () => {
           <ProfilePicture />
           <h1 className='fira-code'>{currentUser.name}</h1>
 
-          <Button text={'SETTINGS'} action={goToSettings} />
+          <Button text={'USER SETTINGS'} action={goToSettings} backgroundColor={'var(--background-medium)'} />
           <SignOutComponent />
         </div>
 
         <div className='profile-right'>
-          <Button text={"PAST TESTS"} action={goToPastTests} />
+          <Button text={"PAST TESTS"} action={goToPastTests}
+            color={'var(--green-medium)'}
+            backgroundColor={'var(--background-medium)'}
+            hoverColor={'var(--green-dark)'}
+          />
           <ProgressBox />
         </div>
-        
-        
       </div>
+        
+      <Feedback />
+      <Footer />
     </>
   );
 };

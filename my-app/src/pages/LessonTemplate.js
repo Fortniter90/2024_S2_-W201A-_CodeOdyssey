@@ -6,6 +6,7 @@ import './LessonTemplate.css';
 import Button from '../components/Button';
 import { fetchLessons } from '../utils/dataFetching';
 import NavigationBar from '../components/NavigationBar';
+import LessonTestLayout from '../components/LessonTestLayout';
 
 const LessonTemplate = () => {
   const { courseId, lessonId } = useParams();
@@ -54,18 +55,12 @@ const LessonTemplate = () => {
     <div>
       <NavigationBar />
 
-      <div className='go-back-link roboto-medium' onClick={goToCourse}>
-        <FaArrowLeftLong />
-        Go Back
-      </div>
+      <LessonTestLayout
 
-      <div className='lessontemplate-header'>
-        {/* Display the lesson ID and status */}
-        <h2 className={`tag tag-blue roboto-bold`}>Lesson {lesson.number}</h2>
-        <h1 className='title fira-code'>{lesson.title}</h1>
-      </div>
+      lesson={lesson}
+      goTo={goToCourse}
 
-      <div className='lessonpage-content'>
+      content={<><div className='lessonpage-content'>
         {lesson.content?.map((item, index) => (
           <div key={index} className='lesson-content roboto-regular'>
             {item.type === 'text' && <p>{item.content}</p>}
@@ -84,7 +79,9 @@ const LessonTemplate = () => {
       <div className='lesson-buttons'>
         <Button text={'RETURN TO COURSE'} outline={true} action={goToCourse}></Button>
         <Button text={'GO TO TESTS'} action={goToTests}></Button>
-      </div>
+      </div></>}
+
+      />
 
     </div>
   );

@@ -20,27 +20,21 @@
     width: 100%;
     height: max-content;
     box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .course-block {
-    border-radius: 20px;
     padding: 10px;
-    margin-bottom: 10px;
-    width: 400px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    width: 100%;
     color: var(--white);
-    padding: 20px;
-    margin: 10px;
 }
-
-
 
 .recent-levels .header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-bottom: 15px;
 }
 
 .recent-levels .header h2 {

@@ -60,33 +60,24 @@ const AllCourses = () => {
                 style={{ backgroundImage: `linear-gradient(var(--${course.color}-light), var(--${course.color}-medium), var(--${course.color}-dark))` }}
               >
 
-                <div className='header'>
-                  <h2 className='fira-code'>{course.title}</h2>
-                  <p className='roboto-bold'>{course.lessonCount} {course.lessonCount === 1 ? 'Lesson' : 'Lessons'} </p>
-                </div>
+                  <div className='header'>
+                    <h2 className='fira-code'>{course.title}</h2>
+                    <p className='roboto-bold'>{course.lessonCount} {course.lessonCount === 1 ? 'Lesson' : 'Lessons'} </p>
+                  </div>
 
 
-
-                <Button text={"VIEW COURSE"} action={(e) => goToCourse(course.id)}
-                  color={`var(--${course.color}-light)`}
-                  backgroundColor={`var(--${course.color}-dark)`}
-                  hoverColor={`var(--white)`}
-                />
+                  <Button text={"VIEW COURSE"} action={() => goToCourse(course.id)}
+                    color={`var(--${course.color}-light)`}
+                    backgroundColor={`var(--${course.color}-dark)`}
+                    hoverColor={`var(--${course.color}-medium)`}
+                  />
               </div>
             </div>
           ))}
-
-
-
-
-
-            
         </div>
-
       </div>
 
       <Feedback />
-
       <Footer />
     </div>
   );

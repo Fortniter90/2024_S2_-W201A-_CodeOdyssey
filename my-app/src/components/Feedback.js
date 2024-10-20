@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { submitFeedback } from "../utils/dataSaving";
+import { FaComment, FaX } from "react-icons/fa6";
 import "./Feedback.css";
+import Button from "./Button";
 
 const Feedback = () => {
 
@@ -9,12 +11,6 @@ const Feedback = () => {
   const [feedback, setFeedback] = useState('');
   const [popupVisible, setPopupVisible] = useState(false);
   const { currentUser } = useAuth();
-
-
-
-  useEffect(() => {
-    setUsername(currentUser.name);
-  }, [currentUser]);
 
   const handleSubmit = async () => {
     if (feedback.trim() === '') return;
