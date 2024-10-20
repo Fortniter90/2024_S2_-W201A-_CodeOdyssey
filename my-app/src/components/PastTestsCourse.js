@@ -4,7 +4,6 @@ import { fetchCourses } from "../utils/dataFetching";
 import Section from "./Section";
 import { useEffect, useState } from "react";
 
-
 const PastTestsCourse = ({ onSelectCourse }) => {
     const { usersCourses, isAuthenticated } = useAuth();
     const navigate = useNavigate(); // Hook to navigate between different pages

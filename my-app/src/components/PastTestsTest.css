@@ -1,0 +1,19 @@
+.pasttest-test {
+    margin: auto 10px;
+}
+
+.pasttest-test pre {
+    margin: auto 10px;
+}
+
+.pasttest-test hr {
+    border: 1px solid var(--background-medium);
+}
+
+.pasttest-test:last-child {
+    margin-bottom: 10px;
+}
+
+.pasttest-test:last-child hr {
+    display: none;
+}

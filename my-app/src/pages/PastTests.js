@@ -33,6 +33,8 @@ function PastTest() {
           setAnswersData(usersAnswers.answers);
           setTestsData(usersAnswers.allTests);
           setLessonsData(usersAnswers.allLessons);
+
+          console.log(lessonsData);
         } catch (err) {
           setError(err.message);  // Set the error message from the caught error
         } finally {
@@ -50,14 +52,14 @@ function PastTest() {
         return <PastTestsCourse onSelectCourse={handleSelectCourse} />;
       case 'lessons':
         return (
-          <PastTestsLesson course={selectedCourse} lessons={lessonsData[selectedCourse]} onSelectLesson={handleSelectLesson} />
+          <PastTestsLesson selectedCourse={selectedCourse} lessonsData={lessonsData} onSelectLesson={handleSelectLesson} />
         );
       case 'tests':
         return (
-          <PastTestsTest course={selectedCourse} lesson={selectedLesson} tests={testsData[selectedLesson]} />
+          <PastTestsTest testsData={testsData} answersData={answersData} />
         );
       default:
-        return <PastTestsCourse courses={usersCourses} onSelectCourse={handleSelectCourse} />;
+        return <PastTestsCourse onSelectCourse={handleSelectCourse} />;
     }
   };
 
@@ -114,6 +116,7 @@ function PastTest() {
             {managementTab()}
           </div>
         </div>
+      </div>
 
       <Feedback />
       <Footer />
@@ -122,4 +125,3 @@ function PastTest() {
 }
 
 export default PastTest;
-
