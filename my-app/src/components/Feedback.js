@@ -20,9 +20,8 @@ const Feedback = () => {
     if (feedback.trim() === '') return;
 
     try {
-      await submitFeedback(currentUser.uid, currentUser.email, feedback);
-
       console.log('Feedback submitted:', feedback);
+      await submitFeedback(currentUser.uid, currentUser.email, feedback);
       setFeedback('');
       setIsOpen(false);
       setPopupVisible(true);
