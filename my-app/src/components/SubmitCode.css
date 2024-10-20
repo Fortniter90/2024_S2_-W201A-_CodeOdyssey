@@ -1,0 +1,54 @@
+/* Styling for test navigation buttons */
+.test-buttons {
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+.test-buttons-left {
+    text-align: left; 
+}
+
+.test-buttons-right {
+    text-align: right;
+}
+
+.test-buttons button {
+    margin: 2px 5px;
+}
+
+.code-results-container {
+    width: 80%;
+    display: flex;
+    gap: 1em;
+}
+
+.code-results {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    position: relative;
+}
+
+.code-results h2 {
+    background-color: var(--gray-light);
+    color: var(--gray-dark);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 0.9em;
+    margin: 0;
+    font-size: 14px;
+}
+
+.code-results pre {
+    background-color: var(--white);
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    padding: 0.9em;
+    min-height: 15px;
+    margin: 0;
+}

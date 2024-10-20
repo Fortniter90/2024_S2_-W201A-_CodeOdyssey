@@ -8,48 +8,39 @@
     position: relative;
 }
 
-.hint-button {
-    font-size: 24px;
+.hint-button-container svg {
+    font-size: 20px;
     cursor: pointer;
+    color: var(--orange-medium);
 }
 
 /* Tooltip styling */
-.hint-tooltip {
+.hint-container {
     position: absolute;
-    top: 100%;
-    left: 0; /* Positioning the tooltip to the right */
+    top: -15%;
+    left: 25px;
     background-color: var(--white);
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    z-index: 1000;
-    width: 250px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top:8px;
-}
-
-.hint-tooltip:before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: 10px; /* Arrow positioning */
-    transform: translateY(-50%);
-    border-width: 8px;
-    border-style: solid;
-    border-color: transparent transparent transparent var(--white); /* Arrow color */
-}
-
-/* Hint panel styling */
-.hint-panel {
-    position: absolute;
-    top: 100%;
-    left: 0; /* Position the hint panel to the right of the button */
-    background-color: var(--white);
-    border: 1px solid #ccc;
+    border: 1px solid var(--background-dark);
     padding: 10px;
     width: 250px;
-    border-radius: 5px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    border-radius: 20px;
+    z-index: 1;
     margin-top: 8px;
+}
+
+.hint-container p {
+    margin: 0;
+    margin-bottom: 5px;
+}
+
+.hint-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.hint-container form label input {
+    width: calc(100% - 10px);
 }

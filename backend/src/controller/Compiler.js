@@ -3,7 +3,7 @@ import fetch from "node-fetch"; // Import the fetch API for making HTTP requests
 const JUDGE_API_URL = 'https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true'; // URL for submitting code to the Judge0 API
 const HEADERS = {
   'content-type': 'application/json', // Specifies that the request body will be in JSON format
-  'X-RapidAPI-Key': 'ba772b0ad4msh188a9506ee4d7f7p1a42eejsnab54531d59dd', // Replace with your own RapidAPI key
+  'X-RapidAPI-Key': '432fab4407mshad7d0186a4c56f4p16926fjsn94c6fadfe608', // Replace with your own RapidAPI key
   'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com' // Hostname for the Judge0 API
 };
 

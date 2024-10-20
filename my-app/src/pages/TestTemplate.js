@@ -158,22 +158,12 @@ const TestTemplate = () => {
           <div className='test-container'>
 
           <div className='test-header'>
-            <h2 className='roboto-medium'>Question {currentTest.number}. {currentTest.question}</h2>
             <HintSystem hint={currentTest.hint} testId={currentTest.number} />
+            <h2 className='roboto-medium'>Question {currentTest.number}. {currentTest.question}</h2>
           </div>
 
           <CodeEditor onCodeChange={handleUserInputChange} code={userAnswers[currentTestIndex] || ''} />
           
-
-
-          {/* Buttons for the test */}
-          <div className='test-buttons'>
-            <div>
-              
-            </div>
-            
-            
-          </div>
           
           <CompilerComponent 
             code={userAnswers[currentTestIndex] || ''} 
@@ -181,40 +171,35 @@ const TestTemplate = () => {
             language={language}
             showAnswer={<Button text={showAnswer ? 'HIDE ANSWER' : 'SHOW ANSWER'} outline={true} action={handleShowAnswer} color={'var(--green-medium)'} backgroundColor={'var(--background-light)'} hoverColor={'var(--green-dark)'} />}
             navigationButtons={
-              <div>
-              {currentTestIndex !== 0 && <Button text={'PREVIOUS QUESTION'} outline={true} action={handlePreviousTest} backgroundColor={'var(--background-light)'} />}
-              
-              {currentTestIndex === tests.length - 1 ?
-                <Button text={'SAVE AND FINISH'} action={saveAnswers} backgroundColor={'var(--background-light)'} /> :
-                <Button text={'NEXT QUESTION'} action={handleNextTest} backgroundColor={'var(--background-light)'} />
-              }
-            </div>
+              <>
+                {currentTestIndex !== 0 && <Button text={'PREVIOUS QUESTION'} outline={true} action={handlePreviousTest} backgroundColor={'var(--background-light)'} />}
+                
+                {currentTestIndex === tests.length - 1 ?
+                  <Button text={'SAVE AND FINISH'} action={saveAnswers} color={'var(--orange-medium)'} backgroundColor={'var(--background-light)'} hoverColor={'var(--orange-dark)'} /> :
+                  <Button text={'NEXT QUESTION'} action={handleNextTest} backgroundColor={'var(--background-light)'} />
+                }
+              </>
             }
           />
 
-          <div className='test-answer'>
-            {showAnswer ? (
-              <div className='answer'>
-                <h3>Correct Answer:</h3>
-                <pre>{currentTest.answer}</pre>
-              </div>
-            ) : (
-              <></>
-            )}
-          </div>
-
-
           {isCorrect !== null && (
-            <div className="result">
+            <div className="test-result roboto-bold">
               {isCorrect ? <p>Correct!</p> : <p>Incorrect. Please Try Again!</p>}
+            </div>
+          )}
+
+          {showAnswer && (
+            <div className='test-answer'>
+              <h2 className='roboto-bold'>Correct Answer</h2>
+              <pre>{currentTest.answer}</pre>
             </div>
           )}
         </div>
         }
       />
 
-        <Feedback />
-        <Footer />
+      <Feedback />
+      <Footer />
     </div>
   );
 };

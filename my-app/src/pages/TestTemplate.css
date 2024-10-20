@@ -16,6 +16,7 @@
     flex-direction: row;
     margin-bottom: 15px;
     align-self: flex-start;
+    gap: 0.5em;
 }
 
 /* Styling for the question */
@@ -23,16 +24,39 @@
     font-size: 16px;
 }
 
-
-/* Styling for test navigation buttons */
-.test-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 80%;
-    margin-top: 5px;
+.test-result {
+    margin: 2em;
 }
 
-.test-buttons button {
-    margin: 0 5px;
+.test-navigation-buttons {
+    align-items: flex-end;
+}
+
+/* Styling for the model answer */
+.test-answer {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 1em;
+    margin-bottom: 2em;
+    position: relative;
+}
+
+.test-answer h2 {
+    background-color: var(--green-light);
+    color: var(--green-dark);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 0.9em;
+    margin: 0;
+    font-size: 14px;
+}
+
+.test-answer pre {
+    background-color: var(--white);
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    padding: 0.9em;
+    min-height: 15px;
+    margin: 0;
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import Button from './Button';
+import './SubmitCode.css';
 
 // Establish a Socket.IO connection to the backend server
 const socket = io("http://localhost:8080");
@@ -39,53 +40,49 @@ function CompilerComponent({ code, answer, language, showAnswer, navigationButto
   }, [answer]);
 
   const handleSubmit = () => {
-    setShowResults(false);
+    setShowResults(true);
 
     socket.emit("submitCode", { source_code: code, language: language });
   };
 
   return (
     <>
-      
-      
+      {/* Buttons for navigating */}
       <div className='test-buttons'>
-        <div>
+        <div className='test-buttons-left'>
           <Button text={'RUN CODE'} action={handleSubmit} color={'var(--green-medium)'} backgroundColor={'var(--background-light)'} hoverColor={'var(--green-dark)'} />
           {showAnswer}
         </div>
-        
+
+        <div className='test-buttons-right'>
           {navigationButtons}
+        </div>
       </div>
 
+      {/* Compiler results */}
       {showResults && (
-        <>
-          <h3>Output:</h3>
-          {error ? (
-            <pre style={{ border: '2px solid red', padding: '10px' }}>Error: {error}</pre>
-          ) : (
-            <pre
-              style={{
-                border: `2px solid ${isCorrect ? 'green' : 'red'}`,
-                padding: '10px',
-              }}
-            >
-              {output}
-            </pre>
-          )}
-
-          <h3>Expected Output:</h3>
-          <pre
-            style={{
-              border: `2px solid ${isCorrect ? 'green' : 'red'}`,
-              padding: '10px',
-            }}
-          >
-            {answer}
-          </pre>
-        </>
+        <div className='code-results-container'>
+          <Section 
+            title={'Output'}
+            children={error ? error : output}
+          />
+          
+          <Section 
+            title={'Expected Output'}
+            children={answer}
+          />
+        </div>
       )}
     </>
   );
 }
+
+// Section component to render a the output and expected output
+const Section = ({ title, children }) => (
+  <div className='code-results'>
+    <h2 className='roboto-bold'>{title}</h2>
+    <pre>{children}</pre>
+  </div>
+);
 
 export default CompilerComponent;
