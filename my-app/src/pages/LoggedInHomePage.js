@@ -102,7 +102,7 @@ const LoggedInHomePage = () => {
           <h1 className='fira-code'>Welcome, {currentUser.displayName || currentUser.name}</h1>
 
           {/* If the user is an admin, show button to navigate to the developer dashboard */}
-          {isAdmin && <Button text="DEVELOPER DASHBOARD" action={navigateTo('/developerdashboard')} />}
+          {isAdmin && <Button text="DEVELOPER DASHBOARD" action={navigateTo('/developerdashboard')} backgroundColor={'var(--background-dark)'} />}
         </div>
 
 
@@ -133,7 +133,7 @@ const LoggedInHomePage = () => {
             
             return (
               <div
-                className='recent-levels'
+                className='user-courses'
                 key={courseId}
                 style={{ backgroundImage: `linear-gradient(var(--${courseData.color}-light), var(--${courseData.color}-medium), var(--${courseData.color}-dark))` }}
                 onClick={goToCourse(courseId)}

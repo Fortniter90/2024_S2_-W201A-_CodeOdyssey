@@ -5,3 +5,42 @@
     display: flex;
     flex-direction: column;
 }
+
+.pasttests h1 {
+    font-size: 3rem;
+}
+
+.pasttests-container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+/* Button to go to previous page */
+.previous-link {
+    display: flex;
+    align-items: center; 
+    color: var(--gray-dark); 
+    text-decoration: none;
+    font-size: 0.9rem;
+    width: max-content;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    user-select: none;
+}
+
+.previous-link:hover {
+    color: var(--gray-medium); 
+}
+
+/* Styling for arrow */
+.previous-link svg {
+    margin-right: 8px; 
+    font-size: 18px;
+}
+
+.pasttests-content {
+    background-color: var(--white);
+    height: fit-content;
+    border-radius: 20px;
+    padding: 0.5em;
+}

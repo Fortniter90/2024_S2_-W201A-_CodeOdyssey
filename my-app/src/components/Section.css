@@ -1,0 +1,62 @@
+.section-container {
+    width: 100%;
+    margin: 1.5em 0;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--white);
+    padding: 0.5em;
+    border-radius: 20px;
+    border-top-left-radius: 0;
+    position: relative;
+}
+
+.section-container h2 {
+    background-color: var(--white);
+    padding: 0.5em 1em;
+    border-radius: 20px 20px 0 0; 
+    font-size: 1.2rem;
+    font-weight: bold;
+    position: absolute;
+    top: -50px;
+    left: 0px;
+}
+
+/* Empty message styling for selected courses */
+.section-empty {
+    background-color: var(--gray-light);
+    color: var(--gray-dark);
+    margin: 0.5em;
+    background-size: cover;
+    border-radius: 20px;
+    padding: 1em;
+    margin: 0.5em;
+}
+
+/* Text styles for the recent levels */
+.section-empty p {
+    margin: 0 0 0.5em 0;
+    font-size: 1em;
+    align-self: flex-end;
+}
+
+.section-empty h3 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin: 0;
+}
+
+/* Alignment for the empty message */
+.empty-align {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5em;
+}
+
+.empty-align p {
+    color: var(--gray-dark);
+}
+
+/* Styling for the plus icon */
+.empty-align svg {
+    font-size: 2.5rem;
+}

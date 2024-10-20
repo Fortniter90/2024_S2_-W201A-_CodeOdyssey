@@ -42,6 +42,19 @@
     left: 0px;
 }
 
+/* Individual course and level item styling */
+.recent-levels,
+.user-courses {
+    background-size: cover;
+    border-radius: 20px;
+    padding: 1em;
+    color: var(--white);
+    margin: 0.5em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 /* Individual level item styling */
 .recent-levels {
     background-size: cover;
@@ -56,15 +69,31 @@
     justify-content: space-between;
 }
 
+/* Individual course item styling */
+.user-courses {
+    background-size: cover;
+    border-radius: 20px;
+    padding: 1em;
+    width: 20vw;
+    max-width: 300px;
+    color: var(--white);
+    margin: 0.5em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 /* Text styles for the recent levels */
 .recent-levels p {
     margin: 0 0 0.5em 0;
     font-size: 1em;
     align-self: flex-end;
+    color: var(--white);
 }
 
-.recent-levels h3 {
-    font-size: 2.5rem;
+.recent-levels h3,
+.user-courses h3 {
+    font-size: 2.3rem;
     line-height: 1.2;
     margin: 0;
 }
