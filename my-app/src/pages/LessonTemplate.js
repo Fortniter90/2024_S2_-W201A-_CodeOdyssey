@@ -7,6 +7,8 @@ import Button from '../components/Button';
 import { fetchLessons } from '../utils/dataFetching';
 import NavigationBar from '../components/NavigationBar';
 import LessonTestLayout from '../components/LessonTestLayout';
+import Footer from '../components/Footer';
+import Feedback from '../components/Feedback';
 
 const LessonTemplate = () => {
   const { courseId, lessonId } = useParams();
@@ -56,33 +58,41 @@ const LessonTemplate = () => {
       <NavigationBar />
 
       <LessonTestLayout
+        lesson={lesson}
+        goTo={goToCourse}
 
-      lesson={lesson}
-      goTo={goToCourse}
-
-      content={<><div className='lessonpage-content'>
-        {lesson.content?.map((item, index) => (
-          <div key={index} className='lesson-content roboto-regular'>
-            {item.type === 'text' && <p>{item.content}</p>}
-            {item.type === 'code' && (
-              <div>
-                <h3>Code Example:</h3>
-                <pre>{item.input}</pre>
-                <h4>Output:</h4>
-                <pre>{item.output}</pre>
+        content={
+          <div className='lessonpage'>
+            {lesson.content?.map((item, index) => (
+              <div key={index} className='lesson-content roboto-regular'>
+                {item.type === 'text' && <p>{item.content}</p>}
+                
+                {item.type === 'code' && (
+                  <div className='example'>
+                    <div className='code-example'>
+                      <h2>Code Example:</h2>
+                      <pre>{item.input}</pre>
+                    </div>
+                    
+                    <div className='code-example'>
+                      <h2>Output:</h2>
+                      <pre>{item.output}</pre>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
+            ))}
+
+            <div className='lesson-buttons'>
+              <Button text={'RETURN TO COURSE'} outline={true} action={goToCourse} backgroundColor={'var(--background-medium)'} />
+              <Button text={'GO TO TESTS'} action={goToTests} backgroundColor={'var(--background-medium)'} />
+            </div>
           </div>
-        ))}
-      </div>
-
-      <div className='lesson-buttons'>
-        <Button text={'RETURN TO COURSE'} outline={true} action={goToCourse}></Button>
-        <Button text={'GO TO TESTS'} action={goToTests}></Button>
-      </div></>}
-
+        }
       />
 
+      <Feedback />
+      <Footer />
     </div>
   );
 };
