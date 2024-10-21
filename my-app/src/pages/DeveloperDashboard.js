@@ -21,6 +21,10 @@ const DeveloperDashboard = () => {
 
   const navigate = useNavigate();
 
+  if (!currentUser) {
+    return <div>loading ...</div>
+  }
+
   // Handle course selection
   const handleCourseSelect = (course) => {
     setSelectedCourse(course);

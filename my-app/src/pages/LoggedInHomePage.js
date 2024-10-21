@@ -18,7 +18,7 @@ const gradients = {
 // Main component for the logged in home page
 const LoggedInHomePage = () => {
   // Destructure values from the authentication context
-  const { currentUser, isAuthenticated, usersCourses, isAdmin, checkAuthStatus } = useAuth();
+  const { currentUser, isAuthenticated, usersCourses, isAdmin, checkAuthStatus, refreshUserData } = useAuth();
 
   // State variables storing data
   const [courseDetails, setCourseDetails] = useState([]);
@@ -97,7 +97,7 @@ const LoggedInHomePage = () => {
 
         {/* Home page header */}
         <div className='homepage-header'>
-          <h1 className='fira-code'>Welcome, {currentUser.displayName || currentUser.name}</h1>
+          <h1 className='fira-code'>Welcome, {currentUser.name}</h1>
 
           {/* If the user is an admin, show button to navigate to the developer dashboard */}
           {isAdmin && <Button text="DEVELOPER DASHBOARD" action={navigateTo('/developerdashboard')} backgroundColor={'var(--background-dark)'} />}
@@ -109,9 +109,10 @@ const LoggedInHomePage = () => {
             {Object.keys(usersCourses).map(courseId => {
               const course = usersCourses[courseId];
               const courseData = courseDetails.find(course => course.id === courseId) || {};
-              const latestLesson = lessonDetails[courseId]?.find(lesson => lesson.id === course.currentLesson) || {};
+              const latestLesson = lessonDetails[courseId]?.find(lesson => lesson.id === course.currentLesson) || null;
 
-              return (
+              // Only render if latestLesson exists
+              return latestLesson ? (
                 <div
                   className='recent-levels'
                   key={courseId}
@@ -121,7 +122,7 @@ const LoggedInHomePage = () => {
                   <p className='roboto-medium'>{courseData.title || 'Unknown Course'}</p>
                   <h3 className='fira-code'>{latestLesson.title || 'Unknown Lesson'}</h3>
                 </div>
-              );
+              ) : null; // If no latestLesson, return null to avoid rendering
             })}
           </Section>
         ) : (

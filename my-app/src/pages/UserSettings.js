@@ -48,7 +48,7 @@ const UserSettings = () => {
   // Handle file input changes when the user selects a file
   const handleFileChange = (e) => {
     const file = e.target.files && e.target.files[0];
-    
+
     // Check if the user canceled the file selection
     if (!file) {
       setIsCropping(false); // Set cropping mode to false if no file is selected
@@ -74,17 +74,17 @@ const UserSettings = () => {
   const initializeCropper = (imgUrl) => {
     const imageElement = imagePreviewRef.current;
     if (imageElement) {
-        imageElement.src = imgUrl; // Set the uploaded image as the source
-        const newCropper = new Cropper(imageElement, {
-            aspectRatio: 1,
-            viewMode: 1,
-            responsive: true,
-            autoCropArea: 1,
-            ready() {
-                setIsCropping(true);
-            },
-        });
-        setCropper(newCropper); // Save the new cropper instance
+      imageElement.src = imgUrl; // Set the uploaded image as the source
+      const newCropper = new Cropper(imageElement, {
+        aspectRatio: 1,
+        viewMode: 1,
+        responsive: true,
+        autoCropArea: 1,
+        ready() {
+          setIsCropping(true);
+        },
+      });
+      setCropper(newCropper); // Save the new cropper instance
     }
   };
 
@@ -153,7 +153,7 @@ const UserSettings = () => {
       alert('Error updating profile');
     }
   };
-  
+
   const toggleAdvancedSettings = () => {
     setAdvancedSettings(!advancedSettings);
   };
@@ -193,8 +193,6 @@ const UserSettings = () => {
               ) : (
                 <ProfilePicture picture={croppedImage} />
               )}
-              
-              
 
               <input
                 type="file"
@@ -237,14 +235,14 @@ const UserSettings = () => {
             <div className='usersettings-advancedtoggle' onClick={toggleAdvancedSettings}>
               <span className='roboto-bold'>ADVANCED SETTINGS</span>
               <span className="dropdown-icon">
-                {advancedSettings ? 
-                  <FaChevronUp /> 
+                {advancedSettings ?
+                  <FaChevronUp />
                   : <FaChevronDown />
                 }
               </span>
             </div>
           </div>
-          
+
           <div className='usersettings-advanced'>
             {advancedSettings && <DeleteUserComponent className='usersettings-delete' />}
           </div>

@@ -1,5 +1,5 @@
 import express from 'express';
-import { fetchCourses, fetchTests, fetchLessons, fetchAllUsers, fetchUserAnswer, fetchUserCourseProgress, fetchAdminUsers, fetchUserAnswers } from '../controller/DataFetchManagement.js';
+import { fetchCourses, fetchTests, fetchLessons, fetchAllUsers, fetchUserAnswer, fetchUserCourseProgress, fetchAdminUsers, fetchUserAnswers, fetchFeedback } from '../controller/DataFetchManagement.js';
 
 const fetchRouter = express.Router();
 
@@ -91,6 +91,16 @@ fetchRouter.get('/users/:userId/answers/:answer', async (req, res) => {
     res.status(200).json(userAnswer);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching admin users', error: error.message });
+  }
+});
+
+// Route to fetch a user answer
+fetchRouter.get('/users/feedback', async (req, res) => {
+  try {
+    const feedback = await fetchFeedback();
+    res.status(200).json(feedback);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching feeback', error: error.message });
   }
 });
 

@@ -5,12 +5,12 @@ import "./ProfilePicture.css";
 const ProfilePicture = ({ picture }) => {
 
   const { currentUser } = useAuth();
-  
+
   if (!picture) picture = currentUser.picture;
 
   return (
     <div className="profile-picture">
-      <img src={picture} alt="Profile Picture" />
+      <img src={picture || currentUser.photoURL} alt="Profile Picture" />
     </div>
   );
 };

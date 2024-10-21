@@ -79,3 +79,14 @@ export const fetchUsersAnswers = async (userId) => {
     throw error;
   }
 };
+
+// Fetch Feedback 
+export const fetchFeedback = async () => {
+  try {
+    const response = await axios.get(`${backendUrl}/fetch/users/feedback`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching feedback:', error);
+    throw error;
+  }
+};

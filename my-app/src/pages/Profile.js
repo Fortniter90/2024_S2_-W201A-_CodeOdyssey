@@ -33,7 +33,7 @@ const Profile = () => {
       <div className='profile'>
         <div className='profile-left'>
           <ProfilePicture />
-          <h1 className='fira-code'>{currentUser.name}</h1>
+          <h1 className='fira-code'>{currentUser.name || currentUser.displayName}</h1>
 
           <Button text={'USER SETTINGS'} action={goToSettings} backgroundColor={'var(--background-medium)'} />
           <SignOutComponent />
@@ -48,7 +48,7 @@ const Profile = () => {
           <ProgressBox />
         </div>
       </div>
-        
+
       <Feedback />
       <Footer />
     </>

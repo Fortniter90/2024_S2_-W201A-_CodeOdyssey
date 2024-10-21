@@ -16,7 +16,7 @@ app.use(express.json());
 
 // CORS configuration
 const corsOptions = {
-  origin: 'http://localhost:3000', // Allow the frontend to connect from this origin
+  origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Accept only GET and POST requests from the client
   allowedHeaders: ['Content-Type', 'Authorization'], // Allow only requests with this header
   credentials: true // Include credentials (cookies, authorization headers, etc.)

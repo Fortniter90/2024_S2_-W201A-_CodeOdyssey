@@ -153,3 +153,17 @@ export const fetchUserAnswers = async (usersId) => {
     throw new Error("Error fetching data.");
   }
 };
+
+export const fetchFeedback = async () => {
+  try {
+    const feedbackSnapshot = await db.collection(`feedback`).get();
+    const feedback = feedbackSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return feedback;
+  } catch (error) {
+    console.error('Error fetching feedback:', error);
+    throw new Error('Failed to fetch feedback');
+  }
+}

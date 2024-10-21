@@ -111,7 +111,7 @@ async function updateProfilePicture(uid, picture) {
 // Function to update user's username
 async function updateUsername(uid, name) {
   try {
-    userRecord = await admin.auth().updateUser(uid, {
+    await admin.auth().updateUser(uid, {
       displayName: name
     });
     console.log("Successfully updated user's username",);
