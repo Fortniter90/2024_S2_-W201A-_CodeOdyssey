@@ -4,8 +4,6 @@ import { saveLesson, updateLesson } from '../utils/dataSaving';
 import { deleteLesson } from '../utils/dataDeleting';
 import ManagementTable from './ManagementTable';
 
-
-
 // Component to manage lesson data
 const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
 
@@ -17,8 +15,6 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
     description: '',
     content: []
   });
-
-
 
   // Fetch lessons when the component mounts
   useEffect(() => {
@@ -35,8 +31,6 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
       console.error('Error loading lessons:', error); // Log any errors during data fetching
     }
   };
-
-
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -140,8 +134,6 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
       console.error('Error deleting lesson:', error); // Log any errors during deletion
     }
   };
-
-
 
   // Render add lesson form
   const lessonAdd = () => {
@@ -310,8 +302,6 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
       </>
     );
   };
-
-
 
   return (
     <ManagementTable

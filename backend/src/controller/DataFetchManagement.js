@@ -145,4 +145,3 @@ export const fetchUserAnswers = async (usersId) => {
     throw new Error("Error fetching data.");
   }
 };
-

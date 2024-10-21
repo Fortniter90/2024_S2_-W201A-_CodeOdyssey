@@ -13,7 +13,6 @@ import Footer from '../components/Footer';
 import Feedback from '../components/Feedback';
 import './TestTemplate.css';
 
-
 const TestTemplate = () => {
   const { courseId, lessonId } = useParams();
   const { currentUser } = useAuth();  // Get the user ID from the Auth context
@@ -197,7 +196,6 @@ const TestTemplate = () => {
         </div>
         }
       />
-
       <Feedback />
       <Footer />
     </div>

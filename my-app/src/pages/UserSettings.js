@@ -32,8 +32,6 @@ const UserSettings = () => {
 
   const navigate = useNavigate(); // Router hook for navigation
 
-  
-
   // Effect to update state when the profile picture changes
   useEffect(() => {
     setCroppedImage(currentUser.picture);
@@ -72,8 +70,6 @@ const UserSettings = () => {
     initializeCropper(imgUrl);
   };
 
-
-
   // Function to reinitialize the cropper when needed
   const initializeCropper = (imgUrl) => {
     const imageElement = imagePreviewRef.current;
@@ -93,7 +89,6 @@ const UserSettings = () => {
   };
 
   // Save the cropped image and exit cropping mode
-
   const saveCroppedImage = () => {
     if (cropper) {
       const canvas = cropper.getCroppedCanvas({
@@ -134,7 +129,6 @@ const UserSettings = () => {
     setIsCropping(false); // Exit cropping mode
   };
 
-
   const updateProfile = async () => {
     let update = false;
 
@@ -171,8 +165,6 @@ const UserSettings = () => {
   if (currentUser === null) {
     return <div>Loading...</div>;
   }
-
-
 
   return (
     <div>

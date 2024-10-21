@@ -12,6 +12,7 @@ const Feedback = () => {
   const [popupVisible, setPopupVisible] = useState(false);
   const { currentUser } = useAuth();
 
+  // Handle submission of feedback
   const handleSubmit = async () => {
     if (feedback.trim() === '') return;
 
@@ -27,9 +28,10 @@ const Feedback = () => {
     }
   };
 
+  // Clear feedback when closed
   const toggleFeedbackBox = () => {
     setIsOpen(!isOpen);
-    if (isOpen) { // Only clear feedback when closing
+    if (isOpen) {
       setFeedback(''); 
     }
   };

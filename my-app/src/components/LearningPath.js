@@ -10,8 +10,6 @@ const LearningPath = ({ courseId, userId }) => {
   const [levels, setLevels] = useState([]);                   // State to hold lesson levels
   const [selectedLesson, setSelectedLesson] = useState(null); // State for currently selected lesson
 
-
-
   // Fetch lessons and user progress when the component mounts
   useEffect(() => {
     loadLessonsAndProgress();

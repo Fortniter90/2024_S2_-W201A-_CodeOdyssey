@@ -1,7 +1,6 @@
 import Button from './Button';
 import './Pagination.css';
 
-
 // Component to navigate through pages
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     

@@ -94,6 +94,4 @@ fetchRouter.get('/users/:userId/answers/:answer', async (req, res) => {
   }
 });
 
-
-
 export default fetchRouter;

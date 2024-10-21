@@ -7,6 +7,7 @@ const HEADERS = {
   'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com' // Hostname for the Judge0 API
 };
 
+// Available languages and their selection IDs
 const languages = [
   { name: "python", id: 71 },
   { name: "java", id: 62 },
@@ -28,12 +29,12 @@ export const handleCodeSubmission = async (data, socket) => {
 
   const language_id = languageObject ? languageObject.id : null;
 
-  console.log(language_id); // This will log the ID for Python, which is 71
+  console.log(language_id); // This will log the ID for the current language
 
-  // Prepare the submission data to send to Judge0 API
+  // send submission data to Judge0 API
   const submissionData = {
-    source_code: source_code, // The actual source code provided by the user
-    language_id: language_id,  // The programming language ID 
+    source_code: source_code, // source code sent by user
+    language_id: language_id,
   };
 
   try {
@@ -57,4 +58,3 @@ export const handleCodeSubmission = async (data, socket) => {
     socket.emit("codeResult", { error: "Error occurred while submitting the code." });
   }
 };
-

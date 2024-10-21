@@ -1,7 +1,7 @@
 import express from 'express';
 import admin from '../config/Firebase.js';
 import verifyToken from '../middleware/VerifyToken.js'
-import { updateUsername, updateProfilePicture, createUser, deleteUser, revokeTokensAndLogTimestamp, loadUserData, setAdminStatus } from '../controller/UserManagement.js'; // Adjust import according to your file structure
+import { updateUsername, updateProfilePicture, createUser, deleteUser, revokeTokensAndLogTimestamp, loadUserData, setAdminStatus } from '../controller/UserManagement.js';
 
 const authRouter = express.Router();
 
@@ -24,7 +24,7 @@ authRouter.get('/status', async (req, res) => {
   }
 });
 
-
+// Router for signup method
 authRouter.post('/signup', async (req, res) => {
   const { email, password, name } = req.body;
 
@@ -41,6 +41,7 @@ authRouter.post('/signup', async (req, res) => {
   }
 });
 
+// Router for signout method
 authRouter.post('/signout', async (req, res) => {
   try {
     const { user } = req.body;
@@ -56,6 +57,7 @@ authRouter.post('/signout', async (req, res) => {
   }
 });
 
+// Router for deleteUser method
 authRouter.delete('/deleteuser', async (req, res) => {
   try {
     const { uid } = req.body;
@@ -69,6 +71,7 @@ authRouter.delete('/deleteuser', async (req, res) => {
   }
 });
 
+// Router for loading user data
 authRouter.get(`/userdata/:userId`, async (req, res) => {
   const { userId } = req.params;
   try {
@@ -82,6 +85,7 @@ authRouter.get(`/userdata/:userId`, async (req, res) => {
   }
 });
 
+// Router for updating username
 authRouter.put(`/updateusername/:userId`, async (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
@@ -96,6 +100,7 @@ authRouter.put(`/updateusername/:userId`, async (req, res) => {
   }
 });
 
+// Router for upating user profile picture
 authRouter.put(`/updateprofilepicture/:userId`, async (req, res) => {
   const { userId } = req.params;
   const { profilePicture } = req.body;
@@ -110,15 +115,16 @@ authRouter.put(`/updateprofilepicture/:userId`, async (req, res) => {
   }
 });
 
+// Router for setting admin status
 authRouter.put("/users/:userId/admin", async (req, res) => {
   const { userId } = req.params;
   const { isAdmin } = req.body;
   try {
     await setAdminStatus(userId, isAdmin);
-    res.json({ message: "Profile picture updated" });
+    res.json({ message: "Admin status updated" });
   } catch (error) {
     res.status(500).json({
-      message: 'Error updating profile picture',
+      message: 'Error updating admin status',
       error: error.message,
     });
   }

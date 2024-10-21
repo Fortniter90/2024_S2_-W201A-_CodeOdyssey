@@ -15,8 +15,6 @@ const gradients = {
   blue: 'linear-gradient(var(--c-light), var(--c-medium), var(--c-dark))'
 };
 
-
-
 // Main component for the logged in home page
 const LoggedInHomePage = () => {
   // Destructure values from the authentiction context
@@ -72,8 +70,6 @@ const LoggedInHomePage = () => {
     // Call the fetchData function
     fetchData();
   }, [isAuthenticated]);
-  
-  
 
   // Redirect to the homepage if not authenticated
   if (!isAuthenticated) return <p>Redirecting to homepage...</p>;
@@ -104,7 +100,6 @@ const LoggedInHomePage = () => {
           {/* If the user is an admin, show button to navigate to the developer dashboard */}
           {isAdmin && <Button text="DEVELOPER DASHBOARD" action={navigateTo('/developerdashboard')} backgroundColor={'var(--background-dark)'} />}
         </div>
-
 
         {/* Render the "Recent Levels" section */}
         <Section title="RECENT LEVELS" emptyMessage="You Have No Recent Levels" onEmptyClick={navigateTo('./course')}>
@@ -170,4 +165,3 @@ const Section = ({ title, children, emptyMessage, onEmptyClick }) => (
 );
 
 export default LoggedInHomePage;
-

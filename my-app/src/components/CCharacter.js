@@ -3,7 +3,6 @@ import BunnyNeutral from './assets/BunnyS2-Neutral_Happy.png'; // Importing the 
 import BunnyConcerned from './assets/BunnyS2-Concerned.png'; // Importing the concerned bunny image
 import BunnyVoice from './assets/BunnyVoice.mp3'; // Importing the audio file
 
-
 // Defining the CCharacter component
 const CCharacter = () => {
   return (

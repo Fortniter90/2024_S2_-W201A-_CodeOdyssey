@@ -6,16 +6,12 @@ import { FaChevronDown, FaChevronUp, FaCircleUser } from "react-icons/fa6";
 import Button from "./Button";
 import "./NavigationBar.css";
 
-
-
 // NavigationBar for course navigation
 const NavigationBar = () => {
     
     const { isAuthenticated } = useAuth();      // Check if user is logged in
     const [courses, setCourses] = useState([]); // State handling course data
     const navigate = useNavigate();             // State handling navigation
-
-
 
     // Load courses component on mount
     useEffect(() => {
@@ -72,8 +68,6 @@ const NavigationBar = () => {
     const goToSignUp = () => {
         navigate('/signup');
     };
-
-
 
     return (
         <div className="navbar roboto-regular">

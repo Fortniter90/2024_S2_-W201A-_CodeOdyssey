@@ -96,7 +96,6 @@ function PastTest() {
     return <div>No answers available</div>;
   }
 
-
   return (
     <div>
       <NavigationBar />

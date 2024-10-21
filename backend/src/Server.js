@@ -47,11 +47,8 @@ io.on("connection", (socket) => {
 
 // Set up the routes
 app.use("/auth", authRouter);
-
 app.use("/fetch", fetchRouter);
-
 app.use("/save", saveRouter);
-
 app.use("/delete", deleteRouter);
 
 // Error handling middleware
@@ -64,4 +61,3 @@ app.use((err, req, res, next) => {
 server.listen(8080, () => {
   console.log("HTTP server running on port 8080"); // Log when the HTTP server is up and running
 });
-

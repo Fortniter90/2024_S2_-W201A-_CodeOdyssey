@@ -6,6 +6,7 @@ import Filter from "./Filter";
 import Pagination from "./Pagination";
 import Modal from "./Modal";
 
+// Structure for managment table
 const ManagementTable = ({  
     type="Item", 
     items,
@@ -22,7 +23,6 @@ const ManagementTable = ({
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 7;
     
-    
     // Replace currentItems with filteredItems
     const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
@@ -36,10 +36,8 @@ const ManagementTable = ({
         delete: false,
     })
 
-
     const [selectedItem, setSelectedItem] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-
 
     // Handle course selection for editing and viewing details
     const handleItemClick = (item) => {
@@ -73,10 +71,8 @@ const ManagementTable = ({
         itemDelete(selectedItem);
     }
 
-
     // Render message if no items are available
     const renderNoItems = () => <div>No items available.</div>;
-
 
     return (
         <div className='management roboto-regular'>

@@ -1,7 +1,6 @@
 import { useAuth } from "../context/AuthContext";
 import "./ProfilePicture.css";
 
-
 // Function to handle the visuals of  the profile picture
 const ProfilePicture = ({ picture }) => {
 

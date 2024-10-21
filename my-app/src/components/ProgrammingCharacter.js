@@ -1,7 +1,6 @@
 import { useRef, useState } from "react"
 import { HiInformationCircle } from "react-icons/hi2";
 
-
 // Component for character visuals
 const ProgrammingCharacter = ({
     neutralImage,
@@ -13,7 +12,6 @@ const ProgrammingCharacter = ({
     
     const [showText, setShowText] = useState(false);    // State to track text status
     const audioRef = useRef(null);                      // Reference to the audio element
-
 
     // Function to toggle between images and play the audio
     const handleImageChange = () => {

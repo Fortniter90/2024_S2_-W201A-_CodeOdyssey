@@ -6,8 +6,6 @@ import LoginComponent from '../components/Login';
 import CodeOdysseyLogo from '../components/assets/CodeOdysseyLogo';
 import './AuthPage.css';
 
-
-
 // Component to handle the login and sign up page visuals
 const AuthPage = ({ title, formComponent: FormComponent, navigationText, navigationLink }) => {
   const navigate = useNavigate();

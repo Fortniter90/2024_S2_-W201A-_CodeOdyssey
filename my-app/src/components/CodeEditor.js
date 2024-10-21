@@ -45,4 +45,3 @@ const CodeEditor = ({ onCodeChange, code }) => {
 };
 
 export default React.memo(CodeEditor);
-

@@ -10,8 +10,6 @@ import AdminManagement from '../components/AdminManagement';
 import FeedbackManagement from '../components/FeedbackManagement';
 import { useAuth } from '../context/AuthContext';
 
-
-
 // DeveloperDashboard to allow developers to easily manage course, lesson, and test information
 const DeveloperDashboard = () => {
 
@@ -73,7 +71,6 @@ const DeveloperDashboard = () => {
             setSelectedLesson(null); // Reset selected lesson when switching tabs
         }
     };
-
 
     if (!isAdmin) navigate('/');
 

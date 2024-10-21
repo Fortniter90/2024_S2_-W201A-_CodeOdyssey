@@ -5,7 +5,6 @@ import PythonCharacter from "../components/PythonCharacter";
 import CCharacter from "../components/CCharacter";
 import NavigationBar from "../components/NavigationBar";
 
-
 const ResourcesPage = () => {
 
   return (
@@ -85,4 +84,3 @@ const ResourcesPage = () => {
 };
   
 export default ResourcesPage;
-  

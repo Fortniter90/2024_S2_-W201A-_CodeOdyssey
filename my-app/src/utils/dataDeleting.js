@@ -31,4 +31,3 @@ export const deleteTest = async (courseId, lessonId, testId) => {
     throw new Error(`Error deleting test: ${error.response?.data?.message || error.message}`);
   }
 };
-
