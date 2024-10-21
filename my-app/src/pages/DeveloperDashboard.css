@@ -21,10 +21,10 @@
 }
 
 .developer-tabs {
-    margin-top: clamp(20px, 4vmin, 45px);
+    margin-top: clamp(20px, 3vmin, 45px);
     display: flex;
     flex-direction: column;
-    gap: 15px 10px;
+    gap: 1.5vh;
     justify-content: center;
     width: 100%;
     position: relative;
@@ -36,7 +36,7 @@
     align-items: center;
     background: none;
     border: none;
-    padding: clamp(5px, 1vw, 10px) clamp(10px, 1vw, 20px);
+    padding: clamp(5px, 0.5vmin, 10px) clamp(10px, 1.5vmin, 20px);
     cursor: pointer;
     color: var(--white-trans);
     font-size: 1vw;

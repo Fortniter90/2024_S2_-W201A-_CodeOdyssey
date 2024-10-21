@@ -1,10 +1,10 @@
 import { useState } from "react";
 import Button from "./Button";
-import "./ManagementTable.css";
-import './DatabaseManagement.css';
 import Filter from "./Filter";
 import Pagination from "./Pagination";
 import Modal from "./Modal";
+import "./ManagementTable.css";
+import './DatabaseManagement.css';
 
 const ManagementTable = ({  
     type="Item", 

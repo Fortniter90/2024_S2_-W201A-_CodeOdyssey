@@ -15,7 +15,7 @@ import { useAuth } from '../context/AuthContext';
 // DeveloperDashboard to allow developers to easily manage course, lesson, and test information
 const DeveloperDashboard = () => {
 
-    const { currentUser, isAdmin } = useAuth();
+    const { isAdmin } = useAuth();
 
     const [activeTab, setActiveTab] = useState('dashboard'); // State to track the currently active tab
     const [selectedCourse, setSelectedCourse] = useState(null); // Store the selected course

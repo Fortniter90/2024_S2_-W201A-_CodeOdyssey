@@ -1,8 +1,8 @@
 import { FaEllipsisVertical } from "react-icons/fa6";
-import './DatabaseTable.css';
+import './Table.css';
 
 // Table to load specified data from firestore
-const DatabaseTable = ({  
+const Table = ({  
       data,
       columns,
       currentPage,
@@ -96,4 +96,4 @@ const DatabaseTable = ({
   );
 };
 
-export default DatabaseTable;
+export default Table;
