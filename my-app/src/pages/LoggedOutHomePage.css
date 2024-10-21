@@ -1,3 +1,7 @@
+.home-page-loggedout {
+    height: 100vh;
+}
+
 /* Main content container styling */
 .main-content {
     display: flex;
@@ -5,7 +9,6 @@
     justify-content: space-around;
     align-items: center;
     color: var(--logo-purple);
-    min-height: 100vh;
 }
 
 .main-content p {

@@ -23,10 +23,7 @@ const LearningPath = ({ courseId, userId }) => {
       const lessonList = Object.entries(lessonData).map(([id, data]) => ({ id, ...data }));
   
       // Fetch user progress for the specific course
-      const userProgress = await fetchUserCourseProgress(userId, courseId);
-      console.log('progress: ', userProgress);
-  
-      const progressData = userProgress;
+      const progressData = await fetchUserCourseProgress(userId, courseId);
   
       // Ensure completedLessons is an array
       const completedLessons = progressData.completedLessons || [];
