@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
+    "codeodyssey-backend": "file:",
     "express": "^4.21.1",
     "firebase-admin": "^12.6.0",
     "http": "^0.0.1-security",

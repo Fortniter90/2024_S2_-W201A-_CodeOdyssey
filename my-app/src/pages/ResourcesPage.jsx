@@ -1,18 +1,10 @@
-import Footer from "../components/Footer";
+import React from 'react';
 import './ResourcesPage.css'; // Importing the CSS file for styling the Resources Page
-import JavaCharacter from "../components/JavaCharacter";
-import PythonCharacter from "../components/PythonCharacter";
-import CCharacter from "../components/CCharacter";
-import NavigationBar from "../components/NavigationBar";
-
 
 const ResourcesPage = () => {
 
   return (
-    <div className="resources-container">
-      {/* Conditionally rendering the navigation bar based on the user's authentication status */}
-      <NavigationBar />
-      
+    <div className="resources-container">   
       {/* Main title of the Resources Page */}
       <h1 className="resources-title">Resources Page</h1>
 
@@ -79,10 +71,8 @@ const ResourcesPage = () => {
         </center>
       </p>
 
-      <Footer />
     </div>
   );
 };
   
 export default ResourcesPage;
-  
