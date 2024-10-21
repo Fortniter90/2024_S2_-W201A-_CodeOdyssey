@@ -30,16 +30,17 @@ const AdminManagement = () => {
     const loadAllUsers = async () => {
       const users = await fetchUsers(); // Fetch all users from the backend
       setAllUsers(users);
-    };
+      
+      // Filter admin users based on isAdmin property
+      const adminUsers = await fetchAdminUsers();
+      setAdminUsers(adminUsers); // Set filtered admin users
 
-    const fetchAdmins = async () => {
-      const adminUsers = await fetchAdminUsers(); // Fetch admin users
-      setAdminUsers(adminUsers);
+      console.log(adminUsers);
     };
 
     loadAllUsers();
-    fetchAdmins();
   }, []); // Runs once when the component mounts
+
 
   // Handle opening the add admin modal
   const handleAdd = () => {
@@ -103,11 +104,6 @@ const AdminManagement = () => {
     }
   };
 
-  // Toggle the visibility of the dropdown for each admin
-  const handleDropdownToggle = (userId) => {
-    setDropdownVisible(dropdownVisible === userId ? null : userId); // Toggle dropdown visibility
-  };
-
   // Filter admin users based on the search term
   const filteredAdminUsers = adminUsers.filter(user =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase()) // Check if admin name includes search term
@@ -121,7 +117,7 @@ const AdminManagement = () => {
         <Button text={'Add Admin'} action={handleAdd} />
       </div>
 
-      <div className='management-filters'>
+      <div className='filter'>
         <div className='search-container roboto-regular'>
           <input
             type='text'

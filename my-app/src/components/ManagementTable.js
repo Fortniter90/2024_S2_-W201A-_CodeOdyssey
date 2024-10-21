@@ -141,7 +141,7 @@ const ManagementTable = ({
             </div>
             
             {/* Course Details and Edit Modal */}
-            {selectedItem ? (
+            {selectedItem && (
                 <Modal
                     isOpen={modals.details}
                     onClose={() => toggleModal('details', false)}
@@ -178,7 +178,7 @@ const ManagementTable = ({
                     }
                     isCentered={false}
                 />
-            ) : (<></>)}
+            )}
 
             {/* Success Confirmation Modal */}
             <Modal
