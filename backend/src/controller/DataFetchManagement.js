@@ -87,14 +87,14 @@ export const fetchUserCourseProgress = async (userId, courseId) => {
 // Fetch all admin user accounts
 export const fetchAdminUsers = async () => {
   try {
-    const querySnapshot = await db.collection('users').where('admin', '==', true).get();
+    const querySnapshot = await db.collection('users').where('isAdmin', '==', true).get();
 
     const adminUsers = await Promise.all(querySnapshot.docs.map(async (doc) => {
       const userId = doc.id;
       const userRecord = await admin.auth().getUser(userId); // Fetch the user object that contains the email
-
       return {
         id: userId,
+        name: userRecord.displayName,
         email: userRecord.email, // Access the email from the user object
         ...doc.data(),            // Include other fields from the Firestore document
       };
@@ -111,10 +111,18 @@ export const fetchAdminUsers = async () => {
 export const fetchAllUsers = async () => {
   try {
     const usersSnapshot = await db.collection('users').get();
-    const usersList = usersSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
+    const usersList = await Promise.all(usersSnapshot.docs.map(async (doc) => {
+      const userId = doc.id;
+      const userRecord = await admin.auth().getUser(userId); // Fetch the user object that contains the email
+      console.log(userRecord.displayName);
+      return {
+        id: doc.id,
+        name: userRecord.displayName,
+        email: userRecord.email, // Access the email from the user object
+        ...doc.data()
+      };
     }));
+
     return usersList;
   } catch (error) {
     console.error("Error fetching users: ", error);
