@@ -5,6 +5,7 @@
     justify-content: space-around;
     align-items: center;
     color: var(--logo-purple);
+    min-height: 100vh;
 }
 
 .main-content p {

@@ -93,12 +93,12 @@ const ManagementTable = ({
                         toggleModal('add', false);
                     }}>
                     
-                    {itemAdd()}
-                    
-                    <div className='modal-buttons'>
-                        <Button type="submit" text="Add Course" />
-                        <Button text="Cancel" outline={true} action={() => toggleModal('add', false)} />
-                    </div>
+                        {itemAdd()}
+                        
+                        <div className='modal-buttons'>
+                            <Button type="submit" text="Add Course" />
+                            <Button text="Cancel" outline={true} action={() => toggleModal('add', false)} />
+                        </div>
                     </form>
                 }
             />

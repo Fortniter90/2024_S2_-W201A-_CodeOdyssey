@@ -99,9 +99,9 @@ const LoggedInHomePage = () => {
         </div>
 
         {/* Render the "Recent Levels" section */}
-        {courseDetails.length > 0 && lessonDetails ? (
+        
           <Section title="RECENT LEVELS" emptyMessage="You Have No Recent Levels" onEmptyClick={navigateTo('./course')}>
-            {Object.keys(usersCourses).map(courseId => {
+              {Object.keys(usersCourses).map(courseId => {
               const course = usersCourses[courseId];
               const courseData = courseDetails.find(course => course.id === courseId) || {};
               const latestLesson = lessonDetails[courseId]?.find(lesson => lesson.id === course.currentLesson) || null;
@@ -120,9 +120,6 @@ const LoggedInHomePage = () => {
               ) : null; // If no latestLesson, return null to avoid rendering
             })}
           </Section>
-        ) : (
-          <p>No recent levels to display.</p>
-        )}
 
         {/* Render the "Your Courses" section */}
         <Section title="YOUR COURSES" emptyMessage="You Have No Courses" onEmptyClick={navigateTo('./course')}>

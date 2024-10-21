@@ -2,6 +2,7 @@
     height: auto;
     width: 80%;
     margin: 25px auto;
+    min-height: 100vh;
 }
 
 .allcourses-container h1 {

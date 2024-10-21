@@ -69,7 +69,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
     const testNumber = parseInt(formData.number, 10);
     const newTest = {
       ...formData,
-      available: false
+      available: true
     };
 
     try {

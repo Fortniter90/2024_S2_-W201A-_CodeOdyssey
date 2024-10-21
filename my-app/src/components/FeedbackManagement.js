@@ -3,20 +3,19 @@ import Pagination from './Pagination';
 import './DatabaseManagement.css';
 import './FeedbackManagement.css';
 import './Filter.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from './Modal';
 import Button from './Button';
+import { fetchFeedback } from '../utils/dataFetching';
 
 const FeedbackManagement = () => {
 
-    const [selectedItem, setSelectedItem] = useState(null);
-    // States controling filtering and searching
+    const [allFeedback, setAllFeedback] = useState([]);
+    const [selectedFeedback, setSelectedFeedback] = useState(null);
     const [searchTerm, setSearchTerm] = useState(''); 
-    
+
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
-
-
 
     // States controling modal visibility
     const [modals, setModals] = useState({
@@ -25,9 +24,34 @@ const FeedbackManagement = () => {
         delete: false,
     })
 
+    useEffect(() => {
+
+        loadFeedback();
+    }, [])
+
+    const loadFeedback = async () => {
+        try {
+            const feedback = await fetchFeedback();
+            setAllFeedback(feedback);
+        } catch (error) {
+            console.error('Error loading feedback: ', error);
+        }
+    };
+
+    /*  DELETE FUNCTION -- REMOVE COMMENTS
+    const handleDelete = async () => {
+        try {
+            await deleteFeedback(selectedFeedback.id);
+            loadFeedback();
+        } catch (error) {
+            console.error('Error deleting feedback: ', error); 
+        }
+    }
+    */
+
     // Handle course selection for editing and viewing details
-    const handleItemClick = () => {
-      setSelectedItem(true);          // Set the selected item
+    const handleItemClick = (feedback) => {
+      setSelectedFeedback(feedback);          // Set the selected item
       toggleModal('details', true); // Open the details modal
     };
 
@@ -36,7 +60,14 @@ const FeedbackManagement = () => {
       setModals((prev) => ({ ...prev, [modalName]: state })); // Change state of given modal
     }
 
-    //const filteredFeedback = feedback..
+    const filteredFeedback = allFeedback.filter(feedback =>
+        feedback.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const totalPages = Math.ceil(filteredFeedback.length / itemsPerPage);
+    const currentItems = filteredFeedback.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    
 
     return (
         <div className='management roboto-regular'> 
@@ -47,53 +78,39 @@ const FeedbackManagement = () => {
             <div className='filter'>
                 <div className='search-container roboto-regular'>
                     <input
-                    type='text'
-                    placeholder='Search by name...'
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                        type='text'
+                        placeholder='Search by name...'
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     <FaMagnifyingGlass className='search-icon' />
                 </div>
             </div>
 
             <div className='feedback-management'>
-                <div className='feedback-management-box' onClick={() => handleItemClick()}>
-                    <h2>User</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                </div>
-                <div className='feedback-management-box'>
-                    <h2>User</h2>
-                    <p>Feedback</p>
-                </div>
-                <div className='feedback-management-box'>
-                    <h2>User</h2>
-                    <p>Feedback</p>
-                </div>
-                <div className='feedback-management-box'>
-                    <h2>User</h2>
-                    <p>Feedback</p>
-                </div>
-                <div className='feedback-management-box'>
-                    <h2>User</h2>
-                    <p>Feedback</p>
-                </div>
-                <div className='feedback-management-box'>
-                    <h2>User</h2>
-                    <p>Feedback</p>
-                </div>
+                {currentItems.length > 0 ? (
+                    currentItems.map((feedback) => (
+                        <div className='feedback-management-box' onClick={() => handleItemClick(feedback)}>
+                            <h2>{feedback.email}</h2>
+                            <p>{feedback.feedback}</p>
+                        </div>
+                    ))
+                ) : (
+                    <div className='feedback-management-box'>
+                        <p>No Feedback Available</p>
+                    </div>
+                )}
             </div>
 
-            {selectedItem && (
+            {selectedFeedback && (
                 <Modal
                     isOpen={modals.details}
                     onClose={() => toggleModal('details', false)}
-                    title={"Feedback"}
+                    title={selectedFeedback.email}
                     children={
                         <>
-                            <h2>User</h2>
-                            <p>Feedback</p>
+                            <p>{selectedFeedback.feedback}</p>
                             
-
                             <hr className='modal-divider' />
                                     
                             <div className='modal-buttons'>
@@ -106,6 +123,12 @@ const FeedbackManagement = () => {
                 />
             )}
 
+            {/* Page navigation controls */}
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+            />
         </div>
     );
 }

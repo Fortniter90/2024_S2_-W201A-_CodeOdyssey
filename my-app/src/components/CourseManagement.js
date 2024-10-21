@@ -54,7 +54,7 @@ const CourseManagement = ({ onSelectCourse }) => {
       ...formData,
       lessonCount: isEditing ? course.lessonCount : 0,   // Keep original lesson count
       testCount: isEditing ? course.testCount : 0,       // Keep original test count
-      available: formData.available || false,
+      available: formData.available || true,
     };
 
     try {

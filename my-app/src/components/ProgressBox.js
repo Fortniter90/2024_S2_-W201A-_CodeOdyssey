@@ -40,7 +40,7 @@ const ProgressBox = () => {
     const goToCourse = (courseId) => () => navigate(`/course/${courseId}`);
 
     return (
-        <Section title={"MY PROGRESS"} emptyMessage={"You have No Courses"} onEmptyClick={navigateTo('./course')}>
+        <Section title={"MY PROGRESS"} emptyMessage={"You have No Courses"} onEmptyClick={navigateTo('/course')}>
             {Object.keys(usersCourses).map(courseId => {
                 const courseData = courseDetails.find(course => course.id === courseId) || {};
                 const count = Array.isArray(usersCourses.completedLessons) ? usersCourses.completedLessons.length : 0; // Get the length of the array, default to 0 if not an array

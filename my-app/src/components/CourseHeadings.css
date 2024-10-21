@@ -15,21 +15,21 @@
 /* Info Button Styling */
 .info-button {
     position: absolute; 
-    top: 20px; 
-    right: 20px;
+    top: 10px; 
+    right: -10px;
     border: none;
     color: var(--white);
-    background-color: rgba(0, 0, 0, 0);
+    background-color: transparent;
     font-size: clamp(15px, 1vw, 20px);
+    cursor: pointer; 
 }
+
 
 /* Popup Overlay Styling */
 .popup-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 50%; 
+    right: -2px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -44,9 +44,7 @@
     border-radius: 20px;
     max-width: 500px;
     width: 100%;
-    position: absolute;
-    top: calc(100% - 43px);
-    right: 6px;
+    position: relative; /* Keep this relative for positioning inside .popup-overlay */
 }
 
 /* Arrow Style */

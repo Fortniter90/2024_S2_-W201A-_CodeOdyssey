@@ -1,118 +1,101 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAdminUsers, fetchUsers } from '../utils/dataFetching';
 import { setAdminStatus } from '../utils/dataSaving';
-import { FaMagnifyingGlass, FaX, FaEllipsis } from 'react-icons/fa6';
+import { FaMagnifyingGlass, FaEllipsis } from 'react-icons/fa6';
 import Button from './Button';
 import './DatabaseManagement.css';
+import Modal from './Modal';
+import './Filter.css';
 
 // Admin Management Component
 const AdminManagement = () => {
   // States holding users
-  const [allUsers, setAllUsers] = useState([]);                           // Hold all users
-  const [adminUsers, setAdminUsers] = useState([]);                       // Hold admin users
+  const [allUsers, setAllUsers] = useState([]);
+  const [adminUsers, setAdminUsers] = useState([]);
+  
+  // State for search terms and filtered users
+  const [searchTerm, setSearchTerm] = useState('');
+  const [modalSearchTerm, setModalSearchTerm] = useState('');
+  const [filteredNonAdminUsers, setFilteredNonAdminUsers] = useState([]);
+  
+  // States managing modal visibility and admin removal
+  const [modals, setModals] = useState({
+    add: false,
+    success: false,
+    delete: false,
+  });
+  const [adminToRemove, setAdminToRemove] = useState(null);
 
-  // States controling filtering and searching
-  const [searchTerm, setSearchTerm] = useState('');                       // Hold the search term for filtering admins
-  const [modalSearchTerm, setModalSearchTerm] = useState('');             // Search term in modal for adding admins
-  const [filteredUsers, setFilteredUsers] = useState([]);                 // Hold filtered users based on search term
-
-  // States managing modal and dropdown visibility
-  const [modalActive, setModalActive] = useState(false);                  // Manage visibility of the modal for adding admins
-  const [dropdownVisible, setDropdownVisible] = useState(null);           // Manage which dropdown is visible
-
-  // States handling admin removal
-  const [confirmationVisible, setConfirmationVisible] = useState(false);  // Control the visibility of the confirmation modal
-  const [adminToRemove, setAdminToRemove] = useState(null);               // Track the admin being removed
-
-
-  // Load all users when the component mounts
+  // Load users and admin users when the component mounts
   useEffect(() => {
-    const loadAllUsers = async () => {
-      const users = await fetchUsers(); // Fetch all users from the backend
-      console.log(users);
+    const loadUsers = async () => {
+      const users = await fetchUsers();
+      const admins = await fetchAdminUsers();
       setAllUsers(users);
-      
-      // Filter admin users based on isAdmin property
-      const adminUsers = await fetchAdminUsers();
-      setAdminUsers(adminUsers); // Set filtered admin users
-
-
-    const fetchAdmins = async () => {
-      const adminUsers = await fetchAdminUsers(); // Fetch admin users
-      setAdminUsers(adminUsers);
+      setAdminUsers(admins);
     };
+    loadUsers();
+  }, []);
 
-    loadAllUsers();
-  }, []); // Runs once when the component mounts
+  // Toggle modal visibility
+  const toggleModal = (modalName, state) => {
+    setModals((prev) => ({ ...prev, [modalName]: state }));
+  };
 
-
-  // Handle opening the add admin modal
+  // Open the "Add Admin" modal and filter non-admin users
   const handleAdd = () => {
-    setModalActive(true); // Set modal to active to show it
-    setModalSearchTerm(''); // Clear the search term in the modal
-    // Filter non-admin users to show in the modal
-    const nonAdminUsers = allUsers.filter(user => !adminUsers.some(isAdmin => isAdmin.id === user.id));
-    setFilteredUsers(nonAdminUsers); // Update filtered users for the modal
+    toggleModal('add', true);
+    setModalSearchTerm('');
+    filterNonAdminUsers(''); // Filter non-admin users initially when modal opens
+  };
+
+  // Filter non-admin users based on the modal search term
+  const filterNonAdminUsers = (searchValue) => {
+    const nonAdminUsers = allUsers.filter(
+      (user) =>
+        !adminUsers.some((admin) => admin.id === user.id) &&
+        user.name.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setFilteredNonAdminUsers(nonAdminUsers);
   };
 
   // Handle search input changes in the modal
   const handleModalSearchChange = (e) => {
-    setModalSearchTerm(e.target.value); // Update the modal search term state
-    // Filter all users based on the search term, excluding admin users
-    const results = allUsers.filter(user =>
-      user.name.toLowerCase().includes(e.target.value.toLowerCase()) &&
-      !adminUsers.some(isAdmin => isAdmin.id === user.id)
-    );
-    setFilteredUsers(results); // Update filtered users based on the search
+    const value = e.target.value;
+    setModalSearchTerm(value);
+    filterNonAdminUsers(value);
   };
 
   // Handle adding an admin
   const handleAddAdmin = async (userId) => {
     try {
-      await setAdminStatus(userId, true); // Set the user as an admin
-      setModalActive(false); // Close the modal
-      // Optionally, refresh the list of admins
-      const updatedAdminUsers = await fetchAdminUsers(); // Fetch updated admin users
-      const usersWithEmails = await Promise.all(
-        updatedAdminUsers.map(async (user) => {
-          const email = user.email;
-          return { ...user, email }; // Return the user object with email
-        })
-      );
-      setAdminUsers(usersWithEmails); // Update state with the new admin users
+      await setAdminStatus(userId, true);
+      toggleModal('add', false);
+      
+      const updatedAdmins = await fetchAdminUsers();
+      setAdminUsers(updatedAdmins);
+
     } catch (error) {
-      console.error("Error adding admin:", error); // Log any error that occurs
+      console.error("Error adding admin:", error);
     }
   };
 
   // Handle removing an admin
-  const handleRemoveAdmin = (userId) => {
-    setAdminToRemove(userId);       // Set the admin ID to remove
-    setConfirmationVisible(true);   // Show confirmation dialog for removal
-  };
+  const handleRemoveAdmin = async () => {
+    try {
+      await setAdminStatus(adminToRemove, false)
+      const updatedAdmins = await fetchAdminUsers();
+      setAdminUsers(updatedAdmins);
 
-  // Confirm the removal of an admin
-  const confirmRemoveAdmin = async () => {
-    if (adminToRemove) {
-      await setAdminStatus(adminToRemove, false); // Set the admin status to false (remove admin)
-      setConfirmationVisible(false); // Close the confirmation dialog
-      // Refresh admin users after removal
-      const updatedAdminUsers = await fetchAdminUsers(); // Fetch updated admin users
-      const usersWithEmails = await Promise.all(
-        updatedAdminUsers.map(async (user) => {
-          const email = user.email;
-          return { ...user, email }; // Return the user object with email
-        })
-      );
-      setAdminUsers(usersWithEmails); // Update state with the new admin users
+    } catch (error) {
+      console.error("Error removing admin: ", error);
     }
   };
 
   // Filter admin users based on the search term
-  const filteredAdminUsers = adminUsers.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) // Check if admin name includes search term
+  const filteredAdminUsers = adminUsers.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
 
   return (
     <div className='management roboto-regular'>
@@ -133,43 +116,42 @@ const AdminManagement = () => {
         </div>
       </div>
 
-      {modalActive && (
-        <>
-          <div className='overlay' onClick={() => setModalActive(false)} />
-          <div className='modal'>
-            <button className='authpage-close' onClick={() => setModalActive(false)}><FaX /></button>
-            <h2>Add New Admin Account</h2>
-            <div className='modal-search-container roboto-regular'>
-              <input
-                type='text'
-                placeholder='Search by name...'
-                value={modalSearchTerm}
-                onChange={handleModalSearchChange}
-              />
-              <FaMagnifyingGlass className='search-icon' />
+      <Modal
+        isOpen={modals.add}
+        onClose={() => toggleModal('add', false)}
+        title={"Add New Admin"}
+      >
+        <div className='search-container roboto-regular' style={{ margin: 0 }}>
+          <input
+            type='text'
+            placeholder='Search by name...'
+            value={modalSearchTerm}
+            onChange={handleModalSearchChange}
+          />
+          <FaMagnifyingGlass className='search-icon' />
+        </div>
+
+        {filteredNonAdminUsers.length > 0 ? (
+          filteredNonAdminUsers.map((user) => (
+            <div
+              key={user.id}
+              className='modal-item'
+              onClick={() => handleAddAdmin(user.id)}
+            >
+              {user.name}
             </div>
-            {filteredUsers.length > 0 ? (
-              filteredUsers.map(user => (
-                <div
-                  key={user.id}
-                  className='modal-item'
-                  onClick={() => handleAddAdmin(user.id)}
-                >
-                  {user.name}
-                </div>
-              ))
-            ) : (
-              <div className='modal-default'>No users shown. The user may already be an admin.</div>
-            )}
+          ))
+        ) : (
+          <div className='modal-default'>
+            No users available. The user may already be an admin.
           </div>
-        </>
-      )}
+        )}
+      </Modal>
 
       <div className='table-container roboto-regular'>
         <table className='management-table'>
           <thead>
             <tr>
-              <th></th>
               <th>Username</th>
               <th>Email</th>
               <th>Actions</th>
@@ -179,16 +161,13 @@ const AdminManagement = () => {
             {filteredAdminUsers.length > 0 ? (
               filteredAdminUsers.map((user) => (
                 <tr key={user.id}>
-                  <td>{user.picture}</td>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
-
-                  {/* Dropdown for actions to perform on row */}
                   <td>
                     <div className='dropdown'>
                       <button className='dropdown-trigger'><FaEllipsis /></button>
                       <div className='menu'>
-                        <button onClick={() => handleRemoveAdmin(user.id)}>Remove Admin</button>
+                        <Button text={"Remove Admin"} action={() => {toggleModal('delete', true); setAdminToRemove(user)}} />
                       </div>
                     </div>
                   </td>
@@ -203,13 +182,34 @@ const AdminManagement = () => {
         </table>
       </div>
 
-      {confirmationVisible && (
-        <div className='confirmation-dialog'>
-          <p>Are you sure you want to remove this admin status?</p>
-          <button onClick={confirmRemoveAdmin}>Yes</button>
-          <button onClick={() => setConfirmationVisible(false)}>No</button>
-        </div>
-      )}
+      <Modal
+        isOpen={modals.success}
+        onClose={() => toggleModal('success', false)}
+        title={'Success!'}
+        children={
+          <>
+            <p>Action completed successfully.</p>
+            <Button text="Close" action={() => toggleModal('success', false)} />
+          </>
+        }
+      />
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={modals.delete}
+        onClose={() => toggleModal('delete', false)}
+        title={'Delete Confirmation'}
+        children={
+          <>
+            <p>Are you sure you want to remove this user as admin?</p>
+
+            <div className='modal-buttons'>
+              <Button text="Delete" action={() => { handleRemoveAdmin(); toggleModal('delete', false); toggleModal('success', true) }} />
+              <Button text="Cancel" outline={true} action={() => toggleModal('delete', false)} />
+            </div>
+          </>
+        }
+      />
     </div>
   );
 };

@@ -5,6 +5,7 @@
     padding: 20px; /* Optional padding */
     width: 80%;
     margin: 0 auto;
+    min-height: 100vh;
 }
 
 .lesson-content {
