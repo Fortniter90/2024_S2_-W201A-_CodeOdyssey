@@ -29,13 +29,17 @@ const AdminManagement = () => {
   useEffect(() => {
     const loadAllUsers = async () => {
       const users = await fetchUsers(); // Fetch all users from the backend
+      console.log(users);
       setAllUsers(users);
       
       // Filter admin users based on isAdmin property
       const adminUsers = await fetchAdminUsers();
       setAdminUsers(adminUsers); // Set filtered admin users
 
-      console.log(adminUsers);
+
+    const fetchAdmins = async () => {
+      const adminUsers = await fetchAdminUsers(); // Fetch admin users
+      setAdminUsers(adminUsers);
     };
 
     loadAllUsers();
@@ -47,7 +51,7 @@ const AdminManagement = () => {
     setModalActive(true); // Set modal to active to show it
     setModalSearchTerm(''); // Clear the search term in the modal
     // Filter non-admin users to show in the modal
-    const nonAdminUsers = allUsers.filter(user => !adminUsers.some(admin => admin.id === user.id));
+    const nonAdminUsers = allUsers.filter(user => !adminUsers.some(isAdmin => isAdmin.id === user.id));
     setFilteredUsers(nonAdminUsers); // Update filtered users for the modal
   };
 
@@ -57,7 +61,7 @@ const AdminManagement = () => {
     // Filter all users based on the search term, excluding admin users
     const results = allUsers.filter(user =>
       user.name.toLowerCase().includes(e.target.value.toLowerCase()) &&
-      !adminUsers.some(admin => admin.id === user.id)
+      !adminUsers.some(isAdmin => isAdmin.id === user.id)
     );
     setFilteredUsers(results); // Update filtered users based on the search
   };

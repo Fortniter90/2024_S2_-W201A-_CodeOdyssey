@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { FaMagnifyingGlass } from 'react-icons/fa6';
 import './Filter.css';
 
-
 // Component to filter through searching and a dropdown menu
 const Filter = ({ items, setFilteredItems }) => {
 

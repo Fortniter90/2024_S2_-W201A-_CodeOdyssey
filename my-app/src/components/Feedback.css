@@ -1,3 +1,4 @@
+/* Feedback menu styles */
 .open-feedback-menu {
   display: flex;
   position: fixed;
@@ -15,6 +16,7 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
+/* Feedback styles */
 .feedback-container,
 .feedback-popup {
   position: fixed;

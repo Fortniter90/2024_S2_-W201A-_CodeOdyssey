@@ -179,6 +179,7 @@ export const updateUsername = async (userId, name) => {
   }
 };
 
+// Function to set admin status
 export const setAdminStatus = async (userId, isAdmin) => {
   try {
     await axios.put(`${backendUrl}/auth/users/${userId}/admin`, {
@@ -193,7 +194,7 @@ export const setAdminStatus = async (userId, isAdmin) => {
   }
 };
 
-
+// Function to submit feedback
 export const submitFeedback = async (userId, userEmail, feedback) => {
   try {
     await axios.post(`${backendUrl}/save/feedback/ ${userId}`, {

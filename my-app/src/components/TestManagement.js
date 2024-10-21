@@ -5,7 +5,6 @@ import { deleteTest } from '../utils/dataDeleting';
 import ManagementTable from './ManagementTable';
 
 
-
 // Component to manage test data
 const TestManagement = ({ selectedCourse, selectedLesson }) => {
 
@@ -18,8 +17,6 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
     hint: '',
     constraints: []
   });
-
-
 
   // Load tests component on mount
   useEffect(() => {
@@ -36,8 +33,6 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
       console.error('Error loading courses:', error); // Log any errors during data fetching
     }
   };
-
-
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -129,8 +124,6 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
       console.error('Error deleting test:', error); // Log any errors during deletion
     }
   };
-
-
 
   // Render add course form
   const testAdd = () => {
@@ -233,8 +226,6 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
       </>
     );
   };
-
-
 
   return (
     <ManagementTable

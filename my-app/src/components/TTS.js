@@ -14,6 +14,7 @@ const TTS = ({ text }) => {
       window.speechSynthesis.speak(speech);
       setIsPlaying(true);
 
+      // Stop playing when finished
       speech.onend = () => {
         setIsPlaying(false);
       };

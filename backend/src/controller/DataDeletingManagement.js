@@ -50,4 +50,3 @@ export const deleteTest = async (courseId, lessonId, testId) => {
     throw error;
   }
 };
-

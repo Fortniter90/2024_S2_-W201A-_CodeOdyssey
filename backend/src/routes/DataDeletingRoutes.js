@@ -3,6 +3,7 @@ import { deleteCourse, deleteLesson, deleteTest } from '../controller/DataDeleti
 
 const deleteRouter = express.Router();
 
+// Router for deleting courses
 deleteRouter.delete('/courses/:courseId', async (req, res) => {
   const { courseId } = req.params;
   try {
@@ -13,6 +14,7 @@ deleteRouter.delete('/courses/:courseId', async (req, res) => {
   }
 });
 
+// Router for deleting lessons
 deleteRouter.delete('/courses/:courseId/lessons/:lessonId', async (req, res) => {
   const { courseId, lessonId } = req.params;
   try {
@@ -23,6 +25,7 @@ deleteRouter.delete('/courses/:courseId/lessons/:lessonId', async (req, res) => 
   }
 });
 
+// Router for deleting tests
 deleteRouter.delete('/courses/:courseId/lessons/:lessonId/tests/:testId', async (req, res) => {
   const { courseId, lessonId, testId } = req.params;
   try {
@@ -34,5 +37,3 @@ deleteRouter.delete('/courses/:courseId/lessons/:lessonId/tests/:testId', async 
 });
 
 export default deleteRouter;
-
-

@@ -1,6 +1,7 @@
 import admin from '../config/Firebase.js';
 const db = admin.firestore(); // Get Firestore instance from adminconst db = admin.firestore(); // Get Firestore instance from admin
 
+// Function to create a new user with some presets
 async function createUser(email, password, name) {
   try {
 
@@ -26,6 +27,7 @@ async function createUser(email, password, name) {
   }
 }
 
+// Function to delete a user
 async function deleteUser(uid) {
   try {
     await admin.auth().deleteUser(uid);
@@ -58,6 +60,7 @@ async function revokeTokensAndLogTimestamp(uid) {
   }
 };
 
+// Function to load user's data
 async function loadUserData(uid) {
   try {
     const userDocRef = db.collection('users').doc(uid); // Use Firestore Admin SDK's collection and doc methods
@@ -92,6 +95,7 @@ async function loadUserData(uid) {
   }
 }
 
+// Function to update user's profile picture
 async function updateProfilePicture(uid, picture) {
   try {
     const userRecord = await admin.auth().updateUser(uid, {
@@ -104,10 +108,10 @@ async function updateProfilePicture(uid, picture) {
   }
 }
 
-
+// Function to update user's username
 async function updateUsername(uid, name) {
   try {
-    userRecord = await admin.auth().updateUser(uid, {
+    await admin.auth().updateUser(uid, {
       displayName: name
     });
     console.log("Successfully updated user's username",);
@@ -116,10 +120,11 @@ async function updateUsername(uid, name) {
   }
 }
 
+// Function to update a user's admin status
 export const setAdminStatus = async (userId, isAdmin) => {
   try {
     const userRef = db.collection('users').doc(userId);
-    await userRef.update({ admin: isAdmin });
+    await userRef.update({ isAdmin: isAdmin });
     console.log(`Successfully updated admin status for user ${userId}`);
   } catch (error) {
     console.error('Error updating admin status:', error.message);
@@ -128,4 +133,3 @@ export const setAdminStatus = async (userId, isAdmin) => {
 };
 
 export { createUser, deleteUser, revokeTokensAndLogTimestamp, loadUserData, updateUsername, updateProfilePicture };
-

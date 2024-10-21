@@ -41,4 +41,3 @@ const SignOutComponent = () => {
 };
 
 export default SignOutComponent;
-

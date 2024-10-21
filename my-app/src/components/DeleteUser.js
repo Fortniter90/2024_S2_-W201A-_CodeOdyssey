@@ -68,4 +68,3 @@ const DeleteUserComponent = () => {
 };
 
 export default DeleteUserComponent;
-

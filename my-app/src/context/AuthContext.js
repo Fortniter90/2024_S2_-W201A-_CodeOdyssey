@@ -26,12 +26,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const refreshToken = async () => {
-    console.log("reeeee");
     const user = auth.currentUser;
     if (!user) return false;
 
     try {
-      await user.getIdToken(true);  // Force refresh the token
+      const token = await user.getIdToken(true);  // Force refresh the token
+      localStorage.setItem('idToken', token);
       await refreshUserData();  // Reload user data after token refresh
       return true;
     } catch (error) {
@@ -126,4 +126,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-

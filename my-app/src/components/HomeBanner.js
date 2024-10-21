@@ -7,8 +7,6 @@ import SnakeNeutral from './assets/SnakeS2-Neutral.png';
 import CapybaraSad from './assets/CapybaraS2-Sad.png';
 import BunnyConcerned from './assets/BunnyS2-Concerned.png';
 
-
-
 // HomeBanner to display courses to make users know what we have
 const HomeBanner = () => {
 
@@ -36,8 +34,6 @@ const HomeBanner = () => {
         },
     ];
     
-
-
     // Automatically change the banner every 5 seconds
     useEffect(() => {
         const interval = setInterval(() => {
@@ -61,9 +57,7 @@ const HomeBanner = () => {
     const handleNavClick = (index) => {
         setCurrentIndex(index);
     };
-
-
-
+    
     return (
         <div className='banner'>
             {/* Left arrow for the previous banner */}

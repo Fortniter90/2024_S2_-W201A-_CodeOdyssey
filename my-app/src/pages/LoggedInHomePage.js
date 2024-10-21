@@ -10,11 +10,10 @@ import Footer from "../components/Footer.js";
 import NavigationBar from "../components/NavigationBar.js";
 
 
-
 // Main component for the logged in home page
 const LoggedInHomePage = () => {
-  // Destructure values from the authentiction context
-  const { currentUser, isAuthenticated, usersCourses, isAdmin } = useAuth();
+  // Destructure values from the authentication context
+  const { currentUser, isAuthenticated, usersCourses, isAdmin, checkAuthStatus, refreshUserData } = useAuth();
 
   // State variables storing data
   const [courseDetails, setCourseDetails] = useState([]);
@@ -27,47 +26,47 @@ const LoggedInHomePage = () => {
   // Fetch course and lesson data whenever authentication status or user course changes
   useEffect(() => {
     const fetchData = async () => {
-  
-      // If not authenticated, do not attempt to fetch data
-      if (!isAuthenticated) {
+      checkAuthStatus();
+
+      // If not authenticated, or if usersCourses is not available, do not attempt to fetch data
+      if (!isAuthenticated || !usersCourses || Object.keys(usersCourses).length === 0) {
+        setLoading(false);
         return;
       }
-  
+
       try {
-        // Fetch course data
+        // Fetch course data first
         const fetchedCourses = await fetchCourses();
         setCourseDetails(fetchedCourses);
-  
-        // Fetch lesson for each course that the user has done
+
+        // Fetch lessons for each course the user is enrolled in, only if there are valid courses
         const lessonPromises = Object.keys(usersCourses).map(async (courseId) => {
-          const courseIndex = fetchedCourses.findIndex(course => course.id === courseId);
-          if (fetchedCourses[courseIndex]) {
+          const course = fetchedCourses.find(course => course.id === courseId);
+          if (course) {
+            // Ensure the course exists in fetchedCourses before fetching lessons
             const lessons = await fetchLessons(courseId);
             return { [courseId]: lessons };
           }
-          return null;
+          return null; // If no course found, return null to avoid errors
         });
-  
-        // Combine the lessons data into a single object
+
+        // Combine lessons data into a single object
         const lessonsData = (await Promise.all(lessonPromises)).reduce((acc, lessons) => {
           return lessons ? { ...acc, ...lessons } : acc;
         }, {});
-  
+
         setLessonDetails(lessonsData);
       } catch (err) {
-        // If an error occurs, set error state
         setError(err);
       } finally {
-        // Mark data loading as finished
         setLoading(false);
       }
     };
-  
-    // Call the fetchData function
-    fetchData();
-  }, [isAuthenticated]);
-  
-  
+
+    if (isAuthenticated && usersCourses) {
+      fetchData();
+    }
+  }, [isAuthenticated, usersCourses]); // Depend on usersCourses
 
   // Redirect to the homepage if not authenticated
   if (!isAuthenticated) return <p>Redirecting to homepage...</p>;
@@ -93,38 +92,43 @@ const LoggedInHomePage = () => {
 
         {/* Home page header */}
         <div className='homepage-header'>
-          <h1 className='fira-code'>Welcome, {currentUser.displayName || currentUser.name}</h1>
+          <h1 className='fira-code'>Welcome, {currentUser.name}</h1>
 
           {/* If the user is an admin, show button to navigate to the developer dashboard */}
           {isAdmin && <Button text="DEVELOPER DASHBOARD" action={navigateTo('/developerdashboard')} backgroundColor={'var(--background-dark)'} />}
         </div>
 
-
         {/* Render the "Recent Levels" section */}
-        <Section title="RECENT LEVELS" emptyMessage="You Have No Recent Levels" onEmptyClick={navigateTo('./course')}>
-          {Object.keys(usersCourses).map(courseId => {
-            const course = usersCourses[courseId];
-            const courseData = courseDetails.find(course => course.id === courseId) || {};
-            const latestLesson = lessonDetails[courseId]?.find(lesson => lesson.id === course.currentLesson) || {};
-            return (
-              <div
-                className='recent-levels'
-                key={courseId}
-                style={{ backgroundImage: `linear-gradient(var(--${courseData.color}-light), var(--${courseData.color}-medium), var(--${courseData.color}-dark))` }}
-                onClick={goToLesson(courseId, latestLesson.id)}
-              >
-                <p className='roboto-medium'>{courseData.title || 'Unknown Course'}</p>
-                <h3 className='fira-code'>{latestLesson.title || 'Unknown Lesson'}</h3>
-              </div>
-            );
-          })}
-        </Section>
+        {courseDetails.length > 0 && lessonDetails ? (
+          <Section title="RECENT LEVELS" emptyMessage="You Have No Recent Levels" onEmptyClick={navigateTo('./course')}>
+            {Object.keys(usersCourses).map(courseId => {
+              const course = usersCourses[courseId];
+              const courseData = courseDetails.find(course => course.id === courseId) || {};
+              const latestLesson = lessonDetails[courseId]?.find(lesson => lesson.id === course.currentLesson) || null;
+
+              // Only render if latestLesson exists
+              return latestLesson ? (
+                <div
+                  className='recent-levels'
+                  key={courseId}
+                  style={{ backgroundImage: `linear-gradient(var(--${courseData.color}-light), var(--${courseData.color}-medium), var(--${courseData.color}-dark))` }}
+                  onClick={goToLesson(courseId, latestLesson.id)}
+                >
+                  <p className='roboto-medium'>{courseData.title || 'Unknown Course'}</p>
+                  <h3 className='fira-code'>{latestLesson.title || 'Unknown Lesson'}</h3>
+                </div>
+              ) : null; // If no latestLesson, return null to avoid rendering
+            })}
+          </Section>
+        ) : (
+          <p>No recent levels to display.</p>
+        )}
 
         {/* Render the "Your Courses" section */}
         <Section title="YOUR COURSES" emptyMessage="You Have No Courses" onEmptyClick={navigateTo('./course')}>
           {Object.keys(usersCourses).map(courseId => {
             const courseData = courseDetails.find(course => course.id === courseId) || {};
-            
+
             return (
               <div
                 className='user-courses'
@@ -153,7 +157,7 @@ const Section = ({ title, children, emptyMessage, onEmptyClick }) => (
     {children.length > 0 ? children : (
       <div className='recent-levels selected-courses-empty' onClick={onEmptyClick}>
         <h3 className='fira-code'>{emptyMessage}</h3>
-        
+
         <div className='empty-align'>
           <p className='roboto-medium'>Start a new journey today!</p>
           <FaPlus className='faplus' />

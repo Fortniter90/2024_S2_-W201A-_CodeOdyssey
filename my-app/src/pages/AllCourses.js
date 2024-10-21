@@ -7,8 +7,6 @@ import Feedback from '../components/Feedback';
 import Button from '../components/Button';
 import "./AllCourses.css";
 
-
-
 const AllCourses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,7 +36,6 @@ const AllCourses = () => {
   const goToCourse = (courseId) => {
     navigate(`/course/${courseId}`);
   }
-
 
   return (
     <div>

@@ -1,6 +1,7 @@
 import { FaX } from 'react-icons/fa6';
 import './Modal.css';
 
+// Structure for Modal
 const Modal = ({ 
     isOpen, 
     onClose, 

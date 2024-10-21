@@ -1,7 +1,7 @@
 import admin from 'firebase-admin';
 import { readFileSync } from 'fs';
 
-// Assuming you're using environment variables to store paths and secrets
+// environment variables to store paths and secrets
 const serviceAccountKeyPath = "codeodysseydatabaseadmin.json";
 
 // Read and parse the service account JSON
@@ -15,4 +15,3 @@ admin.initializeApp({
 
 export default admin;
 export const db = admin.firestore();  // Firestore initialization
-

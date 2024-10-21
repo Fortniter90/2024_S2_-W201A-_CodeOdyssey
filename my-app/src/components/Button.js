@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./Button.css";
 
+// Structure for button
 const Button = ({
     text,
     outline = false,

@@ -4,8 +4,6 @@ import { saveCourse, updateCourse } from '../utils/dataSaving';
 import { deleteCourse } from '../utils/dataDeleting';
 import ManagementTable from './ManagementTable';
 
-
-
 // Component to manage course data
 const CourseManagement = ({ onSelectCourse }) => {
 
@@ -16,8 +14,6 @@ const CourseManagement = ({ onSelectCourse }) => {
     color: '',
     description: ''
   });
-
-
 
   // Load courses component on mount
   useEffect(() => {
@@ -34,8 +30,6 @@ const CourseManagement = ({ onSelectCourse }) => {
       console.error('Error loading courses:', error); // Log any errors during data fetching
     }
   };
-
-
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -88,8 +82,6 @@ const CourseManagement = ({ onSelectCourse }) => {
       console.error('Error deleting course:', error); // Log any errors during deletion
     }
   };
-
-
 
   // Render add course form
   const courseAdd = () => {
@@ -171,8 +163,6 @@ const CourseManagement = ({ onSelectCourse }) => {
       </>
     );
   };
-
-
 
   return (
     <ManagementTable

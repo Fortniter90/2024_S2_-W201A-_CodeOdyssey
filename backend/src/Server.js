@@ -16,7 +16,7 @@ app.use(express.json());
 
 // CORS configuration
 const corsOptions = {
-  origin: 'http://localhost:3000', // Allow the frontend to connect from this origin
+  origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Accept only GET and POST requests from the client
   allowedHeaders: ['Content-Type', 'Authorization'], // Allow only requests with this header
   credentials: true // Include credentials (cookies, authorization headers, etc.)
@@ -47,11 +47,8 @@ io.on("connection", (socket) => {
 
 // Set up the routes
 app.use("/auth", authRouter);
-
 app.use("/fetch", fetchRouter);
-
 app.use("/save", saveRouter);
-
 app.use("/delete", deleteRouter);
 
 // Error handling middleware
@@ -64,4 +61,3 @@ app.use((err, req, res, next) => {
 server.listen(8080, () => {
   console.log("HTTP server running on port 8080"); // Log when the HTTP server is up and running
 });
-

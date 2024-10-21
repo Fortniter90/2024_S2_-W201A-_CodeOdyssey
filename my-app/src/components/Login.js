@@ -16,7 +16,6 @@ const LoginComponent = () => {
     navigate('/');
   }
 
-
   // Function that handles user login
   const loginHandler = async (e) => {
     e.preventDefault(); // Prevents the page from reloading
@@ -68,4 +67,3 @@ const LoginComponent = () => {
 };
 
 export default LoginComponent;
-

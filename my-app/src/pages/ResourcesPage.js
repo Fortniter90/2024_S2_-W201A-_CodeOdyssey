@@ -2,7 +2,6 @@ import Footer from "../components/Footer";
 import NavigationBar from "../components/NavigationBar";
 import './ResourcesPage.css';
 
-
 const ResourcesPage = () => {
 
   return (
@@ -82,4 +81,3 @@ const ResourcesPage = () => {
 };
   
 export default ResourcesPage;
-  

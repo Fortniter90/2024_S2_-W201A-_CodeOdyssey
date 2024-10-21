@@ -1,7 +1,6 @@
 import { FaPlus } from "react-icons/fa6";
 import './Section.css';
 
-
 // Section component to render a titled section with content or an empty state
 const Section = ({ title, children, emptyMessage, onEmptyClick, outerContainer = true }) => {
   return outerContainer ? (

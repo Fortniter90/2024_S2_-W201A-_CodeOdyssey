@@ -176,4 +176,3 @@ export const submitFeedback = async (userId, userEmail, feedback) => {
     throw new Error('Failed to submit feedback');
   }
 };
-
