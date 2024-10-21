@@ -199,7 +199,6 @@ const TestTemplate = () => {
       />
 
       <Feedback />
-      <Footer />
     </div>
   );
 };

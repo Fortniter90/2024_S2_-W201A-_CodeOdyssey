@@ -146,7 +146,6 @@ const LoggedInHomePage = () => {
       </div>
 
       <Feedback />
-      <Footer />
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import React from "react";
+
 const Star = ({ x, y, size = 1, darkBackground = false }) => {
     const scale = size === 'small' ? 0.5 : size === 'large' ? 0.75 : 1;
     

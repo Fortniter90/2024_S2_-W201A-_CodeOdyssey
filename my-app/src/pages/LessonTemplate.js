@@ -92,7 +92,6 @@ const LessonTemplate = () => {
       />
 
       <Feedback />
-      <Footer />
     </div>
   );
 };

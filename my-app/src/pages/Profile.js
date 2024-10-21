@@ -50,7 +50,6 @@ const Profile = () => {
       </div>
         
       <Feedback />
-      <Footer />
     </>
   );
 };

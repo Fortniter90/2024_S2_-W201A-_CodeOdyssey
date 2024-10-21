@@ -119,7 +119,6 @@ function PastTest() {
       </div>
 
       <Feedback />
-      <Footer />
     </div>
   );
 }

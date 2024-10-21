@@ -79,7 +79,6 @@ const ResourcesPage = () => {
         </center>
       </p>
 
-      <Footer />
     </div>
   );
 };

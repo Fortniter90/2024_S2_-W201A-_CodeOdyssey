@@ -67,7 +67,6 @@ const AllCourses = () => {
       </div>
 
       <Feedback />
-      <Footer />
     </div>
   );
 };

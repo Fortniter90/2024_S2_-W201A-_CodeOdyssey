@@ -37,7 +37,6 @@ const LoggedOutHomePage = () => {
       {/* Banner about courses */}
       <HomeBanner />
 
-      <Footer />
     </div>
   );
 };

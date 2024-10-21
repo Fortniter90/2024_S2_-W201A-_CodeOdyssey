@@ -1,3 +1,4 @@
+import React from "react";
 import Star from "./assets/Star";
 import "./Footer.css";
 
@@ -10,9 +11,9 @@ const Footer = () => {
 
         {/* Navigation Links */}
         <nav className='footer-nav roboto-bold'>
-          <a href="/">HOME</a>
-          <a href="/resources" className='footer-nav-centered'>RESOURCES</a>
-          <a href="/about">ABOUT US</a>
+          <a href="/" data-testid="home-link">HOME</a>
+          <a href="/resources" data-testid="resources-link" className='footer-nav-centered'>RESOURCES</a>
+          <a href="/about" data-testid="about-link">ABOUT US</a>
         </nav>
 
         {/* Horizontal Line */}

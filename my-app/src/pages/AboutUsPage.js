@@ -82,7 +82,6 @@ const AboutUsPage = () => {
         <img src={CapybaraHappy} alt="Capybara Happy" className="sticky-image capybara-image" />
         <img src={SnakeHappy} alt="Snake Happy" className="sticky-image snake-image" />
       
-        <Footer />
       </div>
       
     );
