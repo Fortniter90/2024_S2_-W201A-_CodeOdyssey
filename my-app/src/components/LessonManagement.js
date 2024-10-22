@@ -78,7 +78,7 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
     const newLesson = {
       ...formData,
       testCount: isEditing ? selectedCourse.testCount : 0,    // Keep original test count
-      available: false
+      available: true
     };
 
     try {

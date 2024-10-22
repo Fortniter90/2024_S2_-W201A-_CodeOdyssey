@@ -23,6 +23,7 @@
 .search-container {
   position: relative;
   margin-left: auto;
+  justify-self: flex-end;
 }
 
 .search-container input {

@@ -36,7 +36,7 @@ const PastTestsCourse = ({ onSelectCourse }) => {
     const navigateTo = (path) => () => navigate(path);
 
     return (
-        <Section emptyMessage={"You have No Courses"} onEmptyClick={navigateTo('./course')} outerContainer={false} >
+        <Section emptyMessage={"You have No Courses"} onEmptyClick={navigateTo('/course')} outerContainer={false} >
             {Object.keys(usersCourses).map(courseId => {
                 const courseData = courseDetails.find(course => course.id === courseId) || {};
                 

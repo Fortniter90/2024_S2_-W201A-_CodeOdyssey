@@ -19,23 +19,27 @@ const LoggedOutHomePage = () => {
       {/* Navigation bar for the home page */}
       <NavigationBar />
 
-      {/* Main content area */}
-      <div className='main-content'>
-        <p className='fira-code'>
-          Your Journey <br />
-          to Mastering <br />
-          Programming <br />
-          Starts Here!
-        </p>
+      <div className='home-page-loggedout'>
+        {/* Main content area */}
+        <div className='main-content'>
+          <p className='fira-code'>
+            Your Journey <br />
+            to Mastering <br />
+            Programming <br />
+            Starts Here!
+          </p>
 
-        {/* Website logo */}
-        <div className='logo'>
-          <CodeOdysseyLogo width='32vw' />
+          {/* Website logo */}
+          <div className='logo'>
+            <CodeOdysseyLogo width='32vw' />
+          </div>
         </div>
-      </div>
 
-      {/* Banner about courses */}
-      <HomeBanner />
+        {/* Banner about courses */}
+        <HomeBanner />
+
+      </div>
+      
 
       <Footer />
     </div>

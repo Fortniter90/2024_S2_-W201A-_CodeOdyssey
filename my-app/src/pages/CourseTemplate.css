@@ -2,6 +2,7 @@
     height: auto;
     width: calc(100% - 150px);
     margin: 20px 75px;
+    min-height: 100vh;
 }
 
 .course-content {

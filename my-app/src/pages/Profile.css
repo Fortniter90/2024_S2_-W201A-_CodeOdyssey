@@ -4,6 +4,7 @@
     margin: 25px auto;
     width: 80%;
     max-width: 1250px;
+    min-height: 100vh;
 }
 
 .profile-left {

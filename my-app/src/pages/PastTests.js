@@ -13,7 +13,7 @@ import { FaArrowLeftLong } from 'react-icons/fa6';
 function PastTest() {
   const { currentUser, isAuthenticated, usersCourses } = useAuth(); // Extracting user info
 
-  const [activeTab, setActiveTab] = useState('dashboard'); // State to track the currently active tab
+  const [activeTab, setActiveTab] = useState('courses'); // State to track the currently active tab
   const [selectedCourse, setSelectedCourse] = useState(null); // Store the selected course
   const [selectedLesson, setSelectedLesson] = useState(null); // Store the selected lesson
 
@@ -90,10 +90,6 @@ function PastTest() {
   // Handle error case
   if (error) {
     return <div>{error}</div>;
-  }
-  // Handle case where answersData is empty or user is not authenticated
-  if (!answersData.length) {
-    return <div>No answers available</div>;
   }
 
   return (

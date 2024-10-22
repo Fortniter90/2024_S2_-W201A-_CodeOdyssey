@@ -1,10 +1,10 @@
 import { useState } from "react";
 import Button from "./Button";
-import "./ManagementTable.css";
-import './DatabaseManagement.css';
 import Filter from "./Filter";
 import Pagination from "./Pagination";
 import Modal from "./Modal";
+import "./ManagementTable.css";
+import './DatabaseManagement.css';
 
 // Structure for managment table
 const ManagementTable = ({  
@@ -93,12 +93,12 @@ const ManagementTable = ({
                         toggleModal('add', false);
                     }}>
                     
-                    {itemAdd()}
-                    
-                    <div className='modal-buttons'>
-                        <Button type="submit" text="Add Course" />
-                        <Button text="Cancel" outline={true} action={() => toggleModal('add', false)} />
-                    </div>
+                        {itemAdd()}
+                        
+                        <div className='modal-buttons'>
+                            <Button type="submit" text="Add Course" />
+                            <Button text="Cancel" outline={true} action={() => toggleModal('add', false)} />
+                        </div>
                     </form>
                 }
             />
@@ -137,7 +137,7 @@ const ManagementTable = ({
             </div>
             
             {/* Course Details and Edit Modal */}
-            {selectedItem ? (
+            {selectedItem && (
                 <Modal
                     isOpen={modals.details}
                     onClose={() => toggleModal('details', false)}
@@ -174,7 +174,7 @@ const ManagementTable = ({
                     }
                     isCentered={false}
                 />
-            ) : (<></>)}
+            )}
 
             {/* Success Confirmation Modal */}
             <Modal

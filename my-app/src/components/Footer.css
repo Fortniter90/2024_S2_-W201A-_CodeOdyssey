@@ -6,7 +6,7 @@
     width: 100%;
     box-sizing: border-box;
     position: relative;
-    bottom: -40vh;
+    margin-top: auto;
 }
 
 .footer-content {

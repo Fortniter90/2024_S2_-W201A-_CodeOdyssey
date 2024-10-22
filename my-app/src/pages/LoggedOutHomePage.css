@@ -1,3 +1,7 @@
+.home-page-loggedout {
+    height: 100vh;
+}
+
 /* Main content container styling */
 .main-content {
     display: flex;

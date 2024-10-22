@@ -21,33 +21,40 @@ const LearningPath = ({ courseId, userId }) => {
       // Fetch lessons from Firestore
       const lessonData = await fetchLessons(courseId);
       const lessonList = Object.entries(lessonData).map(([id, data]) => ({ id, ...data }));
-
+  
       // Fetch user progress for the specific course
-      const userProgress = await fetchUserCourseProgress(userId, courseId);
-      console.log('progress: ',userProgress);
-
-      const progressData = userProgress;
-
+      const progressData = await fetchUserCourseProgress(userId, courseId);
+  
       // Ensure completedLessons is an array
       const completedLessons = progressData.completedLessons || [];
-
+  
+      // If there's no current lesson, set the first lesson as the current one
+      const currentLessonId = progressData.currentLesson || (lessonList.length > 0 ? lessonList[0].id : null);
+  
       // Mark lessons as completed or current based on user progress
       const updatedLessons = lessonList.map((lesson) => ({
         ...lesson,
         isCompleted: completedLessons.includes(lesson.id),
-        isCurrent: progressData.currentLesson === lesson.id
+        isCurrent: currentLessonId === lesson.id
       }));
-
+  
       setLevels(updatedLessons); // Update levels state with fetched lessons
-
-      // Set the latest lesson as selected by default
+  
+      // Set the current lesson as selected by default
       const currentLesson = updatedLessons.find(lesson => lesson.isCurrent) || updatedLessons[0];
       setSelectedLesson(currentLesson);
-
+  
+      // Optionally, update the user's current lesson in the database if it wasn't set
+      if (!progressData.currentLesson && currentLesson) {
+        await updateUserLessons(userId, updatedLessons, currentLesson, courseId);
+        await updateUserCourseData(userId, courseId);
+      }
+  
     } catch (error) {
       console.error("Error fetching lessons and progress:", error);
     }
   };
+  
 
   // Show loading message if no levels are loaded yet
   if (!levels.length) return <div>Loading...</div>;
