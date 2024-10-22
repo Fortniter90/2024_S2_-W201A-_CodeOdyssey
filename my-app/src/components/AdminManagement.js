@@ -12,12 +12,12 @@ const AdminManagement = () => {
   // States holding users
   const [allUsers, setAllUsers] = useState([]);
   const [adminUsers, setAdminUsers] = useState([]);
-  
+
   // State for search terms and filtered users
   const [searchTerm, setSearchTerm] = useState('');
   const [modalSearchTerm, setModalSearchTerm] = useState('');
   const [filteredNonAdminUsers, setFilteredNonAdminUsers] = useState([]);
-  
+
   // States managing modal visibility and admin removal
   const [modals, setModals] = useState({
     add: false,
@@ -71,7 +71,7 @@ const AdminManagement = () => {
     try {
       await setAdminStatus(userId, true);
       toggleModal('add', false);
-      
+
       const updatedAdmins = await fetchAdminUsers();
       setAdminUsers(updatedAdmins);
 
@@ -83,7 +83,7 @@ const AdminManagement = () => {
   // Handle removing an admin
   const handleRemoveAdmin = async () => {
     try {
-      await setAdminStatus(adminToRemove, false)
+      await setAdminStatus(adminToRemove.id, false)
       const updatedAdmins = await fetchAdminUsers();
       setAdminUsers(updatedAdmins);
 
@@ -167,7 +167,7 @@ const AdminManagement = () => {
                     <div className='dropdown'>
                       <button className='dropdown-trigger'><FaEllipsis /></button>
                       <div className='menu'>
-                        <Button text={"Remove Admin"} action={() => {toggleModal('delete', true); setAdminToRemove(user)}} />
+                        <Button text={"Remove Admin"} action={() => { toggleModal('delete', true); setAdminToRemove(user) }} />
                       </div>
                     </div>
                   </td>
