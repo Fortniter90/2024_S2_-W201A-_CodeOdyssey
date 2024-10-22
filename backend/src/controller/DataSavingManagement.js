@@ -1,6 +1,5 @@
 import admin from '../config/Firebase.js';
 const db = admin.firestore(); // Get Firestore instance from adminconst db = admin.firestore(); // Get Firestore instance from admin
-const FieldValue = admin.firestore.FieldValue;
 
 // Function to add a new course
 export const saveCourse = async (courseData) => {
@@ -30,8 +29,10 @@ export const saveLesson = async (courseId, lessonData) => {
     const courseRef = db.collection('courses').doc(courseId);
     const lessonsRef = courseRef.collection('lessons');
 
-    // Add a timestamp to the lesson data using FieldValue
-    lessonData.createdAt = FieldValue.serverTimestamp();
+    //  Increment lesson count
+    await courseRef.update({
+      lessonCount: admin.firestore.FieldValue.increment(1), // Decrement lessonCount by 1
+    });
 
     // Add the new lesson document to the lessons subcollection
     const newLessonRef = await lessonsRef.add(lessonData);
