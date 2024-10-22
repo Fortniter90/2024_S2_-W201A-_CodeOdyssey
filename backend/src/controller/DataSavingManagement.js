@@ -35,6 +35,11 @@ export const saveLesson = async (courseId, lessonData) => {
 
     // Add the new lesson document to the lessons subcollection
     const newLessonRef = await lessonsRef.add(lessonData);
+    // Increment the testCount in the course and lesson documents
+
+    await courseRef.update({
+      lessonCount: FieldValue.increment(1), // Increment testCount by 1
+    });
 
     console.log("Lesson saved with ID:", newLessonRef.id);
     return { id: newLessonRef.id };

@@ -1,5 +1,6 @@
 import { useRef, useState } from "react"
 import { HiInformationCircle } from "react-icons/hi2";
+import './ProgrammingCharacter.css';
 
 // Component for character visuals
 const ProgrammingCharacter = ({

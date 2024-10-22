@@ -68,7 +68,8 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
       title: lesson.title,
       number: lesson.number,
       description: lesson.description,
-      content: lesson.content
+      content: lesson.content,
+      available: lesson.available,
     });
   };
 

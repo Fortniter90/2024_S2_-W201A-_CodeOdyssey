@@ -99,27 +99,26 @@ const LoggedInHomePage = () => {
         </div>
 
         {/* Render the "Recent Levels" section */}
-        
-          <Section title="RECENT LEVELS" emptyMessage="You Have No Recent Levels" onEmptyClick={navigateTo('./course')}>
-              {Object.keys(usersCourses).map(courseId => {
-              const course = usersCourses[courseId];
-              const courseData = courseDetails.find(course => course.id === courseId) || {};
-              const latestLesson = lessonDetails[courseId]?.find(lesson => lesson.id === course.currentLesson) || null;
+        <Section title="RECENT LEVELS" emptyMessage="You Have No Recent Levels" onEmptyClick={navigateTo('./course')}>
+            {Object.keys(usersCourses).map(courseId => {
+            const course = usersCourses[courseId];
+            const courseData = courseDetails.find(course => course.id === courseId) || {};
+            const latestLesson = lessonDetails[courseId]?.find(lesson => lesson.id === course.currentLesson) || null;
 
-              // Only render if latestLesson exists
-              return latestLesson ? (
-                <div
-                  className='recent-levels'
-                  key={courseId}
-                  style={{ backgroundImage: `linear-gradient(var(--${courseData.color}-light), var(--${courseData.color}-medium), var(--${courseData.color}-dark))` }}
-                  onClick={goToLesson(courseId, latestLesson.id)}
-                >
-                  <p className='roboto-medium'>{courseData.title || 'Unknown Course'}</p>
-                  <h3 className='fira-code'>{latestLesson.title || 'Unknown Lesson'}</h3>
-                </div>
-              ) : null; // If no latestLesson, return null to avoid rendering
-            })}
-          </Section>
+            // Only render if latestLesson exists
+            return latestLesson && (
+              <div
+                className='recent-levels'
+                key={courseId}
+                style={{ backgroundImage: `linear-gradient(var(--${courseData.color}-light), var(--${courseData.color}-medium), var(--${courseData.color}-dark))` }}
+                onClick={goToLesson(courseId, latestLesson.id)}
+              >
+                <p className='roboto-medium'>{courseData.title || 'Unknown Course'}</p>
+                <h3 className='fira-code'>{latestLesson.title || 'Unknown Lesson'}</h3>
+              </div>
+            )
+          })}
+        </Section>
 
         {/* Render the "Your Courses" section */}
         <Section title="YOUR COURSES" emptyMessage="You Have No Courses" onEmptyClick={navigateTo('./course')}>

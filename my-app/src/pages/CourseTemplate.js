@@ -4,9 +4,10 @@ import CourseHeadings from '../components/CourseHeadings';
 import LearningPath from '../components/LearningPath';
 import { useAuth } from '../context/AuthContext';
 import "./CourseTemplate.css";
-import { fetchCourses, fetchLessons } from '../utils/dataFetching';
-import { updateUserCourseData, updateUserLessons } from '../utils/dataSaving';
+import { fetchCourses } from '../utils/dataFetching';
 import NavigationBar from '../components/NavigationBar';
+import Footer from '../components/Footer';
+import Feedback from '../components/Feedback';
 
 const CourseTemplate = () => {
   const { currentUser } = useAuth(); // Extracting user info
@@ -22,9 +23,6 @@ const CourseTemplate = () => {
 
         if (courseData) {
           setCourse(courseData);
-
-          // Update user course data
-          await updateUserCourseData(currentUser.uid, courseId);
 
         } else {
           console.error('Course not found');
@@ -49,6 +47,9 @@ const CourseTemplate = () => {
         <CourseHeadings course={course} />
         <LearningPath courseId={course.id} userId={currentUser.uid} />
       </div>
+
+      <Feedback />
+      <Footer />
     </div>
   );
 };

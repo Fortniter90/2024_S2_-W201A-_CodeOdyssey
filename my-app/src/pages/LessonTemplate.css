@@ -8,7 +8,18 @@
     min-height: 100vh;
 }
 
+.lesson-container {
+    display: flex;
+    width: inherit;
+    gap: 20px;
+}
+
+
 .lesson-content {
+    width: 100%;
+}
+
+.lesson-content-type {
     width: 100%; 
     margin: 10px 0;
 }

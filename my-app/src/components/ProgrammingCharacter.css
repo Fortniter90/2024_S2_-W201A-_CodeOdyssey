@@ -5,6 +5,7 @@
     flex-direction: column; 
     align-items: center;
     margin-top: 20px;
+    width: fit-content;
 }
   
 /* Container for the character and information icon, sets layout and alignment */

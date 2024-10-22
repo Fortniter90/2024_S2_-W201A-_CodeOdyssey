@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './TTS.css';
+import { FaVolumeHigh, FaVolumeXmark } from 'react-icons/fa6';
 
 const TTS = ({ text }) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -29,7 +30,7 @@ const TTS = ({ text }) => {
         role="button"
         tabIndex="0"
       >
-        {isPlaying ? '🔇' : '🔊'}
+        {isPlaying ? <FaVolumeHigh /> : <FaVolumeXmark />}
       </div>
       <span className="tooltip">Text to Speech</span>
     </div>

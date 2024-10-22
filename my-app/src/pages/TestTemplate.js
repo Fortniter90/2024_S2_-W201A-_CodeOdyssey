@@ -12,6 +12,7 @@ import LessonTestLayout from '../components/LessonTestLayout';
 import Footer from '../components/Footer';
 import Feedback from '../components/Feedback';
 import './TestTemplate.css';
+import TTS from '../components/TTS';
 
 const TestTemplate = () => {
   const { courseId, lessonId } = useParams();
@@ -159,6 +160,7 @@ const TestTemplate = () => {
           <div className='test-header'>
             <HintSystem hint={currentTest.hint} testId={currentTest.number} />
             <h2 className='roboto-medium'>Question {currentTest.number}. {currentTest.question}</h2>
+            <TTS text={`Question ${currentTest.number}. ${currentTest.question}`} />
           </div>
 
           <CodeEditor onCodeChange={handleUserInputChange} code={userAnswers[currentTestIndex] || ''} />
