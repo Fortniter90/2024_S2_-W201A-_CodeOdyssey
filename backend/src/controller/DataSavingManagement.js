@@ -29,17 +29,12 @@ export const saveLesson = async (courseId, lessonData) => {
     const courseRef = db.collection('courses').doc(courseId);
     const lessonsRef = courseRef.collection('lessons');
 
-    //  Increment lesson count
-    await courseRef.update({
-      lessonCount: admin.firestore.FieldValue.increment(1), // Decrement lessonCount by 1
-    });
-
     // Add the new lesson document to the lessons subcollection
     const newLessonRef = await lessonsRef.add(lessonData);
-    // Increment the testCount in the course and lesson documents
 
+    // Increment the testCount in the course and lesson documents
     await courseRef.update({
-      lessonCount: FieldValue.increment(1), // Increment testCount by 1
+      lessonCount: admin.firestore.FieldValue.increment(1), // Increment testCount by 1
     });
 
     console.log("Lesson saved with ID:", newLessonRef.id);
@@ -71,10 +66,10 @@ export const saveTest = async (courseId, lessonId, testData) => {
     const lessonRef = db.collection('courses').doc(courseId).collection('lessons').doc(lessonId);
 
     await courseRef.update({
-      testCount: FieldValue.increment(1), // Increment testCount by 1
+      testCount: admin.firestore.FieldValue.increment(1), // Increment testCount by 1
     });
     await lessonRef.update({
-      testCount: FieldValue.increment(1), // Increment testCount by 1
+      testCount: admin.firestore.FieldValue.increment(1), // Increment testCount by 1
     });
   } catch (error) {
     console.error('Error saving test:', error);

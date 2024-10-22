@@ -3,7 +3,7 @@ import fetch from "node-fetch"; // Import the fetch API for making HTTP requests
 const JUDGE_API_URL = 'https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true'; // URL for submitting code to the Judge0 API
 const HEADERS = {
   'content-type': 'application/json', // Specifies that the request body will be in JSON format
-  'X-RapidAPI-Key': '432fab4407mshad7d0186a4c56f4p16926fjsn94c6fadfe608', // Replace with your own RapidAPI key
+  'X-RapidAPI-Key': '432fab4407mshad7d0186a4c56f4p16926fjsn94c6fadfe608', // RapidAPI key
   'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com' // Hostname for the Judge0 API
 };
 
@@ -29,7 +29,7 @@ export const handleCodeSubmission = async (data, socket) => {
 
   const language_id = languageObject ? languageObject.id : null;
 
-  console.log(language_id); // This will log the ID for the current language
+  console.log(language_id);
 
   // send submission data to Judge0 API
   const submissionData = {
@@ -48,11 +48,10 @@ export const handleCodeSubmission = async (data, socket) => {
     // Parse the JSON response returned by the API
     const result = await response.json();
 
-    // Log the output and error to the server console
-    console.log("codeResult", { output: result.stdout, error: result.stderr });
+    console.log("codeResult", { output: result.stdout, error: result.compile_output });
 
     // Send the result back to the client via the socket
-    socket.emit("codeResult", { output: result.stdout, error: result.stderr });
+    socket.emit("codeResult", { output: result.stdout, error: result.compile_output });
   } catch (error) {
     // If an error occurs, send an error message to the client
     socket.emit("codeResult", { error: "Error occurred while submitting the code." });

@@ -7,130 +7,129 @@ import { useEffect, useState } from 'react';
 import Modal from './Modal';
 import Button from './Button';
 import { fetchFeedback } from '../utils/dataFetching';
+import { deleteFeedback } from '../utils/dataDeleting';
 
 const FeedbackManagement = () => {
 
-    const [allFeedback, setAllFeedback] = useState([]);
-    const [selectedFeedback, setSelectedFeedback] = useState(null);
-    const [searchTerm, setSearchTerm] = useState(''); 
+  const [allFeedback, setAllFeedback] = useState([]);
+  const [selectedFeedback, setSelectedFeedback] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 6;
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
-    // States controling modal visibility
-    const [modals, setModals] = useState({
-        details: false,
-        success: false,
-        delete: false,
-    })
+  // States controling modal visibility
+  const [modals, setModals] = useState({
+    details: false,
+    success: false,
+    delete: false,
+  })
 
-    useEffect(() => {
+  useEffect(() => {
 
-        loadFeedback();
-    }, [])
+    loadFeedback();
+  }, [])
 
-    const loadFeedback = async () => {
-        try {
-            const feedback = await fetchFeedback();
-            setAllFeedback(feedback);
-        } catch (error) {
-            console.error('Error loading feedback: ', error);
-        }
-    };
-
-    /*  DELETE FUNCTION -- REMOVE COMMENTS
-    const handleDelete = async () => {
-        try {
-            await deleteFeedback(selectedFeedback.id);
-            loadFeedback();
-        } catch (error) {
-            console.error('Error deleting feedback: ', error); 
-        }
+  const loadFeedback = async () => {
+    try {
+      const feedback = await fetchFeedback();
+      setAllFeedback(feedback);
+    } catch (error) {
+      console.error('Error loading feedback: ', error);
     }
-    */
+  };
 
-    // Handle course selection for editing and viewing details
-    const handleItemClick = (feedback) => {
-      setSelectedFeedback(feedback);          // Set the selected item
-      toggleModal('details', true); // Open the details modal
-    };
-
-    // Handle modal visibility
-    const toggleModal = (modalName, state) => {
-      setModals((prev) => ({ ...prev, [modalName]: state })); // Change state of given modal
+  const handleDelete = async () => {
+    try {
+      await deleteFeedback(selectedFeedback.id);
+      loadFeedback();
+    } catch (error) {
+      console.error('Error deleting feedback: ', error);
     }
+  }
 
-    const filteredFeedback = allFeedback.filter(feedback =>
-        feedback.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  // Handle course selection for editing and viewing details
+  const handleItemClick = (feedback) => {
+    setSelectedFeedback(feedback);          // Set the selected item
+    toggleModal('details', true); // Open the details modal
+  };
 
-    const totalPages = Math.ceil(filteredFeedback.length / itemsPerPage);
-    const currentItems = filteredFeedback.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  // Handle modal visibility
+  const toggleModal = (modalName, state) => {
+    setModals((prev) => ({ ...prev, [modalName]: state })); // Change state of given modal
+  }
 
-    
+  const filteredFeedback = allFeedback.filter(feedback =>
+    feedback.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-    return (
-        <div className='management roboto-regular'> 
-            <div className='management-header'>
-                <h1 className='fira-code'>Feedback Management</h1>
-            </div>
+  const totalPages = Math.ceil(filteredFeedback.length / itemsPerPage);
+  const currentItems = filteredFeedback.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-            <div className='filter'>
-                <div className='search-container roboto-regular'>
-                    <input
-                        type='text'
-                        placeholder='Search by name...'
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <FaMagnifyingGlass className='search-icon' />
-                </div>
-            </div>
 
-            <div className='feedback-management'>
-                {currentItems.length > 0 ? (
-                    currentItems.map((feedback) => (
-                        <div className='feedback-management-box' onClick={() => handleItemClick(feedback)}>
-                            <h2>{feedback.email}</h2>
-                            <p>{feedback.feedback}</p>
-                        </div>
-                    ))
-                ) : (
-                    <div className='feedback-management-box'>
-                        <p>No Feedback Available</p>
-                    </div>
-                )}
-            </div>
 
-            {selectedFeedback && (
-                <Modal
-                    isOpen={modals.details}
-                    onClose={() => toggleModal('details', false)}
-                    title={selectedFeedback.email}
-                    children={
-                        <>
-                            <p>{selectedFeedback.feedback}</p>
-                            
-                            <hr className='modal-divider' />
-                                    
-                            <div className='modal-buttons'>
-                                <Button text={"Close"} action={() => toggleModal('details', false)} />
-                                <Button text={"Delete"} outline={true} action={() => { toggleModal('details', false); toggleModal('delete', true) }} />
-                            </div>
-                        </>
-                    }
-                    isCentered={false}
-                />
-            )}
+  return (
+    <div className='management roboto-regular'>
+      <div className='management-header'>
+        <h1 className='fira-code'>Feedback Management</h1>
+      </div>
 
-            {/* Page navigation controls */}
-            <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-            />
+      <div className='filter'>
+        <div className='search-container roboto-regular'>
+          <input
+            type='text'
+            placeholder='Search by name...'
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <FaMagnifyingGlass className='search-icon' />
         </div>
-    );
+      </div>
+
+      <div className='feedback-management'>
+        {currentItems.length > 0 ? (
+          currentItems.map((feedback) => (
+            <div className='feedback-management-box' onClick={() => handleItemClick(feedback)}>
+              <h2>{feedback.email}</h2>
+              <p>{feedback.feedback}</p>
+            </div>
+          ))
+        ) : (
+          <div className='feedback-management-box'>
+            <p>No Feedback Available</p>
+          </div>
+        )}
+      </div>
+
+      {selectedFeedback && (
+        <Modal
+          isOpen={modals.details}
+          onClose={() => toggleModal('details', false)}
+          title={selectedFeedback.email}
+          children={
+            <>
+              <p>{selectedFeedback.feedback}</p>
+
+              <hr className='modal-divider' />
+
+              <div className='modal-buttons'>
+                <Button text={"Close"} action={() => toggleModal('details', false)} />
+                <Button text={"Delete"} outline={true} action={() => { toggleModal('details', false); toggleModal('delete', true) }} />
+              </div>
+            </>
+          }
+          isCentered={false}
+        />
+      )}
+
+      {/* Page navigation controls */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
+    </div>
+  );
 }
 
 export default FeedbackManagement;

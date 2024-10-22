@@ -1,5 +1,5 @@
 import express from 'express';
-import { deleteCourse, deleteLesson, deleteTest } from '../controller/DataDeletingManagement.js';
+import { deleteCourse, deleteFeedback, deleteLesson, deleteTest } from '../controller/DataDeletingManagement.js';
 
 const deleteRouter = express.Router();
 
@@ -30,6 +30,17 @@ deleteRouter.delete('/courses/:courseId/lessons/:lessonId/tests/:testId', async 
   const { courseId, lessonId, testId } = req.params;
   try {
     deleteTest(courseId, lessonId, testId);
+    res.status(200).send({ messsage: 'Test successfully deleted' });
+  } catch (error) {
+    res.status(500).send({ message: 'Error deleting test' });
+  }
+});
+
+// Router for deleting feeback 
+deleteRouter.delete('/feedback/:feedbackId', async (req, res) => {
+  const { feedbackId } = req.params;
+  try {
+    deleteFeedback(feedbackId);
     res.status(200).send({ messsage: 'Test successfully deleted' });
   } catch (error) {
     res.status(500).send({ message: 'Error deleting test' });

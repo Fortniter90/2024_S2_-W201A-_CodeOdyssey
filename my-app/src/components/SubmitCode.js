@@ -7,7 +7,6 @@ import './SubmitCode.css';
 const socket = io("http://localhost:8080");
 
 function CompilerComponent({ code, answer, language, showAnswer, navigationButtons }) {
-  // States to manage source code, output, and errors
   const [isCorrect, setIsCorrect] = useState(null);
   const [output, setOutput] = useState(''); // State to store the output from the server
   const [error, setError] = useState(''); // State to store any errors returned from the server
@@ -15,17 +14,20 @@ function CompilerComponent({ code, answer, language, showAnswer, navigationButto
 
   useEffect(() => {
     socket.on("codeResult", (data) => {
-      if (data.output !== null) {
+      console.log(data);
+      if (data !== null) {
         setShowResults(true);
         if (data.error) {
           setError(data.error);
           setOutput('');
-          setIsCorrect(false);
-        } else {
+          setIsCorrect(false); // Mark as incorrect
+        } else if (data.output) {
           setOutput(data.output);
           setError('');
-          setIsCorrect(data.output.trim() === answer.trim());
+          setIsCorrect(data.output.trim() === answer.trim()); // Compare output to answer
         }
+      } else {
+        setError("Can't Compile");
       }
     });
 
@@ -62,14 +64,16 @@ function CompilerComponent({ code, answer, language, showAnswer, navigationButto
       {/* Compiler results */}
       {showResults && (
         <div className='code-results-container'>
-          <Section 
+          <Section
             title={'Output'}
             children={error ? error : output}
+            isCorrect={isCorrect}
           />
-          
-          <Section 
+
+          <Section
             title={'Expected Output'}
             children={answer}
+            isCorrect={isCorrect}
           />
         </div>
       )}
@@ -77,12 +81,13 @@ function CompilerComponent({ code, answer, language, showAnswer, navigationButto
   );
 }
 
-// Section component to render a the output and expected output
-const Section = ({ title, children }) => (
-  <div className='code-results'>
+// Section component to render the output and expected output
+const Section = ({ title, children, isCorrect }) => (
+  <div className={`code-results ${isCorrect === true ? 'correct' : isCorrect === false ? 'incorrect' : ''}`}>
     <h2 className='roboto-bold'>{title}</h2>
     <pre>{children}</pre>
   </div>
 );
 
 export default CompilerComponent;
+

@@ -11,6 +11,7 @@ const CourseManagement = ({ onSelectCourse }) => {
   const [courses, setCourses] = useState([]);   // List of courses
   const [formData, setFormData] = useState({    // Data for adding and editing course data
     title: '',
+    language: '',
     color: '',
     description: ''
   });
@@ -43,6 +44,7 @@ const CourseManagement = ({ onSelectCourse }) => {
     setFormData({
       title: course.title,
       color: course.color,
+      language: course.language,
       description: course.description,
       available: course.available
     });
@@ -65,7 +67,7 @@ const CourseManagement = ({ onSelectCourse }) => {
       }
 
       loadCourses();  // Refresh course list
-      setFormData({ title: '', color: '', description: '' }); // Reset form data
+      setFormData({ title: '', color: '', language: '', description: '' }); // Reset form data
 
     } catch (error) {
       console.error(`Error ${isEditing ? 'updating' : 'adding'} course:`, error);
@@ -88,23 +90,28 @@ const CourseManagement = ({ onSelectCourse }) => {
     return (
       <>
         <div className='form-group'>
-            <label>Title:</label>
-            <input type="text" name="title" value={formData.title} onChange={handleInputChange} required />
+          <label>Title:</label>
+          <input type="text" name="title" value={formData.title} onChange={handleInputChange} required />
         </div>
 
         <div className='form-group'>
-            <label>Color:</label>
-            <select name="color" value={formData.color} onChange={handleInputChange} required>
+          <label>Color:</label>
+          <select name="color" value={formData.color} onChange={handleInputChange} required>
             <option value="">Select Color</option>
             <option value="orange">Orange</option>
             <option value="green">Green</option>
             <option value="blue">Blue</option>
-            </select>
+          </select>
         </div>
 
         <div className='form-group'>
-            <label>Description:</label>
-            <textarea name="description" value={formData.description} onChange={handleInputChange} required />
+          <label>Language:</label>
+          <input type="text" name="language" value={formData.language} onChange={handleInputChange} required />
+        </div>
+
+        <div className='form-group'>
+          <label>Description:</label>
+          <textarea name="description" value={formData.description} onChange={handleInputChange} required />
         </div>
       </>
     );
@@ -116,13 +123,14 @@ const CourseManagement = ({ onSelectCourse }) => {
       <>
         <div className='row-availability-edit'>
           <span className={`availability-tag ${course.available ? "available" : "unavailable"}`}>
-              {course.available ? "Available" : "Unavailable"}
+            {course.available ? "Available" : "Unavailable"}
           </span>
         </div>
 
         <p><strong>Lessons Count:</strong> {course.lessonCount}</p>
         <p><strong>Tests Count:</strong> {course.testCount}</p>
         <p><strong>Color:</strong> {course.color}</p>
+        <p><strong>Language:</strong> {course.language}</p>
         <p><strong>Description:</strong> {course.description}</p>
       </>
     );
@@ -140,20 +148,25 @@ const CourseManagement = ({ onSelectCourse }) => {
         <div className='form-group'>
           <label>Availability:</label>
           <select name="available" value={formData.available} onChange={handleInputChange} required>
-              <option value="">Select Availability</option>
-              <option value={true}>Available</option>
-              <option value={false}>Unavailable</option>
+            <option value="">Select Availability</option>
+            <option value={true}>Available</option>
+            <option value={false}>Unavailable</option>
           </select>
         </div>
 
         <div className='form-group'>
           <label>Color:</label>
           <select name="color" value={formData.color} onChange={handleInputChange} required>
-              <option value="">Select Color</option>
-              <option value="orange">Orange</option>
-              <option value="green">Green</option>
-              <option value="blue">Blue</option>
+            <option value="">Select Color</option>
+            <option value="orange">Orange</option>
+            <option value="green">Green</option>
+            <option value="blue">Blue</option>
           </select>
+        </div>
+
+        <div className='form-group'>
+          <label>Language:</label>
+          <input type="text" name="language" value={formData.language} onChange={handleInputChange} required />
         </div>
 
         <div className='form-group'>
