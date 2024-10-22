@@ -141,7 +141,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
 
         <div className='form-group'>
           <label>Answer:</label>
-          <input type="text" name="answer" value={formData.answer} onChange={handleInputChange} required />
+          <textarea name='answer' value={formData.answer} onChange={handleInputChange} required />
         </div>
 
         <div className='form-group'>
