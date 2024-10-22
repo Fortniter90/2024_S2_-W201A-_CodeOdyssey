@@ -42,7 +42,7 @@ const FeedbackManagement = () => {
   const handleDelete = async () => {
     try {
       await deleteFeedback(selectedFeedback.id);
-      loadFeedback();
+      await loadFeedback();
     } catch (error) {
       console.error('Error deleting feedback: ', error);
     }
@@ -114,7 +114,7 @@ const FeedbackManagement = () => {
 
               <div className='modal-buttons'>
                 <Button text={"Close"} action={() => toggleModal('details', false)} />
-                <Button text={"Delete"} outline={true} action={() => { toggleModal('details', false); toggleModal('delete', true) }} />
+                <Button text={"Delete"} outline={true} action={() => { handleDelete(); toggleModal('details', false); toggleModal('delete', true) }} />
               </div>
             </>
           }
