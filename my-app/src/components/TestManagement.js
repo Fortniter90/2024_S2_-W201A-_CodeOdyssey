@@ -120,6 +120,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
   const handleDelete = async (test) => {
     try {
       await deleteTest(selectedCourse.id, selectedLesson.id, test.id);
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait one second
       loadTests();  // Refresh test list after deletion
 
     } catch (error) {

@@ -134,8 +134,8 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
   const handleDelete = async (lesson) => {
     try {
       await deleteLesson(selectedCourse.id, lesson.id);
-      loadLessons(); // Refresh lesson list after deletion
-
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Wait one second
+      await loadLessons();
     } catch (error) {
       console.error('Error deleting lesson:', error); // Log any errors during deletion
     }

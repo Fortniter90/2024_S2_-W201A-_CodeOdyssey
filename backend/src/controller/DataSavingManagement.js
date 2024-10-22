@@ -5,7 +5,7 @@ const db = admin.firestore(); // Get Firestore instance from adminconst db = adm
 export const saveCourse = async (courseData) => {
   try {
     const newCourseRef = db.collection('courses');
-    await newCourseRef.add(courseData);
+    await newCourseRef.add(courseData); // Save course to database
   } catch (error) {
     console.error('Error saving course:', error);
     throw error;
@@ -16,7 +16,7 @@ export const saveCourse = async (courseData) => {
 export const updateCourse = async (courseId, updatedCourseData) => {
   try {
     const courseRef = db.collection('courses').doc(courseId);
-    await courseRef.update(updatedCourseData);
+    await courseRef.update(updatedCourseData); // Update course in database
   } catch (error) {
     console.error('Error updating course:', error);
     throw error;
@@ -37,7 +37,6 @@ export const saveLesson = async (courseId, lessonData) => {
       lessonCount: admin.firestore.FieldValue.increment(1), // Increment testCount by 1
     });
 
-    console.log("Lesson saved with ID:", newLessonRef.id);
     return { id: newLessonRef.id };
   } catch (error) {
     throw new Error(`Error saving lesson: ${error.message}`);
@@ -48,7 +47,7 @@ export const saveLesson = async (courseId, lessonData) => {
 export const updateLesson = async (courseId, lessonId, lessonData) => {
   try {
     const lessonRef = db.collection('courses').doc(courseId).collection('lessons').doc(lessonId);
-    await lessonRef.update(lessonData);
+    await lessonRef.update(lessonData); // Update lesson in database
   } catch (error) {
     console.error('Error updating lesson:', error);
     throw error;
@@ -88,18 +87,23 @@ export const updateTest = async (courseId, lessonId, testId, testData) => {
   }
 };
 
-// Function to update the user's lesson list
+// Function to update the user's lesson progress
 export const updateUserLessons = async (userId, levels, lesson, courseId) => {
   try {
+    // Filter and collect the IDs of all completed lessons up to the current lesson
     const completedLessons = levels
       .filter(level => level.number <= lesson.number)
       .map(level => level.id);
 
+    // Find the index of the current lesson and determine the next lesson, if any
     const currentLessonIndex = levels.findIndex(level => level.id === lesson.id);
     const nextLesson = levels[currentLessonIndex + 1];
 
+    // Reference the user's document in the 'users' collection
     const userRef = db.collection('users').doc(userId);
 
+    // Update the user's progress in the Firestore document, updating completed lessons
+    // and setting the current lesson to the next one (or null if no next lesson)
     await userRef.update({
       [`courses.${courseId}.completedLessons`]: completedLessons,
       [`courses.${courseId}.currentLesson`]: nextLesson ? nextLesson.id : null
@@ -110,21 +114,22 @@ export const updateUserLessons = async (userId, levels, lesson, courseId) => {
   }
 };
 
-// Function to update user course data
+// Function to initialize or update user course data if it doesn't already exist
 export const updateUserCourseData = async (userId, courseId) => {
   try {
     const userRef = db.collection('users').doc(userId);
-    const userSnap = await userRef.get();
+    const userSnap = await userRef.get(); // Retrieve the user's data
 
     if (userSnap.exists) {
       const userData = userSnap.data();
       const userCourses = userData.courses || {};
 
+      // If the user doesn't have data for the specific course, initialize it with empty values
       if (!userCourses[courseId]) {
         await userRef.update({
           [`courses.${courseId}`]: {
-            currentLesson: '', // Empty string for currentLesson
-            completedLessons: [] // Empty array for completedLessons
+            currentLesson: '',
+            completedLessons: []
           }
         });
       }
@@ -137,10 +142,11 @@ export const updateUserCourseData = async (userId, courseId) => {
   }
 };
 
-// Function to save answers to Firestore
+// Function to save user's test answers in Firestore
 export const saveUserAnswers = async (usersId, courseId, lessonId, tests, userAnswers) => {
-  console.log('Saving answers for user:', usersId);
+  console.log('Saving answers for user:', usersId); // Log for tracking
   try {
+    // Loop through each test and save the user's answer
     for (let i = 0; i < tests.length; i++) {
       const answerData = {
         courseId,
@@ -151,9 +157,9 @@ export const saveUserAnswers = async (usersId, courseId, lessonId, tests, userAn
 
       console.log('Saving answer data:', answerData);
 
-      // Automatically generate a unique ID when adding a new answer document
+      // Add the answer to the 'answers' subcollection for the user, generating a unique document ID
       const docRef = await db.collection('users').doc(usersId).collection('answers').add(answerData);
-      console.log('Document written with ID:', docRef.id);
+      console.log('Document written with ID:', docRef.id); // Log the document ID
     }
 
     return true;
@@ -163,17 +169,19 @@ export const saveUserAnswers = async (usersId, courseId, lessonId, tests, userAn
   }
 };
 
+// Function to submit user feedback to Firestore
 export const submitFeedback = async (userId, userEmail, feedback) => {
   try {
+    // Add the feedback to the 'feedback' collection with the user's ID, email, and feedback content
     await db.collection('feedback').add({
       userId: userId,
       email: userEmail,
       feedback: feedback,
     });
 
-    console.log('Feedback submitted');
   } catch (error) {
     console.error('Error submitting feedback:', error.message);
     throw new Error('Failed to submit feedback');
   }
 };
+;

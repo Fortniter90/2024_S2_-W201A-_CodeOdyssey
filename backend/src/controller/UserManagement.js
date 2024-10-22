@@ -22,8 +22,8 @@ async function createUser(email, password, name) {
 
     console.log('Successfully created new user:', userRecord.uid);
   } catch (error) {
-    console.error('Error creating new user:', error); // Log the error details
-    throw new Error(`Failed to create user: ${error.message}`); // Throw a more specific error message
+    console.error('Error creating new user:', error);
+    throw new Error(`Failed to create user: ${error.message}`);
   }
 }
 
@@ -31,7 +31,8 @@ async function createUser(email, password, name) {
 async function deleteUser(uid) {
   try {
     await admin.auth().deleteUser(uid);
-    const userDocRef = admin.firestore().collection('users').doc(uid);
+    const userDocRef = admin.firestore().collection('users').doc(uid); // User reference
+    // Delete user
     await userDocRef.delete();
 
     console.log(`Successfully deleted user and Firestore document for UID: ${uid}`);
@@ -111,6 +112,7 @@ async function updateProfilePicture(uid, picture) {
 // Function to update user's username
 async function updateUsername(uid, name) {
   try {
+    // Update users name
     await admin.auth().updateUser(uid, {
       displayName: name
     });
@@ -124,6 +126,7 @@ async function updateUsername(uid, name) {
 export const setAdminStatus = async (userId, isAdmin) => {
   try {
     const userRef = db.collection('users').doc(userId);
+    // Grant user admin privileges
     await userRef.update({ isAdmin: isAdmin });
     console.log(`Successfully updated admin status for user ${userId}`);
   } catch (error) {
