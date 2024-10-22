@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center; /* Center the content horizontally */
     padding: 20px; /* Optional padding */
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
     min-height: 100vh;
 }
