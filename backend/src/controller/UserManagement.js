@@ -12,9 +12,9 @@ async function createUser(email, password, name) {
       password: password,
       disabled: false,
       displayName: name,
+      isAdmin: false,
       photoURL: 'https://firebasestorage.googleapis.com/v0/b/codeodysseydatabase.appspot.com/o/profile_pictures%2Fdefaultprofilepic.png?alt=media&token=1a7119e5-c0a0-4d88-8433-bc7018602490',
     });
-    console.log(userRecord.displayName);
     // Save user details to Firestore
     await db.collection('users').doc(userRecord.uid).set({
       courses: {},

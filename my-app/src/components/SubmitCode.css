@@ -52,3 +52,25 @@
     min-height: 15px;
     margin: 0;
 }
+
+.correct {
+  border: 2px solid green;
+  background-color: #e6ffe6; /* Light green background */
+}
+
+.incorrect {
+  border: 2px solid red;
+  background-color: #ffe6e6; /* Light red background */
+}
+
+.code-results {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  font-family: 'Courier New', Courier, monospace;
+  white-space: pre-wrap; /* Ensure newlines are respected */
+}
+
+.roboto-bold {
+  font-weight: bold;
+}

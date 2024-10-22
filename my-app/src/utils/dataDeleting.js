@@ -4,7 +4,6 @@ const backendUrl = 'http://localhost:8080';
 // Function to delete a course
 export const deleteCourse = async (courseId) => {
   try {
-    console.log("womp womp");
     const response = await axios.delete(`${backendUrl}/delete/courses/${courseId}`);
     return response.data;
   } catch (error) {
@@ -31,3 +30,15 @@ export const deleteTest = async (courseId, lessonId, testId) => {
     throw new Error(`Error deleting test: ${error.response?.data?.message || error.message}`);
   }
 };
+
+// Function to delete feedback 
+export const deleteFeedback = async (feedbackId) => {
+  try {
+    const response = await axios.delete(`${backendUrl}/delete/feedback/${feedbackId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error deleting feedback: ${error.response?.data?.message || error.message}`);
+  }
+};
+
+

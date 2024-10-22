@@ -14,6 +14,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
     number: '',
     question: '',
     answer: '',
+    requiredOutput: '',
     hint: '',
     constraints: []
   });
@@ -58,6 +59,7 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
       number: test.number,
       question: test.question,
       answer: test.answer,
+      requiredOutput: test.requiredOutput,
       hint: test.hint,
       available: test.available,
       constraints: test.constraints
@@ -85,9 +87,9 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
         await shiftTestNumbers(testNumber);
         await saveTest(selectedCourse.id, selectedLesson.id, newTest);
       }
-      
+
       loadTests(); // Refresh test list
-      setFormData({ number: '', question: '', answer: '', hint: '', constraints: [] }); // Reset form data
+      setFormData({ number: '', question: '', answer: '', requiredOutput: '', hint: '', constraints: [] }); // Reset form data
 
     } catch (error) {
       console.error(`Error ${isEditing ? 'updating' : 'adding'} test:`, error);
@@ -139,9 +141,14 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
           <input type="text" name="question" value={formData.question} onChange={handleInputChange} required />
         </div>
 
-        <div className='form-group'>
-          <label>Answer:</label>
+        <div classname='form-group'>
+          <label>answer:</label>
           <textarea name='answer' value={formData.answer} onChange={handleInputChange} required />
+        </div>
+
+        <div classname='form-group'>
+          <label>Required Output:</label>
+          <textarea name='requiredOutput' value={formData.requiredOutput} onChange={handleInputChange} required />
         </div>
 
         <div className='form-group'>
@@ -202,7 +209,12 @@ const TestManagement = ({ selectedCourse, selectedLesson }) => {
 
         <div className='form-group'>
           <label>Answer:</label>
-          <input type="text" name="answer" value={formData.answer} onChange={handleInputChange} required />
+          <textarea name="answer" value={formData.answer} onChange={handleInputChange} required />
+        </div>
+
+        <div className='form-group'>
+          <label>Required Output:</label>
+          <textarea name='requiredOutput' value={formData.requiredOutput} onChange={handleInputChange} required />
         </div>
 
         <div className='form-group'>

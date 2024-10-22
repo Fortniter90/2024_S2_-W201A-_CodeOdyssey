@@ -97,7 +97,12 @@ const LessonManagement = ({ selectedCourse, onSelectLesson }) => {
         await saveLesson(selectedCourse.id, newLesson);
       }
 
-      loadLessons(); // Refresh lesson list
+      try {
+        await loadLessons();
+        console.log('Lessons reloaded');
+      } catch (error) {
+        console.error('Error reloading lessons:', error);
+      }
       setFormData({ title: '', number: '', description: '', content: [] }); // Reset form data
 
     } catch (error) {
